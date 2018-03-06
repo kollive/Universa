@@ -17,13 +17,8 @@
     "history": "^4.7.2",
     "jest": "^21.2.1",
     "lodash": "^4.17.4",
-<<<<<<< HEAD
     "material-ui": "^0.19.4",
     "moment": "^2.20.1",
-=======
-    "material-ui": "^0.20.0",
-    "moment": "^2.19.2",
->>>>>>> 05096b213f0a9950074143ca52ec373ccf466ec8
     "mui-icons": "^1.2.1",
     "password-rules": "0.0.3",
     "primereact": "^1.3.0",
@@ -34,13 +29,13 @@
     "react-big-calendar": "^0.17.0",
     "react-bootstrap-table": "^4.0.6",
     "react-bootstrap-typeahead": "^2.0.0-alpha.3",
-<<<<<<< HEAD
+
     "react-datepicker": "^1.2.2",
-=======
+
     "react-date-picker": "^6.8.2",
     "react-datepicker": "^1.2.1",
     "react-day-picker": "^7.0.7",
->>>>>>> 05096b213f0a9950074143ca52ec373ccf466ec8
+
     "react-dom": "^16.0.0",
     "react-dropzone": "^4.2.3",
     "react-fontawesome": "^1.6.1",

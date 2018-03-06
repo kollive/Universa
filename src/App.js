@@ -17,6 +17,8 @@ import CadetsSearch from "./components/CadetsSearch";
 import CadetInlineSearch from "./components/CadetInlineSearch";
 import Admin from "./components/Admin";
 import UserComponent from './components/Users/MaintainUsers';
+import TimeSheetHeader from './components/TimeSheetHeader';
+import TimeSheet from './components/TimeSheet';
 import CadetDetails from "./components/CadetDetails";
 import logo from "./logo.svg";
 
@@ -205,6 +207,9 @@ export class App extends Component {
                     <Route path="/cadet" component={CadetsSearch} />
                     <Route path="/cadetinline" component={CadetInlineSearch} />
                     <Route path="/admin" component={Admin} />
+                    <Route path="/tsheader" component={TimeSheetHeader} />
+                    <Route path="/ts" component={TimeSheet} />
+                    
                     <Route path="/calendar" component={Calendar} />
                     <Route
                       path="/cadetdetails"
