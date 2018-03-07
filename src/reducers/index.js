@@ -23,7 +23,8 @@ import usersListState from './usersList_reducer';
 import aeroleState from './aerolereducer';
 import timeoutState from './timeoutreducer';
 import ManageStaffState from './Staff/managestaffreducer';
-import StaffListState from './Staff/stafflistreducer';
+import StaffListState from './Staff/stafflistreducer'
+import TimesheetState from './Timesheet/timesheetreducer';
 import WorkPlanState from './workplanreducer';
 
 export default combineReducers({
@@ -52,5 +53,6 @@ export default combineReducers({
    timeoutState,
    StaffListState,
    ManageStaffState,
+   TimesheetState,
    WorkPlanState
 });

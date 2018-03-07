@@ -35,6 +35,8 @@ import "./App.css";
 import UsersList from "./components/Users/usersList";
 import Roles from "./components/Roles";
 import Calendar from "./components/Calendar";
+import Timesheet from "./components/Timesheet/Timesheet";
+
 import IdleTimer from 'react-idle-timer';
 import {
   Modal,
@@ -238,7 +240,10 @@ export class App extends Component {
                       path="/Roles"
                       render={props => <UsersList {...this.props} />}
                     />
-
+ <Route
+                      path="/Timesheet"
+                      render={props => <Timesheet {...this.props} />}
+                    />
                     <Route path="/" component={Main} />
                   </Switch>
                 </ConnectedRouter>

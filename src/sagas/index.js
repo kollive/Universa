@@ -26,7 +26,9 @@ import { types as aeroleTypes } from "./../reducers/aerolereducer";
 import { types as timeoutTypes } from "./../reducers/timeoutreducer";
 import {types as ManageStaffTypes} from "reducers/Staff/managestaffreducer";
 import {types as StaffListTypes} from "reducers/Staff/stafflistreducer";
+import  {types as TimehseetTypes} from 'reducers/Timesheet/timesheetreducer';
 import {types as WorkPlanTypes} from "reducers/workplanreducer";
+
 
 import  * as authSagas  from './authsaga'
 import  * as attribSagas  from './attribsaga'
@@ -52,7 +54,11 @@ import  * as aeroleSagas  from './aerolesaga';
 import  * as timeoutSagas  from './timeoutsaga';
 import * as ManageStaffSaga from './Staff/managestaffsaga.js';
 import * as StaffListSaga from './Staff/stafflistsaga.js';
+
+import * as TimesheetSaga from './Timesheet/timesheetsaga';
+
 import * as WorkPlanSaga from './workplansaga.js';
+
 
 export default function* rootSaga () {
   try {
@@ -83,7 +89,9 @@ export default function* rootSaga () {
         takeLatest([timeoutTypes.SIGNUP_REQUEST,timeoutTypes.LOGIN_REQUEST,timeoutTypes.PASSWORD_RESET_REQUEST,timeoutTypes.LOGOUT], timeoutSagas.handleRequest),
         takeLatest([StaffListTypes.FETCH_REQUEST,StaffListTypes.DELETE_REQUEST], StaffListSaga.handleRequest),
         takeLatest([ManageStaffTypes.INSERT_REQUEST,ManageStaffTypes.FETCH_STAFF_REQUEST,ManageStaffTypes.FETCH_STAFF_RESOURCE_DETAILS,ManageStaffTypes.UPDATE_STAFF_REQUEST], ManageStaffSaga.handleRequest),
+        takeLatest([TimehseetTypes.INSERT_TIME_REQUEST,TimehseetTypes.FETCH_TIME_REQUEST,TimehseetTypes.UPDATE_TIME_REQUEST,ManageStaffTypes.UPDATE_STAFF_REQUEST], TimesheetSaga.handleRequest),
         takeLatest([WorkPlanTypes.FETCH_TABLE_REQUEST,WorkPlanTypes.EXCEL_REQUEST,WorkPlanTypes.CANCEL_REQUEST,WorkPlanTypes.MAKE_ROW_EDITABLE,WorkPlanTypes.INSERT_REQUEST,WorkPlanTypes.DELETE_REQUEST,WorkPlanTypes.UPDATE_REQUEST], WorkPlanSaga.handleRequest),
+
         ]);
 
     //throw e;
