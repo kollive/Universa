@@ -23,7 +23,7 @@ class TimeSheetHeader extends React.Component {
         this.items = [];
 
         this.state = {
-            weekOrDay:false,
+            weekOrDay:true,
             isOpen: false,
             startDate: moment(),
             items: [
@@ -147,8 +147,9 @@ class TimeSheetHeader extends React.Component {
             wkEnd = new Date(new Date(wkStart).setDate(wkStart.getDate() + 6));
         } else {
             wkStart = new Date(new Date(dt).setDate(dt.getDate()));
-            wkEnd = new Date(new Date(wkStart).setDate(wkStart.getDate() + 1));
+            wkEnd = new Date(new Date(wkStart).setDate(wkStart.getDate()));
         }
+        this.props.callParentDates(wkStart, wkEnd)
         /*
         this.setState({
             wkStartDate : wkStart,
@@ -193,7 +194,7 @@ class TimeSheetHeader extends React.Component {
                         </span>
                     </Col>
                     <Col sm="3">
-                        <div className="d-sm-inline-flex">Day<Toggle ref={(r) => { this.togCtl = r }} style={{ width: "50px" }} onToggle={(e, val) => { this.setDayOrWeek(val) }} />Week</div>
+                        <div className="d-sm-inline-flex">Day<Toggle defaultToggled={true} ref={(r) => { this.togCtl = r }} style={{ width: "50px" }} onToggle={(e, val) => { this.setDayOrWeek(val) }} />Week</div>
                     </Col>
                 </Row>
             </div>

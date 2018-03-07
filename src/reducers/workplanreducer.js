@@ -54,7 +54,7 @@ export const types = {
   };
   
   export const actions = {
-    getWorkPlans: payload => ({ type: types.FETCH_TABLE_REQUEST, cname: payload.cname }),
+    getWorkPlans: payload => ({ type: types.FETCH_TABLE_REQUEST, payload }),
     makeRowEditable: payload => ({ type: types.MAKE_ROW_EDITABLE, payload }),
     insertWorkplanTable: payload => ({ type: types.INSERT_REQUEST, payload }),
     updateWorkplanTable: payload => ({ type: types.UPDATE_REQUEST, payload }),  

@@ -52,16 +52,27 @@ class TimeSheet extends Component {
       indicatorscollapse: true,
       showApprovals: false,
       showHome: true,
-      searchCadet: true
+      searchCadet: true,
+      staffID:"",
+      startDT:"2018-03-01",
+      endDT: "2018-03-07"
     };
     // this.onClickAction = this.onClickAction.bind(this);
-    this.cadetSearch = this.cadetSearch.bind(this);
+    this.setDate = this.setDate.bind(this);
   }
 
-  cadetSearch(cadet) {
-    this.props.callParentSearch(cadet);
+
+
+  setDate(startDT,endDT) {
+      debugger;
     //alert(cadet.hv_cadet_name);
+    this.setState({
+        startDT: startDT,
+        endDT: endDT
+    });
+   
   }
+
   onClickLink(index) {
     //debugger;
     if (index == 1) {
@@ -120,7 +131,7 @@ class TimeSheet extends Component {
             <Row >
               {" "}
               <Col sm="12">
-              <TimeSheetHeader/>
+              <TimeSheetHeader callParentDates={this.setDate} />
               </Col>
             </Row>
           </div>
@@ -136,7 +147,7 @@ class TimeSheet extends Component {
             <Row >
               {" "}
               <Col sm="12">
-              <WorkPlan/>
+              <WorkPlan staffID={this.props.hv_staff_id} startDT={this.state.startDT} endDT={this.state.endDT} />
               </Col>
             </Row>
           </div>

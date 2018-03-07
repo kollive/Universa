@@ -62,6 +62,7 @@ import Admin from "./Admin";
 
 import CadetsSearch from "./CadetsSearch";
 import AttribList from "./AttribTables";
+import TimeSheet from "./TimeSheet";
 
 import BAP from "./BAP";
 import Calendar from "./Calendar"
@@ -202,7 +203,8 @@ let showlist=false
               value="0"
               icon={<FontIcon className="fa fa-home" style={{ color: "darkgrey" }} />}
             >
-              <HomeComponent callParentSearch={this.cadetSearch} parentSwitchTab={this.handleChange} />
+            <TimeSheet {...this.props} /> 
+              {/*<HomeComponent callParentSearch={this.cadetSearch} parentSwitchTab={this.handleChange} /> */}
             </Tab>
             <Tab
               style={tabStyles.default_tab}
