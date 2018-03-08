@@ -73,13 +73,13 @@ import {
         .catch(error => error);
     },
   
-    getWPlanTable(roleID) {
+    getWPlanTable(PL) {
       debugger;
       //console.log(userData.user);
       //console.log(userData.password);
   
       //new Promise((resolve, reject) => {
-      return fetch("http://hvs.selfip.net:4003/ExecSP/", {
+      return fetch("http://hvs.selfip.net:4003/ExecSPM/", {
         //return fetch("http://localhost:4003/GetWPlanTable/", {
   
         method: "POST",
@@ -88,10 +88,12 @@ import {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          spName: "sps_getWPlanScreenFunctions",
+          spName: "sps_getTaskData",
           token: sessionStorage.getItem("token"),
           parms: {
-            roleID: roleID
+            staffID: PL.payload.staffID,
+            startDt: PL.payload.startDT,
+            endDt: PL.payload.endDT 
           }
         })
       })
@@ -492,7 +494,7 @@ import {
         case wplanTypes.FETCH_TABLE_REQUEST: {
           //yield all([put({ type: "LOGIN_STATUS", message: '' }), put({ type: "ITEMS_IS_LOADING", isLoading: true })])
           debugger;
-          const fetchTask = yield fork(getWPlanTable, action.cname);
+          const fetchTask = yield fork(getWPlanTable, action.payload);
           debugger;
           break;
         }

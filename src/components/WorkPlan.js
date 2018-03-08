@@ -9,7 +9,7 @@ import {
     ModalHeader,
     ModalBody,
     ModalFooter
-  } from "reactstrap";
+} from "reactstrap";
 
 import {
     Container,
@@ -75,11 +75,26 @@ export class WorkPlan extends Component {
         // debugger;
     };
 
+    formatDate = (dt) => {
+        let d = new Date(dt);
+        return d.getFullYear() + "-" + ('0' + (d.getMonth() + 1)).slice(-2) + "-" + ('0' + d.getDate()).slice(-2); //d.getHours() d.getMinutes()
+    }
     componentWillReceiveProps(nextProps) {
         //alert("componentWillReceiveProps");
         //console.log(nextProps);
         //alert(this.props.cadetName )
         //alert(nextProps.cadetName )
+
+        if ((new Date(nextProps.startDT).setHours(0, 0, 0, 0) != new Date(this.props.startDT).setHours(0, 0, 0, 0)) || (new Date(nextProps.endDT).setHours(0, 0, 0, 0) != new Date(this.props.endDT).setHours(0, 0, 0, 0))) {
+            this.props.getWorkPlans({
+                type: workplanTypes.FETCH_TABLES_REQUEST,
+                payload: {
+                    staffID: "1",
+                    startDT: this.formatDate(nextProps.startDT),
+                    endDT: this.formatDate(nextProps.endDT)
+                }
+            });
+        }
 
         if (nextProps.WorkPlanState.items) {
             this.items = nextProps.WorkPlanState.items;
@@ -106,7 +121,11 @@ export class WorkPlan extends Component {
 
         this.props.getWorkPlans({
             type: workplanTypes.FETCH_TABLES_REQUEST,
-            cname: "%"
+            payload: {
+                staffID: "1",
+                startDT: this.formatDate(this.props.startDT),
+                endDT: this.formatDate(this.props.endDT)
+            }
         });
 
     }
@@ -152,35 +171,35 @@ export class WorkPlan extends Component {
 
     toggle = () => {
         this.setState({
-          modal: !this.state.modal,
-          attribValue: ""
+            modal: !this.state.modal,
+            attribValue: ""
         });
-      };
-      
-    addTask= () => {
-        const row = {
-          role_id: -1
-        }
-    
-        this.setState({
-          modal: !this.state.modal,
-          selectedRoleRow: row,
-          roleMode: "A"
-        });
-      }
+    };
 
-      insertRow= () => {
+    addTask = () => {
         const row = {
-          role_id: -1
+            role_id: -1
         }
-    
+
         this.setState({
-          modal: !this.state.modal,
-          selectedRoleRow: row,
-          roleMode: "A"
+            modal: !this.state.modal,
+            selectedRoleRow: row,
+            roleMode: "A"
         });
-      }
-      
+    }
+
+    insertRow = () => {
+        const row = {
+            role_id: -1
+        }
+
+        this.setState({
+            modal: !this.state.modal,
+            selectedRoleRow: row,
+            roleMode: "A"
+        });
+    }
+
 
     debouncedSearch = _.debounce(this._onFilterChange, 100);
 
