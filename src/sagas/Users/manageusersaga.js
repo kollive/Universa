@@ -87,7 +87,7 @@ return fetch("http://hvs.selfip.net:4003/ExecSP/", {
   }
 
   function statusHelper(response) {
-    debugger;
+    //debugger;
     if (!response.ok) {
       const error = new Error(response.statusText);
       error.response = response;
@@ -181,17 +181,17 @@ return fetch("http://hvs.selfip.net:4003/ExecSP/", {
     try {
      
       let resultObj = yield call(getUser,userData.user);
-      debugger
+      //debugger
       if (isJSON(resultObj)) {
         resultObj = JSON.parse(resultObj);
         if (resultObj.message != "ok") {
-          debugger;
+          //debugger;
           yield put({
             type: UserTypes.MESSAGE,
             message: { val: resultObj.val, statusMsg: resultObj.result }
           });
         } else {
-          debugger
+         // debugger
           sessionStorage.setItem("token", resultObj.token);
           if(resultObj.roles.length != undefined) {
             sessionStorage.setItem("roles", JSON.stringify(resultObj.roles));

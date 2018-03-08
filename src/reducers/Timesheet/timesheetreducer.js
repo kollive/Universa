@@ -28,7 +28,7 @@ export const types = {
 
   export const actions={
     insertTimesheet: (payload) => ({ type: types.INSERT_TIME_REQUEST, payload }),
-    getTimesheet: (payload) => ({ type: types.FETCH_STAFF_REQUEST, payload }),
+    getTimesheet: (payload) => ({ type: types.FETCH_TIME_REQUEST, payload }),
     updateTimesheet : (payload)  => ({type:types.UPDATE_TIME_REQUEST,payload}),
     resetMessage: (message) => ({
         type: message.type,

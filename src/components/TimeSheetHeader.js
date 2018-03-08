@@ -15,8 +15,10 @@ import moment from 'moment'
 //import DatePicker from 'react-date-picker';
 import { Button } from 'reactstrap';
 import 'react-datepicker/dist/react-datepicker.css'
+import Timesheet from './Timesheet/Timesheet'
 
 class TimeSheetHeader extends React.Component {
+    renderTimesheet;
     constructor(props) {
         super(props);
 
@@ -49,19 +51,21 @@ class TimeSheetHeader extends React.Component {
                 userid: "sv"
             }
         });
+    this.renderTimesheet=<Timesheet headerState={this.state}/>
+        
     }
     componentDidUpdate(prevProps, prevState) {
-        //debugger;
+        debugger;
         console.log("componentDidUpdate");
         console.log(this.state.items[0].user);
     }
     componentWillReceiveProps(nextProps) {
-        //debugger;
+        debugger;
         this.state.items = nextProps.headerState.items;
     }
 
     handleChange = (date) => {
-
+debugger
         //console.log(wkStart)
         //console.log(wkEnd)
         //this.focus = !this.focus;
@@ -86,7 +90,6 @@ class TimeSheetHeader extends React.Component {
             startDate: date
         })
         //}
-
     }
 
     toggle = () => {
@@ -103,7 +106,7 @@ class TimeSheetHeader extends React.Component {
 
     moveWeek = (tmpDay) => {
         //return;
-        debugger;
+        //debugger;
         let newDate = null;
         if (tmpDay == "P") {
             newDate = new Date(this.state.startDate);
@@ -163,7 +166,10 @@ class TimeSheetHeader extends React.Component {
     };
 
     render() {
-        //debugger;
+    debugger;
+       // const renderTimesheet=<Timesheet headerState={this.state}/>
+         this.renderTimesheet=<Timesheet headerState={this.state}/>
+       
         return (
             <div className="m-2 p-2">
                 <Row>
@@ -195,6 +201,9 @@ class TimeSheetHeader extends React.Component {
                     <Col sm="3">
                         <div className="d-sm-inline-flex">Day<Toggle ref={(r) => { this.togCtl = r }} style={{ width: "50px" }} onToggle={(e, val) => { this.setDayOrWeek(val) }} />Week</div>
                     </Col>
+                </Row>
+                <Row>
+                {this.renderTimesheet}
                 </Row>
             </div>
         );

@@ -18,7 +18,7 @@ import {
   import * as utils from "Utils/common";
 
     function insertTimesheet(timesheetData) {
-      debugger
+      //debugger
   return fetch("http://hvs.selfip.net:4003/ExecSP/", {
       method: "POST",
       headers: {
@@ -38,7 +38,7 @@ import {
 
 
   function updateTimesheet(timesheetData) {
-    debugger;
+    //debugger;
 return fetch("http://hvs.selfip.net:4003/ExecSP/", {
       method: "POST",
       headers: {
@@ -78,7 +78,7 @@ return fetch("http://hvs.selfip.net:4003/ExecSP/", {
 
   function* insertTimesheetDetails(timesheetData){
     try{
-   debugger
+   //debugger
     
       const resultMessage = yield call(insertTimesheet, timesheetData.payload);
       if (isJSON(resultMessage)) {
@@ -91,7 +91,7 @@ return fetch("http://hvs.selfip.net:4003/ExecSP/", {
           });
         }
       else {
-   debugger;
+   //debugger;
        sessionStorage.setItem("token", resultObj.token);
        if(resultObj.roles.length != undefined) {
          sessionStorage.setItem("roles", JSON.stringify(resultObj.roles));
@@ -118,7 +118,7 @@ return fetch("http://hvs.selfip.net:4003/ExecSP/", {
 
   function* updateTimesheetDetails(timesheetData){
     try{
-     debugger
+     //debugger
       const resultMessage = yield call(updateTimesheet, timesheetData.payload);
       if (isJSON(resultMessage)) {
         let resultObj = JSON.parse(resultMessage);
@@ -152,9 +152,6 @@ return fetch("http://hvs.selfip.net:4003/ExecSP/", {
     try {
           
       let resultObj = yield call(getTimesheet,timesheetData.payload);
-         // alert('he me ' +resultObj)
-      alert(resultObj)
-      
       if (isJSON(resultObj)) {
         resultObj = JSON.parse(resultObj);
         if (resultObj.message != "ok") {
@@ -164,17 +161,15 @@ return fetch("http://hvs.selfip.net:4003/ExecSP/", {
             message: { val: resultObj.val, statusMsg: resultObj.result }
           });
         } else {
-          
          
           sessionStorage.setItem("token", resultObj.token);
           if(resultObj.roles.length != undefined) {
             sessionStorage.setItem("roles", JSON.stringify(resultObj.roles));
           }       
-         
           
            yield put({
-              type: TimesheetTypes.STAFFITEMS,
-              staffrow: resultObj.result
+              type: TimesheetTypes.ITEMS,
+              items: resultObj.result
         });
       }
     }

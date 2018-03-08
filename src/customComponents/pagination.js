@@ -31,7 +31,7 @@ class HVSPagination extends React.Component {
   }
 
   componentWillMount() {
-    debugger;
+    //debugger;
     // set page if items array isn't empty
     if (this.props.items && this.props.items.length) {
       this.setPage(this.props.initialPage);
@@ -39,7 +39,7 @@ class HVSPagination extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    debugger;
+    //debugger;
 
     // reset page if items array has changed
     if (
@@ -103,7 +103,7 @@ class HVSPagination extends React.Component {
       }
       */
 
-      debugger;
+      //debugger;
 
       // calculate total pages
       const totalPages = Math.ceil((items ? items.length : 0) / pageSize);
@@ -124,7 +124,7 @@ class HVSPagination extends React.Component {
   }
 
   setPage(page) {
-    debugger;
+    //debugger;
 
     let items;
     //alert(this.props.items)
@@ -202,7 +202,7 @@ class HVSPagination extends React.Component {
   }
 
   getPager(totalItems, currentPage, pageSize) {
-    debugger;
+    //debugger;
     // default to first page
     currentPage = currentPage || 1;
 

@@ -15,6 +15,7 @@ import CadetInlineSearch from "./CadetInlineSearch";
 //import { actions as cadetDetailsActions } from "reducers/cadetdetailsreducer";
 import TimeSheetHeader from "./TimeSheetHeader";
 import WorkPlan from "./WorkPlan";
+import Timesheet from './Timesheet/Timesheet'
 
 import {
   Container,
@@ -46,7 +47,7 @@ const styles = {
 class TimeSheet extends Component {
   constructor(props) {
     super(props);
-
+debugger
     this.state = {
       notifycollapse: true,
       indicatorscollapse: true,
@@ -129,7 +130,7 @@ class TimeSheet extends Component {
           <Row >
               {" "}
               <Col sm="12">
-              <CadetInlineSearch/>
+            
               </Col>
             </Row>
             <Divider />

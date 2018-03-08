@@ -20,7 +20,7 @@ import List from "material-ui/List/List";
 import ListItem from "material-ui/List/ListItem";
 import { Tabs, Tab } from "material-ui/Tabs";
 import Drawer from 'material-ui/Drawer';
-
+import TimeSheetHeader from './TimeSheetHeader';
 import StaffList from "./Staff/StaffList";
     
 import {
@@ -165,7 +165,7 @@ export class ReactStrapComp extends Component {
   }
 
   handleChange = value => {
-    debugger
+    //debugger
     //alert(value)
     this.setState({
       activeTab: value
@@ -202,7 +202,7 @@ let showlist=false
               value="0"
               icon={<FontIcon className="fa fa-home" style={{ color: "darkgrey" }} />}
             >
-              <HomeComponent callParentSearch={this.cadetSearch} parentSwitchTab={this.handleChange} />
+             <TimeSheetHeader/>
             </Tab>
             <Tab
               style={tabStyles.default_tab}
