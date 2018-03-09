@@ -46,7 +46,7 @@ const styles = {
     }
 };
 
-class TimeSheet extends Component {
+class TimeSheetContainer extends Component {
     constructor(props) {
         super(props);
 
@@ -59,11 +59,14 @@ class TimeSheet extends Component {
             staffID: "",
             startDT: null,
             endDT: null,
+            mode: "W",
             name: "",
             hv_staff_id: ""
         };
         // this.onClickAction = this.onClickAction.bind(this);
         this.setDate = this.setDate.bind(this);
+        this.setMode = this.setMode.bind(this);
+        
     }
 
     componentWillMount = () => {
@@ -115,6 +118,16 @@ class TimeSheet extends Component {
         });
 
     }
+ 
+    setMode(mode) {
+        debugger;
+        //alert(this.state.hv_staff_id);
+        this.setState({
+            mode: mode
+        });
+
+    }
+
 
     render() {
         return (
@@ -126,23 +139,16 @@ class TimeSheet extends Component {
                         <Row >
                             {" "}
                             <Col sm="12">
-                                <TimeSheetHeader hv_name={(this.props.commonState.hv_name == "" ? this.props.name : this.props.commonState.hv_name )} callParentDates={this.setDate} />
+                                <TimeSheetHeader hv_name={(this.props.commonState.hv_name == "" ? this.props.name : this.props.commonState.hv_name )} callParentDates={this.setDate} callParentMode={this.setMode} />
                             </Col>
                         </Row>
                     </div>
                     <Divider />
-                    <div >
+                    <div >                        
                         <Row >
                             {" "}
                             <Col sm="12">
-                                <CadetInlineSearch />
-                            </Col>
-                        </Row>
-                        <Divider />
-                        <Row >
-                            {" "}
-                            <Col sm="12">
-                                <WorkPlan staffID={ (this.props.commonState.hv_staff_id == "" ? this.props.hv_staff_id : this.props.commonState.hv_staff_id)} startDT={this.state.startDT} endDT={this.state.endDT} />
+                                <WorkPlan staffID={ (this.props.commonState.hv_staff_id == "" ? this.props.hv_staff_id : this.props.commonState.hv_staff_id)} startDT={this.state.startDT} endDT={this.state.endDT} mode={this.state.mode} />
                             </Col>
                         </Row>
                     </div>
@@ -169,4 +175,4 @@ const mapDispatchToProps = dispatch => ({
 
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(TimeSheet);
+export default connect(mapStateToProps, mapDispatchToProps)(TimeSheetContainer);

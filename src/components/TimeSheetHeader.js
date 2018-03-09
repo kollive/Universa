@@ -18,7 +18,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 import Timesheet from './Timesheet/Timesheet'
 
 class TimeSheetHeader extends React.Component {
-    renderTimesheet;
+    
     constructor(props) {
         super(props);
 
@@ -39,6 +39,7 @@ class TimeSheetHeader extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.moveWeek = this.moveWeek.bind(this);
         this.toggle = this.toggle.bind(this);
+        this.renderTimesheet;
     }
 
     componentDidMount() {
@@ -52,12 +53,8 @@ class TimeSheetHeader extends React.Component {
                 userid: "sv"
             }
         });
-<<<<<<< HEAD
         */
-=======
-    this.renderTimesheet=<Timesheet headerState={this.state}/>
-        
->>>>>>> 38da0a43717a0a929ce8b16a353d96ec2b451acb
+        //this.renderTimesheet=<Timesheet headerState={this.state}/>
     }
     componentDidUpdate(prevProps, prevState) {
         debugger;
@@ -70,7 +67,7 @@ class TimeSheetHeader extends React.Component {
     }
 
     handleChange = (date) => {
-debugger
+        debugger
         //console.log(wkStart)
         //console.log(wkEnd)
         //this.focus = !this.focus;
@@ -106,7 +103,9 @@ debugger
     }
 
     setDayOrWeek = (val) => {
-        this.setState({weekOrDay:val})      
+        this.setState({weekOrDay:val}) 
+        let mode = (val ? "W" : "D");
+        this.props.callParentMode(mode);
     }
 
     moveWeek = (tmpDay) => {

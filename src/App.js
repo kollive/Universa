@@ -18,7 +18,7 @@ import CadetInlineSearch from "./components/CadetInlineSearch";
 import Admin from "./components/Admin";
 import UserComponent from './components/Users/MaintainUsers';
 import TimeSheetHeader from './components/TimeSheetHeader';
-import TimeSheet from './components/TimeSheet';
+import TimeSheetContainer from './components/TimeSheetContainer';
 import CadetDetails from "./components/CadetDetails";
 import logo from "./logo.svg";
 
@@ -182,7 +182,7 @@ export class App extends Component {
               <h3>Time Elapsed: {this.state.elapsed}</h3>
               <h3>Last Active: {this.state.lastActive}</h3>
               <h3>Idle: {this.state.isIdle.toString()}</h3>
-            </div>
+            </div>            
   */
   render() {
     return (
@@ -208,7 +208,7 @@ export class App extends Component {
                     <Route path="/cadetinline" component={CadetInlineSearch} />
                     <Route path="/admin" component={Admin} />
                     <Route path="/tsheader" component={TimeSheetHeader} />
-                    <Route path="/ts" component={TimeSheet} />
+                    <Route path="/ts" component={TimeSheetContainer} />
                     
                     <Route path="/calendar" component={Calendar} />
                     <Route
@@ -240,11 +240,11 @@ export class App extends Component {
                       path="/Roles"
                       render={props => <UsersList {...this.props} />}
                     />
- <Route
+                    <Route path="/" component={Main} />
+                    <Route
                       path="/Timesheet"
                       render={props => <Timesheet {...this.props} />}
                     />
-                    <Route path="/" component={Main} />
                   </Switch>
                 </ConnectedRouter>
               </Col>

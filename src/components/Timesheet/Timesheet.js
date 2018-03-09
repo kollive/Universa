@@ -8,7 +8,7 @@ import * as _ from "lodash";
 import { Table } from 'reactstrap';
 import moment from 'moment'
 import { Modal, ModalHeader, ModalBody, ModalFooter, Alert } from 'reactstrap';
-import TimeSheetClass from './TimeSheetClass'
+import TimeSheetClass from 'reducers/Timesheet/TimeSheetClass'
 export class Timesheet extends Component {
     objTimeSheetClass;
     constructor(props) {
