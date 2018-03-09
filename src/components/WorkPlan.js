@@ -69,6 +69,7 @@ const styles = {
 };
 
 export class WorkPlan extends Component {
+
     static propTypes = {
         //name: PropTypes.string.isRequired
     };
@@ -89,7 +90,7 @@ export class WorkPlan extends Component {
             this.props.getWorkPlans({
                 type: workplanTypes.FETCH_TABLES_REQUEST,
                 payload: {
-                    staffID: (this.props.staffID == "" ? this.props.CommonState.hv_staff_id : this.props.staffID),
+                    staffID: (this.props.staffID == "" ? "7" : this.props.staffID),
                     startDT: this.formatDate(nextProps.startDT),
                     endDT: this.formatDate(nextProps.endDT)
                 }
@@ -97,7 +98,7 @@ export class WorkPlan extends Component {
         }
 
         if (nextProps.WorkPlanState.items) {
-        //if(this.props != nextProps) {
+            //if(this.props != nextProps) {
             //debugger;
             //alert("in Data")
             this.setState({
@@ -166,10 +167,9 @@ export class WorkPlan extends Component {
             //debugger;      
             alert(this.props.WorkPlanState.message.msg);
 
-            if(this.props.WorkPlanState.message.val == "1")
-            {
-                this.setState({modal: !this.state.modal});
-                
+            if (this.props.WorkPlanState.message.val == "1") {
+                this.setState({ modal: !this.state.modal });
+
                 this.props.getWorkPlans({
                     type: workplanTypes.FETCH_TABLES_REQUEST,
                     payload: {
@@ -179,7 +179,7 @@ export class WorkPlan extends Component {
                     }
                 });
             }
-            
+
             this.props.resetMessage({
                 type: workplanTypes.MESSAGE,
                 message: { val: 0, msg: "" }
@@ -243,21 +243,29 @@ export class WorkPlan extends Component {
             sundayHrs: 0,
         };
 
-
-
         this.tableID = 0;
         this.newUpdateValue = "";
         this.filterValue = "";
         this.selectedCadetRow = {};
 
+        this.formatDate = this.formatDate.bind(this);
         this.saveTask = this.saveTask.bind(this);
         this.toggle = this.toggle.bind(this);
+        this.getDayHours = this.getDayHours.bind(this);
+        this.saveHours = this.saveHours.bind(this);
+        this.getHours = this.getHours.bind(this);
+
+        this.handleStartChange = this.handleStartChange.bind(this);
+        this.handleEndChange = this.handleEndChange.bind(this);
+
+        this.addTask = this.addTask.bind(this);
+        this.saveTask = this.saveTask.bind(this);
         //this.newAttribVal = "";
     }
 
     toggle = () => {
         this.setState({
-            modal: !this.state.modal,       
+            modal: !this.state.modal,
         });
     };
 
@@ -306,31 +314,6 @@ export class WorkPlan extends Component {
         });
     }
 
-    clickedItem(item, e) {
-        return;
-        debugger;
-        this.filterValue = item.hv_bdgt_res_name.toLowerCase();
-        this.setState({
-            popoverOpen: false
-        });
-        this._onFilterChange();
-        this.inputSearch.value = "";
-        //console.log(item.hv_universal_name)
-        //alert(item.hv_universal_name)
-    }
-
-    showDetails = row => {
-        return;
-        debugger;
-        //alert(row.hv_bdgt_res_name);
-        this.selectedCadetRow = row;
-        this.setState({
-            activeTab: "3",
-            inDetailsTab: true
-        });
-        //this.props.history.push("/cadetdetails",{ params: row});
-    };
-
     popToggle = () => {
         this.setState({
             popoverOpen: !this.state.popoverOpen
@@ -364,97 +347,96 @@ export class WorkPlan extends Component {
 
     getHours = (day) => {
         debugger;
-        let rows = _.filter((this.state.items || []), function (itm) {
-            //alert("itm" + itm.task_id);
-            //alert("row" + row.task_id)
-            return (_.parseInt(itm.taskday) == _.parseInt(day))
-        });
+        if (this.props.mode == "W") {
+            let rows = _.filter((this.state.items || []), function (itm) {
+                //alert("itm" + itm.task_id);
+                //alert("row" + row.task_id)
+                return (_.parseInt(itm.taskday) == _.parseInt(day))
+            });
 
-        //alert(rows.length)
-        if (rows.length > 0) {
-           let hours = 0
-           rows.forEach(function(val,indx){
-            hours += _.parseInt(val.num_hours);
-           })
-           //alert(hours)
-           return hours;
+            //alert(rows.length)
+            if (rows.length > 0) {
+                let hours = 0
+                rows.forEach(function (val, indx) {
+                    hours += _.parseInt(val.num_hours);
+                })
+                //alert(hours)
+                return hours;
+            } else {
+                return 0;
+            }
         } else {
-            return 0;
-        }
 
+            let hours = 0;
+            (this.state.items || []).forEach(function (val, indx) {
+                hours += _.parseInt(val.num_hours);
+            })
+            //alert(hours)
+            return hours;
+        }
     }
 
     //Sunday = 1, Saturday = 7
     getDayHours = (day, tmprow) => {
-        //debugger;
 
-        // if (row.taskday == 0) {
-        //     return 0;
-        //}
+        if (this.props.mode == "W") {
+            let rows = _.filter((this.state.items || []), function (itm) {
+                //alert("itm" + itm.task_id);
+                //alert("row" + row.task_id)
 
-        /*
-        if (day == 2 && row.taskday == 2) {
-            alert("in")
-            if (this.state.items) {
-                //alert(this.state.items.length);
-                let item = _.filter(this.state.items, function (itm) {
-                    //alert("itm" + itm.task_id);
-                    //alert("row" + row.task_id)
-                    return _.parseInt(itm.task_id) == _.parseInt(row.task_id)
-                });
-                if (item && item.length > 0) {
-                    //alert(1);
-                    return item[0].num_hours;
-                } else {
-                    return row.num_hours;
-                }
+                //From the database
+                let d = new Date(itm.task_date);
+                d.setDate(d.getDate() + 1);
+                let d1 = d.getFullYear() + "-" + ('0' + (d.getMonth() + 1)).slice(-2) + "-" + ('0' + (d.getDate())).slice(-2); //d.getHours() 
+                console.log(d1)                                               
+                return (_.parseInt(itm.task_id) == _.parseInt(tmprow.task_id) && _.parseInt(itm.taskday) == _.parseInt(day) && (d1 != "1900-01-01"))
+            });
+
+            if (rows.length > 0) {
+                let row = rows[0];
+                return row.num_hours || 0;
             } else {
-                return row.num_hours;
+                return 0;
             }
+        } else {
+            //alert("in")
+            //alert(this.props.startDT)
+            let startDT = this.props.startDT;
+            let rows = _.filter((this.state.items || []), function (itm) {
+                //alert("itm" + itm.task_id);
+                //alert("row" + row.task_id)
+                //console.log(this.formatDate(itm.task_date))
+                //console.log(this.formatDate(startDT))
+                //console.log(new Date(itm.task_date).setHours(0,0,0,0))
+                //console.log( new Date(startDT).setHours(0,0,0,0))
 
-        } 
-        */
+                //From the database
+                let d = new Date(itm.task_date);
+                d.setDate(d.getDate() + 1);
+                let d1 = d.getFullYear() + "-" + ('0' + (d.getMonth() + 1)).slice(-2) + "-" + ('0' + d.getDate()).slice(-2); //d.getHours() 
+                
+                d = new Date(startDT);
+                let d2 = d.getFullYear() + "-" + ('0' + (d.getMonth() + 1)).slice(-2) + "-" + ('0' + d.getDate()).slice(-2); //d.getHours() 
 
-        let rows = _.filter((this.state.items || []), function (itm) {
-            //alert("itm" + itm.task_id);
-            //alert("row" + row.task_id)
-            return (_.parseInt(itm.task_id) == _.parseInt(tmprow.task_id) && _.parseInt(itm.taskday) == _.parseInt(day))
-        });
+                console.log(itm.task_date)
+                console.log(d1)
+                console.log(d2)
+                //let d1 = this.formatDate(itm.task_date);
+                //let d2 = this.formatDate(itm.startDT);
 
-        if (rows.length > 0) {
-            let row = rows[0];
-            return row.num_hours || 0;
+                return (_.parseInt(itm.task_id) == _.parseInt(tmprow.task_id) && (d1 != "1900-01-01") && (d1 == d2))
+            });
+            //console.log("9999999999999")
+            //console.log(this.state.items)
+            //console.log(startDT);
+            //console.log(rows)
+            if (rows.length > 0) {
+                let row = rows[0];
+                return row.num_hours || 0;
+            } else {
+                return 0;
+            }
         }
-        /*
-
-        if (_.parseInt(day) == 2 && _.parseInt(row.taskday) == 2) {
-            return row.num_hours || 0;
-        }
-
-        if (_.parseInt(day) == 3 && _.parseInt(row.taskday) == 3) {
-            return row.num_hours || 0;
-        }
-
-        if (day == 4 && row.taskday == 4) {
-            return row.num_hours || 0;
-        }
-
-        if (day == 5 && row.taskday == 5) {
-            return row.num_hours || 0;
-        }
-
-        if (day == 6 && row.taskday == 6) {
-            return row.num_hours || 0;
-        }
-
-        if (day == 7 && row.taskday == 7) {
-            return row.num_hours || 0;
-        }
-
-        if (day == 1 && row.taskday == 1) {
-            return row.num_hours || 0;
-        }
-        */
     }
 
     saveHours = (e, date, num, row) => {
@@ -480,52 +462,6 @@ export class WorkPlan extends Component {
                 user_id: "sv"
             }
         });
-
-
-        /*
-        items = items.map((itm) => {
-            //debugger;
-            if (_.parseInt(itm.task_id) == _.parseInt(row.task_id)) {
-                itm.num_hours = hrs;
-            }
-            return itm;
-        })
-
-        //debugger;
-        //[...this.state.items, FuncPicked]
-        this.setState({
-            items: items
-        })
-
-        let mondayHrs = 0;
-        let tuedayHrs = 0;
-        let weddayHrs = 0;
-        let thudayHrs = 0;
-        let fridayHrs = 0;
-        let satdayHrs = 0;
-        let sundayHrs = 0;
-
-        items.map((row, index) => {
-            mondayHrs = mondayHrs + this.getDayHours(2, row);
-            tuedayHrs = tuedayHrs + this.getDayHours(3, row);
-            weddayHrs = weddayHrs + this.getDayHours(4, row);
-            thudayHrs = thudayHrs + this.getDayHours(5, row);
-            fridayHrs = fridayHrs + this.getDayHours(6, row);
-            satdayHrs = satdayHrs + this.getDayHours(7, row);
-            sundayHrs = sundayHrs + this.getDayHours(1, row);
-        });
-
-        this.setState({
-            mondayHrs: mondayHrs,
-            tuedayHrs: tuedayHrs,
-            weddayHrs: weddayHrs,
-            thudayHrs: thudayHrs,
-            fridayHrs: fridayHrs,
-            satdayHrs: satdayHrs,
-            sundayHrs: sundayHrs
-        })
-        */
-
     }
 
     RenderHeaderColumn = columnName => {
@@ -546,6 +482,7 @@ export class WorkPlan extends Component {
     };
 
     render() {
+
         return (
             <div style={{ height: "100%", width: "100%" }}>
                 <Container
@@ -567,117 +504,154 @@ export class WorkPlan extends Component {
                                 className="border-bottom-0"
                             >
                                 <thead>
-                                    <tr style={{ backgroundColor: "#ADD8E6", color: "black" }}>
-                                        <th style={{ width: "20px" }}>
-                                            <span className="fa-stack fa-lg" style={styles.link} onClick={() => this.addTask()}>
-                                                <i className="fa fa-square-o fa-stack-2x" />
-                                                <i className="fa fa-plus-circle fa-stack-1x" />
-                                            </span>{" "}
-                                        </th>
-                                        <th style={{ width: "120px" }} />
-                                        <th style={{ width: "70px" }}>Total</th>
-                                        <th style={{ width: "80px" }}>
-                                            <Label>{this.getHours(2)}</Label>
-                                        </th>
-                                        <th style={{ width: "80px" }}>
-                                            <Label>{this.getHours(3)}</Label>
-                                        </th>
-                                        <th style={{ width: "80px" }}>
-                                            <Label>{this.getHours(4)}</Label>
-                                        </th>
-                                        <th style={{ width: "80px" }}>
-                                            <Label>{this.getHours(5)}</Label>
-                                        </th>
-                                        <th style={{ width: "80px" }}>
-                                            <Label>{this.getHours(6)}</Label>
-                                        </th>
-                                        <th style={{ width: "80px" }}>
-                                            <Label>{this.getHours(7)}</Label>
-                                        </th>
-                                        <th style={{ width: "80px" }}>
-                                            <Label>{this.getHours(1)}</Label>
-                                        </th>
-                                    </tr>
+                                    {this.props.mode == "D" ?
+                                        <tr style={{ backgroundColor: "#ADD8E6", color: "black" }}>
+                                            <th style={{ width: "20px" }}>
+                                                <span className="fa-stack fa-lg" style={styles.link} onClick={() => this.addTask()}>
+                                                    <i className="fa fa-square-o fa-stack-2x" />
+                                                    <i className="fa fa-plus-circle fa-stack-1x" />
+                                                </span>{" "}
+                                            </th>
+                                            <th style={{ width: "120px" }} />
+                                            <th style={{ width: "70px" }}>Total</th>
+                                            <th style={{ width: "80px" }}>
+                                                <Label>{this.getHours(2)}</Label>
+                                            </th>
+                                        </tr>
+                                        :
+                                        <tr style={{ backgroundColor: "#ADD8E6", color: "black" }}>
+                                            <th style={{ width: "20px" }}>
+                                                <span className="fa-stack fa-lg" style={styles.link} onClick={() => this.addTask()}>
+                                                    <i className="fa fa-square-o fa-stack-2x" />
+                                                    <i className="fa fa-plus-circle fa-stack-1x" />
+                                                </span>{" "}
+                                            </th>
+                                            <th style={{ width: "120px" }} />
+                                            <th style={{ width: "70px" }}>Total</th>
+                                            <th style={{ width: "80px" }}>
+                                                <Label>{this.getHours(2)}</Label>
+                                            </th>
+                                            <th style={{ width: "80px" }}>
+                                                <Label>{this.getHours(3)}</Label>
+                                            </th>
+                                            <th style={{ width: "80px" }}>
+                                                <Label>{this.getHours(4)}</Label>
+                                            </th>
+                                            <th style={{ width: "80px" }}>
+                                                <Label>{this.getHours(5)}</Label>
+                                            </th>
+                                            <th style={{ width: "80px" }}>
+                                                <Label>{this.getHours(6)}</Label>
+                                            </th>
+                                            <th style={{ width: "80px" }}>
+                                                <Label>{this.getHours(7)}</Label>
+                                            </th>
+                                            <th style={{ width: "80px" }}>
+                                                <Label>{this.getHours(1)}</Label>
+                                            </th>
+                                        </tr>
+                                    }
                                 </thead>
                                 <tbody>
                                     {_.uniqBy((this.state.items || []), "task_id").map(
                                         (row, index) => (
-                                            <tr key={index}>
-                                                <td style={styles.link}>
-                                                    <i className="fa fa-tasks fa-fw" />
-                                                </td>
-                                                <td>{row.task_description}</td>
-                                                <td>{""}</td>
-                                                <td>
-                                                    <Input
-                                                        type="text"
-                                                        style={{ width: "40px", height: "22px", lineHeight: "0", padding: "0px" }}
-                                                        value={this.getDayHours(2, row)}
-                                                        onChange={(e) => { this.saveHours(e, this.props.startDT, 0, row) }}  //Monday                                        
-                                                    />
-                                                </td>
-                                                <td>
-                                                    <Input
-                                                        type="text"
-                                                        style={{ width: "40px", height: "22px", lineHeight: "0", padding: "0px" }}
-                                                        value={this.getDayHours(3, row)}
-                                                        onChange={(e) => { this.saveHours(e, this.props.startDT, 1, row) }}  //Tuesday          
-                                                    />
-                                                </td>
-                                                <td>
-                                                    <Input
-                                                        type="text"
-                                                        style={{ width: "40px", height: "22px", lineHeight: "0", padding: "0px" }}
-                                                        value={this.getDayHours(4, row)}
-                                                        onChange={(e) => { this.saveHours(e, this.props.startDT, 2, row) }}  //Wednesday                                
-                                                    />
-                                                </td>
-                                                <td>
-                                                    <Input
-                                                        type="text"
-                                                        style={{ width: "40px", height: "22px", lineHeight: "0", padding: "0px" }}
-                                                        value={this.getDayHours(5, row)}
-                                                        onChange={(e) => { this.saveHours(e, this.props.startDT, 3, row) }}  //Thursday                                
-                                                    />
-                                                </td>
-                                                <td>
-                                                    <Input
-                                                        type="text"
-                                                        style={{ width: "40px", height: "22px", lineHeight: "0", padding: "0px" }}
-                                                        value={this.getDayHours(6, row)}
-                                                        onChange={(e) => { this.saveHours(e, this.props.startDT, 4, row) }}  //Friday                                
-                                                    />
-                                                </td>
-                                                <td>
-                                                    <Input
-                                                        type="text"
-                                                        style={{ width: "40px", height: "22px", lineHeight: "0", padding: "0px" }}
-                                                        value={this.getDayHours(7, row)}
-                                                        onChange={(e) => { this.saveHours(e, this.props.startDT, 5, row) }}  //Saturday                                
-                                                    />
-                                                </td>
-                                                <td>
-                                                    <Input
-                                                        type="text"
-                                                        style={{ width: "40px", height: "22px", lineHeight: "0", padding: "0px" }}
-                                                        value={this.getDayHours(1, row)}
-                                                        onChange={(e) => { this.saveHours(e, this.props.startDT, 6, row) }}  //Sunday                                
-                                                    />
-                                                </td>
-                                            </tr>
-                                        ))}
-
+                                            this.props.mode == "D" ?
+                                                (
+                                                    <tr key={index}>
+                                                        <td style={styles.link}>
+                                                            <i className="fa fa-tasks fa-fw" />
+                                                        </td>
+                                                        <td>{row.task_description}</td>
+                                                        <td>{""}</td>
+                                                        <td>
+                                                            <Input
+                                                                type="text"
+                                                                style={{ width: "40px", height: "22px", lineHeight: "0", padding: "0px" }}
+                                                                value={this.getDayHours(2, row)}
+                                                                onChange={(e) => { this.saveHours(e, this.props.startDT, 0, row) }}  //Monday                                        
+                                                            ></Input>
+                                                        </td>
+                                                        <td colspan={6}>
+                                                        </td>
+                                                    </tr>
+                                                ) : (
+                                                    <tr key={index}>
+                                                        <td style={styles.link}>
+                                                            <i className="fa fa-tasks fa-fw" />
+                                                        </td>
+                                                        <td>{row.task_description}</td>
+                                                        <td>{""}</td>
+                                                        <td>
+                                                            <Input
+                                                                type="text"
+                                                                style={{ width: "40px", height: "22px", lineHeight: "0", padding: "0px" }}
+                                                                value={this.getDayHours(2, row)}
+                                                                onChange={(e) => { this.saveHours(e, this.props.startDT, 0, row) }}  //Monday                                        
+                                                            />
+                                                        </td>
+                                                        <td>
+                                                            <Input
+                                                                type="text"
+                                                                style={{ width: "40px", height: "22px", lineHeight: "0", padding: "0px" }}
+                                                                value={this.getDayHours(3, row)}
+                                                                onChange={(e) => { this.saveHours(e, this.props.startDT, 1, row) }}  //Tuesday          
+                                                            />
+                                                        </td>
+                                                        <td>
+                                                            <Input
+                                                                type="text"
+                                                                style={{ width: "40px", height: "22px", lineHeight: "0", padding: "0px" }}
+                                                                value={this.getDayHours(4, row)}
+                                                                onChange={(e) => { this.saveHours(e, this.props.startDT, 2, row) }}  //Wednesday                                
+                                                            />
+                                                        </td>
+                                                        <td>
+                                                            <Input
+                                                                type="text"
+                                                                style={{ width: "40px", height: "22px", lineHeight: "0", padding: "0px" }}
+                                                                value={this.getDayHours(5, row)}
+                                                                onChange={(e) => { this.saveHours(e, this.props.startDT, 3, row) }}  //Thursday                                
+                                                            />
+                                                        </td>
+                                                        <td>
+                                                            <Input
+                                                                type="text"
+                                                                style={{ width: "40px", height: "22px", lineHeight: "0", padding: "0px" }}
+                                                                value={this.getDayHours(6, row)}
+                                                                onChange={(e) => { this.saveHours(e, this.props.startDT, 4, row) }}  //Friday                                
+                                                            />
+                                                        </td>
+                                                        <td>
+                                                            <Input
+                                                                type="text"
+                                                                style={{ width: "40px", height: "22px", lineHeight: "0", padding: "0px" }}
+                                                                value={this.getDayHours(7, row)}
+                                                                onChange={(e) => { this.saveHours(e, this.props.startDT, 5, row) }}  //Saturday                                
+                                                            />
+                                                        </td>
+                                                        <td>
+                                                            <Input
+                                                                type="text"
+                                                                style={{ width: "40px", height: "22px", lineHeight: "0", padding: "0px" }}
+                                                                value={this.getDayHours(1, row)}
+                                                                onChange={(e) => { this.saveHours(e, this.props.startDT, 6, row) }}  //Sunday                                
+                                                            />
+                                                        </td>
+                                                    </tr>
+                                                )
+                                        )
+                                    )}
                                 </tbody>
                             </Table>
                         </Col>
                     </Row>
-                    <Modal isOpen={this.state.modal} toggle={this.toggle} autoFocus={false}>
+                    <Modal isOpen={this.state.modal} toggle={this.toggle} autoFocus={false} size="md">
                         <ModalHeader toggle={this.toggle}>Add Task</ModalHeader>
                         <ModalBody>
                             <Container fluid>
                                 <Row>
                                     <Col>Change Order:</Col>
-                                    <Col size="sm">
+                                    <Col>
                                         <Input
                                             type="select"
                                             style={{ width: "250px", lineHeight: "0", padding: "0px" }}
@@ -692,7 +666,7 @@ export class WorkPlan extends Component {
                                 </Row>
                                 <Row>
                                     <Col>Task Name:</Col>
-                                    <Col size="sm">
+                                    <Col>
                                         <Input
                                             type="text"
                                             style={{ width: "250px", lineHeight: "0", padding: "0px" }}
@@ -703,7 +677,7 @@ export class WorkPlan extends Component {
                                 </Row>
                                 <Row>
                                     <Col>Task Description:</Col>
-                                    <Col size="sm">
+                                    <Col>
                                         <Input
                                             type="text"
                                             style={{ width: "250px", lineHeight: "0", padding: "0px" }}
@@ -714,14 +688,14 @@ export class WorkPlan extends Component {
                                 </Row>
                                 <Row>
                                     <Col>Task Start Date:</Col>
-                                    <Col size="sm">
+                                    <Col>
                                         <DatePicker ref={(r) => { this.startDT = r }} selected={this.state.startDate} onChange={this.handleStartChange} dateFormat="YYYY-MM-DD" />
                                     </Col>
 
                                 </Row>
                                 <Row>
                                     <Col>Task End Date:</Col>
-                                    <Col size="sm">
+                                    <Col>
                                         <DatePicker ref={(r) => { this.endDT = r }} selected={this.state.endDate} onChange={this.handleEndChange} dateFormat="YYYY-MM-DD" />
                                     </Col>
                                 </Row>

@@ -62,7 +62,7 @@ import Admin from "./Admin";
 
 import CadetsSearch from "./CadetsSearch";
 import AttribList from "./AttribTables";
-import TimeSheet from "./TimeSheet";
+import TimeSheetContainer from "./TimeSheetContainer";
 
 import BAP from "./BAP";
 import Calendar from "./Calendar"
@@ -203,7 +203,7 @@ let showlist=false
               value="0"
               icon={<FontIcon className="fa fa-home" style={{ color: "darkgrey" }} />}
             >
-            <TimeSheet hv_staff_id={this.props.hv_staff_id} name={this.props.name}  {...this.props} /> 
+            <TimeSheetContainer hv_staff_id={this.props.hv_staff_id} name={this.props.name}  {...this.props} /> 
               {/*<HomeComponent callParentSearch={this.cadetSearch} parentSwitchTab={this.handleChange} /> */}
             </Tab>
             <Tab

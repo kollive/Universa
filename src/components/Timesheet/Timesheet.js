@@ -7,8 +7,13 @@ import TimePicker from 'material-ui/TimePicker';
 import * as _ from "lodash";
 import { Table } from 'reactstrap';
 import moment from 'moment'
+<<<<<<< HEAD
 import { Modal, ModalHeader, ModalBody, ModalFooter, Alert, Row, Col, Container } from 'reactstrap';
 import TimeSheetClass from './TimeSheetClass'
+=======
+import { Modal, ModalHeader, ModalBody, ModalFooter, Alert } from 'reactstrap';
+import TimeSheetClass from 'reducers/Timesheet/TimeSheetClass'
+>>>>>>> 806d68cf3fe866eeac96acb32b8390a04cbf8dcd
 export class Timesheet extends Component {
     objTimeSheetClass;
     constructor(props) {
