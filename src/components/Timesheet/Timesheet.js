@@ -20,12 +20,12 @@ export class Timesheet extends Component {
         let startOfWeek, endOfWeek, userid;
         this.objTimeSheetClass = new TimeSheetClass();
         if (this.props.headerState.mode=="D") {
-            startOfWeek = moment(this.props.headerState.startDate)//this.props.headerState.startDate//this.state.start_timesheet_date
-            endOfWeek = moment(this.props.headerState.startDate)//this.props.headerState.endDate//this.state.end_timesheet_date
+            startOfWeek = moment(this.props.headerState.startDT)//this.props.headerState.startDT//this.state.start_timesheet_date
+            endOfWeek = moment(this.props.headerState.startDT)//this.props.headerState.endDate//this.state.end_timesheet_date
         }
         else {
-            startOfWeek = moment(this.props.headerState.startDate).startOf('isoWeek')//this.props.headerState.startDate//this.state.start_timesheet_date
-            endOfWeek = moment(this.props.headerState.startDate).endOf('isoWeek')
+            startOfWeek = moment(this.props.headerState.startDT).startOf('isoWeek')//this.props.headerState.startDT//this.state.start_timesheet_date
+            endOfWeek = moment(this.props.headerState.startDT).endOf('isoWeek')
         }
 
 
@@ -38,7 +38,7 @@ export class Timesheet extends Component {
         }
         this.state = {
             date: new Date(),
-            staff_id: this.props.staffID==''?'1':this.props.hv_staff_id,
+            staff_id:"1",//this.props.staffID==''?'1':this.props.staffID,
             loggedIn: userid
         }
 
@@ -174,12 +174,12 @@ debugger
         if (nextProps.headerState != this.props.headerState) {
             if (nextProps.headerState != undefined) {
                 if (this.props.headerState.mode=="D") {
-                    startOfWeek = moment(nextProps.headerState.startDate)
-                    endOfWeek = moment(nextProps.headerState.startDate)
+                    startOfWeek = moment(nextProps.headerState.startDT)
+                    endOfWeek = moment(nextProps.headerState.startDT)
                 }
                 else {
-                    startOfWeek = moment(nextProps.headerState.startDate).startOf('isoWeek')
-                    endOfWeek = moment(nextProps.headerState.startDate).endOf('isoWeek')
+                    startOfWeek = moment(nextProps.headerState.startDT).startOf('isoWeek')
+                    endOfWeek = moment(nextProps.headerState.startDT).endOf('isoWeek')
                 }
 
                 this.props.getTimesheet({
@@ -194,6 +194,7 @@ debugger
         }
     }
     renderSavedTimesheet() {
+        debugger
         let startOfWeek, endOfWeek;
         let unqFunction = this.evaluatePermissions();
         let key = _.findKey(unqFunction, function (o) { return o.function_id == 67 });
@@ -205,12 +206,12 @@ debugger
         this.setState({ hasAccessToDataGrid: 'block' });
         if (this.props.headerState != undefined) {
             if (this.props.headerState.mode=="D") {
-                startOfWeek = moment(this.props.headerState.startDate)//this.props.headerState.startDate//this.state.start_timesheet_date
-                endOfWeek = moment(this.props.headerState.startDate)//this.props.headerState.endDate//this.state.end_timesheet_date
+                startOfWeek = moment(this.props.headerState.startDT)//this.props.headerState.startDT//this.state.start_timesheet_date
+                endOfWeek = moment(this.props.headerState.startDT)//this.props.headerState.endDate//this.state.end_timesheet_date
             }
             else {
-                startOfWeek = moment(this.props.headerState.startDate).startOf('isoWeek')//this.props.headerState.startDate//this.state.start_timesheet_date
-                endOfWeek = moment(this.props.headerState.startDate).endOf('isoWeek')
+                startOfWeek = moment(this.props.headerState.startDT).startOf('isoWeek')//this.props.headerState.startDT//this.state.start_timesheet_date
+                endOfWeek = moment(this.props.headerState.startDT).endOf('isoWeek')
             }
             this.props.getTimesheet({
                 type: ManageTimeTypes.FETCH_TIME_REQUEST,
@@ -227,12 +228,12 @@ debugger
         let contentHeader, list, startOfWeek, endOfWeek, savedTimesheet, time;
         if (this.props.headerState != undefined) {
             if (this.props.headerState.mode=="D") {
-                startOfWeek = moment(this.props.headerState.startDate)
-                endOfWeek = moment(this.props.headerState.startDate)//this.props.headerState.endDate//this.state.end_timesheet_date
+                startOfWeek = moment(this.props.headerState.startDT)
+                endOfWeek = moment(this.props.headerState.startDT)//this.props.headerState.endDate//this.state.end_timesheet_date
             }
             else {
-                startOfWeek = moment(this.props.headerState.startDate).startOf('isoWeek')//this.props.headerState.startDate//this.state.start_timesheet_date
-                endOfWeek = moment(this.props.headerState.startDate).endOf('isoWeek')
+                startOfWeek = moment(this.props.headerState.startDT).startOf('isoWeek')//this.props.headerState.startDT//this.state.start_timesheet_date
+                endOfWeek = moment(this.props.headerState.startDT).endOf('isoWeek')
             }
             var days = [];
             var day = startOfWeek;
@@ -258,14 +259,15 @@ debugger
             });
 
             if (this.props.TimesheetState !== undefined) {
-                //debugger
+            if (this.props.TimesheetState.items !== undefined) {
                 if (this.props.TimesheetState.items.length !== 0)
                     savedTimesheet = this.props.TimesheetState.items
+            }
             }
             list = myClock.map(p => {
                 return (
                     <tr key={p.clock}>
-                        <td style={{ width: "240px"  }}>{p.clock}</td>
+                        <td style={{ width: "280px"  }}>{p.clock}</td>
                         {myDays.map(k => {
                             let currentDate = k.toDateString().split(" ")
                             if (savedTimesheet !== undefined) {
@@ -293,17 +295,11 @@ debugger
                                     }
                                 }
                                 this.objTimeSheetClass.setTime(p.clock, this.convertTime(savedTime), this.convertDate(k))
-                                //this.objTimeSheetClass.setTime('sum', this.sumTime(savedTime), this.convertDate(k))
-
-
-                                return (<td style={{ width: "130px" }} key={p.id}>
-                                    
-                                    <TimePicker dialogBodyStyle={{
-                                        fontSize: 10,
-                                    }} titleStyle={{ fontSize: 10, textAlign: 'center' }} textFieldStyle={{ width: '60%', textAlign: 'center', fontSize: 15 }} dialogContainerStyle={{ height: '100000px' }} value={savedTime} onChange={(event, time) => { this.onTimeChange(event, time, k, p.clock) } } autoOk={false} /></td>);
+                                return (<td className="grey1" key={p.id}><TimePicker textFieldStyle={{ width: '50%', textAlign: 'center' }} value={savedTime} onChange={(event, time) => {this.onTimeChange(event, time, k, p.clock)}} autoOk={false} /></td>);                           
                             }
                             else
-                                return (<td style={{ width: "130px" }} key={p.id}><TimePicker textFieldStyle={{ width: '60%', textAlign: 'center' }} value='' onChange={(event, time) => this.onTimeChange(event, time, k, p.clock)} autoOk={false} /></td>);
+                                return (<td style={{ width: "130px" }} key={p.id}>
+                                <TimePicker dialogBodyStyle= {{fontSize: 10}} textFieldStyle={{ width: '50%', textAlign: 'center' }} value='' onChange={(event, time) => this.onTimeChange(event, time, k, p.clock)} autoOk={false} /></td>);
 
                         })}
                     </tr>
