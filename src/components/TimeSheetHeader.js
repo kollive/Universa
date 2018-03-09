@@ -45,14 +45,19 @@ class TimeSheetHeader extends React.Component {
         //debugger;
         //alert(this.props.location.state.params.hv_table_i)
         //alert(this.props.name)
+        /*
         this.props.renderHeader({
             type: headerActions.renderHeader,
             loadheader: {
                 userid: "sv"
             }
         });
+<<<<<<< HEAD
+        */
+=======
     this.renderTimesheet=<Timesheet headerState={this.state}/>
         
+>>>>>>> 38da0a43717a0a929ce8b16a353d96ec2b451acb
     }
     componentDidUpdate(prevProps, prevState) {
         debugger;
@@ -176,7 +181,8 @@ debugger
                 <Row>
                     <Col sm="3">
                         <div>
-                            <h3 className="d-inline align-middle">Timesheet</h3>
+                            <h3 className="d-inline align-middle">Timesheet</h3> <br/>
+                            <h6>{this.props.hv_name}</h6>
                         </div>
                     </Col>
                     <Col sm="3">

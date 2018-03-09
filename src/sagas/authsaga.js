@@ -68,13 +68,20 @@ function* login(userData) {
     //yield put({ type: authTypes.LOGIN_REQUEST, isLoading: false })
     let resultObj = yield call(authApi.login, userData.payload);
     if (utils.isJSON(resultObj)) {
+      
       resultObj = JSON.parse(resultObj);
-
+      //console.log("99999999999")
+      //console.log(resultObj)
       if (resultObj.message == "ok") {
         //alert(JSON.parse(resultObj).roles)
         yield put({
           type: authTypes.NAME,
           name: resultObj.name
+        });
+        //alert(resultObj.hv_staff_id)
+        yield put({
+          type: authTypes.STAFFID,
+          hv_staff_id: resultObj.hv_staff_id
         });
       }
 

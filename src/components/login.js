@@ -72,7 +72,8 @@ class Login extends Component {
       value: "",
       tooltipOpen: false,
       txtUser: "",
-      txtPwd: ""
+      txtPwd: "",
+      hv_staff_id : -1
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -113,8 +114,8 @@ class Login extends Component {
       //alert("token: " + sessionStorage.getItem("token"));
       //this.props.history.push
       //this.props.history.push('/attrib', ...this.state);
-      //alert(this.props.authState.name);
-      this.setState({ isLoading: false, name: this.props.authState.name });
+      //alert(this.props.authState.hv_staff_id);
+      this.setState({ isLoading: false, name: this.props.authState.name, hv_staff_id:  this.props.authState.hv_staff_id});
       this.props.resetMessage({
         type: authTypes.MESSAGE,
         message: ""

@@ -63,11 +63,11 @@ class HVSPagination extends React.Component {
           function(item) {
             for (var i = 0; i < filter.length; i++) {
               if (item[keys[i]].toLowerCase().indexOf(filter[i].value) == -1) {
-                //debugger;
+                ////debugger;
                 return false;
               }
             }
-            //debugger;
+            ////debugger;
             return true;
           }
         ); 
@@ -137,11 +137,11 @@ class HVSPagination extends React.Component {
         function(item) {
           for (var i = 0; i < filter.length; i++) {
             if (item[keys[i]].toLowerCase().indexOf(filter[i].value) == -1) {
-              //debugger;
+              ////debugger;
               return false;
             }
           }
-          //debugger;
+          ////debugger;
           return true;
         }
       ); 
