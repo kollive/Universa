@@ -17,6 +17,7 @@ import WorkPlan from "./WorkPlan";
 import { bindActionCreators } from "redux";
 import { types as commonTypes } from "reducers/commonreducer";
 import { actions as commonActions } from "reducers/commonreducer";
+import Timesheet from './Timesheet/Timesheet'
 
 
 import {
@@ -130,6 +131,8 @@ class TimeSheetContainer extends Component {
 
 
     render() {
+        this.renderTimesheet=<Timesheet headerState={this.state} staffID={ (this.props.commonState.hv_staff_id == "" ? this.props.hv_staff_id : this.props.commonState.hv_staff_id)}/>
+
         return (
             <Container
                 fluid
@@ -144,6 +147,15 @@ class TimeSheetContainer extends Component {
                         </Row>
                     </div>
                     <Divider />
+                      <div >                        
+                        <Row >
+                            {" "}
+                            <Col sm="12">
+                                              {this.renderTimesheet}
+
+                            </Col>
+                        </Row>
+                    </div>
                     <div >                        
                         <Row >
                             {" "}

@@ -15,7 +15,6 @@ import moment from 'moment'
 //import DatePicker from 'react-date-picker';
 import { Button } from 'reactstrap';
 import 'react-datepicker/dist/react-datepicker.css'
-import Timesheet from './Timesheet/Timesheet'
 
 class TimeSheetHeader extends React.Component {
     
@@ -39,7 +38,7 @@ class TimeSheetHeader extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.moveWeek = this.moveWeek.bind(this);
         this.toggle = this.toggle.bind(this);
-        this.renderTimesheet;
+        //this.renderTimesheet;
     }
 
     componentDidMount() {
@@ -54,14 +53,10 @@ class TimeSheetHeader extends React.Component {
             }
         });
         */
-<<<<<<< HEAD
  
-    this.renderTimesheet=<Timesheet headerState={this.state}/>
+ 
         
  
-=======
-        //this.renderTimesheet=<Timesheet headerState={this.state}/>
->>>>>>> 806d68cf3fe866eeac96acb32b8390a04cbf8dcd
     }
     componentDidUpdate(prevProps, prevState) {
         debugger;
@@ -180,7 +175,7 @@ class TimeSheetHeader extends React.Component {
     render() {
     debugger;
        // const renderTimesheet=<Timesheet headerState={this.state}/>
-         this.renderTimesheet=<Timesheet headerState={this.state}/>
+        // this.renderTimesheet=<Timesheet headerState={this.state}/>
        
         return (
             <div className="m-2 p-2">
@@ -216,7 +211,6 @@ class TimeSheetHeader extends React.Component {
                     </Col>
                 </Row>
                 <Row>
-                {this.renderTimesheet}
                 </Row>
             </div>
         );

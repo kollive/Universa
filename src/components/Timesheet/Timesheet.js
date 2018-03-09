@@ -15,10 +15,11 @@ import TimeSheetClass from './TimeSheetClass'
 export class Timesheet extends Component {
     objTimeSheetClass;
     constructor(props) {
+        debugger
         super(props)
         let startOfWeek, endOfWeek, userid;
         this.objTimeSheetClass = new TimeSheetClass();
-        if (!this.props.headerState.weekOrDay) {
+        if (this.props.headerState.mode=="D") {
             startOfWeek = moment(this.props.headerState.startDate)//this.props.headerState.startDate//this.state.start_timesheet_date
             endOfWeek = moment(this.props.headerState.startDate)//this.props.headerState.endDate//this.state.end_timesheet_date
         }
@@ -37,7 +38,7 @@ export class Timesheet extends Component {
         }
         this.state = {
             date: new Date(),
-            staff_id: '1',
+            staff_id: this.props.staffID==''?'1':this.props.hv_staff_id,
             loggedIn: userid
         }
 
@@ -169,11 +170,10 @@ export class Timesheet extends Component {
     componentWillReceiveProps(nextProps) {
         //alert('componentWillReceiveProps')
         let startOfWeek, endOfWeek;
-
+debugger
         if (nextProps.headerState != this.props.headerState) {
-
             if (nextProps.headerState != undefined) {
-                if (!nextProps.headerState.weekOrDay) {
+                if (this.props.headerState.mode=="D") {
                     startOfWeek = moment(nextProps.headerState.startDate)
                     endOfWeek = moment(nextProps.headerState.startDate)
                 }
@@ -204,7 +204,7 @@ export class Timesheet extends Component {
         this.setState({ hasAccessToView: '' });
         this.setState({ hasAccessToDataGrid: 'block' });
         if (this.props.headerState != undefined) {
-            if (!this.props.headerState.weekOrDay) {
+            if (this.props.headerState.mode=="D") {
                 startOfWeek = moment(this.props.headerState.startDate)//this.props.headerState.startDate//this.state.start_timesheet_date
                 endOfWeek = moment(this.props.headerState.startDate)//this.props.headerState.endDate//this.state.end_timesheet_date
             }
@@ -226,7 +226,7 @@ export class Timesheet extends Component {
     render() {
         let contentHeader, list, startOfWeek, endOfWeek, savedTimesheet, time;
         if (this.props.headerState != undefined) {
-            if (!this.props.headerState.weekOrDay) {
+            if (this.props.headerState.mode=="D") {
                 startOfWeek = moment(this.props.headerState.startDate)
                 endOfWeek = moment(this.props.headerState.startDate)//this.props.headerState.endDate//this.state.end_timesheet_date
             }
@@ -265,7 +265,7 @@ export class Timesheet extends Component {
             list = myClock.map(p => {
                 return (
                     <tr key={p.clock}>
-                        <td style={{ width: "15%",maxWidth:"15%" }}>{p.clock}</td>
+                        <td style={{ width: "240px"  }}>{p.clock}</td>
                         {myDays.map(k => {
                             let currentDate = k.toDateString().split(" ")
                             if (savedTimesheet !== undefined) {
@@ -296,14 +296,14 @@ export class Timesheet extends Component {
                                 //this.objTimeSheetClass.setTime('sum', this.sumTime(savedTime), this.convertDate(k))
 
 
-                                return (<td style={{ width: "5%",maxWidth:"5%" }} key={p.id}>
+                                return (<td style={{ width: "130px" }} key={p.id}>
                                     
                                     <TimePicker dialogBodyStyle={{
                                         fontSize: 10,
                                     }} titleStyle={{ fontSize: 10, textAlign: 'center' }} textFieldStyle={{ width: '60%', textAlign: 'center', fontSize: 15 }} dialogContainerStyle={{ height: '100000px' }} value={savedTime} onChange={(event, time) => { this.onTimeChange(event, time, k, p.clock) } } autoOk={false} /></td>);
                             }
                             else
-                                return (<td style={{ width: "5%" }} key={p.id}><TimePicker textFieldStyle={{ width: '60%', textAlign: 'center' }} value='' onChange={(event, time) => this.onTimeChange(event, time, k, p.clock)} autoOk={false} /></td>);
+                                return (<td style={{ width: "130px" }} key={p.id}><TimePicker textFieldStyle={{ width: '60%', textAlign: 'center' }} value='' onChange={(event, time) => this.onTimeChange(event, time, k, p.clock)} autoOk={false} /></td>);
 
                         })}
                     </tr>
