@@ -126,7 +126,7 @@ class TimeSheet extends Component {
                         <Row >
                             {" "}
                             <Col sm="12">
-                                <TimeSheetHeader name={(this.props.commonState.hv_name == "" ? this.props.name : this.props.commonState.hv_name )} callParentDates={this.setDate} />
+                                <TimeSheetHeader hv_name={(this.props.commonState.hv_name == "" ? this.props.name : this.props.commonState.hv_name )} callParentDates={this.setDate} />
                             </Col>
                         </Row>
                     </div>

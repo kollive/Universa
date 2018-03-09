@@ -50,7 +50,7 @@ import {
 
   //.then(data => data)
   function statusHelper(response) {
-    debugger;
+    //debugger;
       
    
     return response;
