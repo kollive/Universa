@@ -9,6 +9,7 @@ export const types = {
   LOGOUT: "AUTH/LOGOUT",
   ITEMS: "AUTH/ITEMS",
   MESSAGE: "AUTH/MESSAGE",
+  STAFFID: "AUTH/STAFFID",
   NAME: "AUTH/NAME",
   TOKEN: "AUTH/TOKEN"
 };
@@ -19,7 +20,8 @@ export const initialState = {
   error: null,
   items: [],
   message: { val: 0, msg: "" },
-  token: ""
+  token: "",
+  hv_staff_id : ""
 };
 
 //export function authState (state = initialState, action) {
@@ -34,6 +36,9 @@ export default (state = initialState, action) => {
 
     case types.NAME:
       return { ...state, name: action.name };
+
+      case types.STAFFID:
+      return { ...state, hv_staff_id: action.hv_staff_id };
 
     case types.TOKEN:
       return { ...state, token: action.token };

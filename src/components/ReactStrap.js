@@ -203,7 +203,7 @@ let showlist=false
               value="0"
               icon={<FontIcon className="fa fa-home" style={{ color: "darkgrey" }} />}
             >
-            <TimeSheet {...this.props} /> 
+            <TimeSheet hv_staff_id={this.props.hv_staff_id} name={this.props.name}  {...this.props} /> 
               {/*<HomeComponent callParentSearch={this.cadetSearch} parentSwitchTab={this.handleChange} /> */}
             </Tab>
             <Tab
@@ -310,7 +310,8 @@ const mapStateToProps = state => {
   //debugger;
   //alert(state.authState.name)
   return {
-    name: state.authState.name
+    name: state.authState.name,
+    hv_staff_id: state.authState.hv_staff_id
   };
 };
 

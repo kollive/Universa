@@ -4,7 +4,7 @@ export const types = {
     DELETE_REQUEST: "WPLAN/DELETE_REQUEST",
     INSERT_REQUEST: "WPLAN/INSERT_REQUEST",
     UPDATE_REQUEST: "WPLAN/UPDATE_REQUEST",
-    //UPDATE_STORE_REQUEST: "WPLAN/UPDATE_STORE_REQUEST",
+    INSERTHOUR_REQUEST: "WPLAN/INSERTHOUR_REQUEST",
     CANCEL_REQUEST: "WPLAN/CANCEL_REQUEST",
     MESSAGE: "WPLAN/MESSAGE",
     TOKEN: "WPLAN/TOKEN",
@@ -56,7 +56,8 @@ export const types = {
   export const actions = {
     getWorkPlans: payload => ({ type: types.FETCH_TABLE_REQUEST, payload }),
     makeRowEditable: payload => ({ type: types.MAKE_ROW_EDITABLE, payload }),
-    insertWorkplanTable: payload => ({ type: types.INSERT_REQUEST, payload }),
+    insertTaskTable: payload => ({ type: types.INSERT_REQUEST, payload }),
+    insertHourTable: payload => ({ type: types.INSERTHOUR_REQUEST, payload }),
     updateWorkplanTable: payload => ({ type: types.UPDATE_REQUEST, payload }),  
     //updateStoreWorkplanTable: payload => ({ type: types.UPDATE_STORE_REQUEST, payload }),
     deleteWorkplanTable: payload => ({

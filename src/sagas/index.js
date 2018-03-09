@@ -28,6 +28,7 @@ import {types as ManageStaffTypes} from "reducers/Staff/managestaffreducer";
 import {types as StaffListTypes} from "reducers/Staff/stafflistreducer";
 import  {types as TimehseetTypes} from 'reducers/Timesheet/timesheetreducer';
 import {types as WorkPlanTypes} from "reducers/workplanreducer";
+import {types as CommonTypes} from "reducers/commonreducer";
 
 
 import  * as authSagas  from './authsaga'
@@ -58,6 +59,7 @@ import * as StaffListSaga from './Staff/stafflistsaga.js';
 import * as TimesheetSaga from './Timesheet/timesheetsaga';
 
 import * as WorkPlanSaga from './workplansaga.js';
+import * as CommonSaga from './commonsaga.js';
 
 
 export default function* rootSaga () {
@@ -90,8 +92,9 @@ export default function* rootSaga () {
         takeLatest([StaffListTypes.FETCH_REQUEST,StaffListTypes.DELETE_REQUEST], StaffListSaga.handleRequest),
         takeLatest([ManageStaffTypes.INSERT_REQUEST,ManageStaffTypes.FETCH_STAFF_REQUEST,ManageStaffTypes.FETCH_STAFF_RESOURCE_DETAILS,ManageStaffTypes.UPDATE_STAFF_REQUEST], ManageStaffSaga.handleRequest),
         takeLatest([TimehseetTypes.INSERT_TIME_REQUEST,TimehseetTypes.FETCH_TIME_REQUEST,TimehseetTypes.UPDATE_TIME_REQUEST,ManageStaffTypes.UPDATE_STAFF_REQUEST], TimesheetSaga.handleRequest),
-        takeLatest([WorkPlanTypes.FETCH_TABLE_REQUEST,WorkPlanTypes.EXCEL_REQUEST,WorkPlanTypes.CANCEL_REQUEST,WorkPlanTypes.MAKE_ROW_EDITABLE,WorkPlanTypes.INSERT_REQUEST,WorkPlanTypes.DELETE_REQUEST,WorkPlanTypes.UPDATE_REQUEST], WorkPlanSaga.handleRequest),
+        takeLatest([WorkPlanTypes.FETCH_TABLE_REQUEST,WorkPlanTypes.EXCEL_REQUEST,WorkPlanTypes.CANCEL_REQUEST,WorkPlanTypes.INSERTHOUR_REQUEST,WorkPlanTypes.INSERT_REQUEST,WorkPlanTypes.DELETE_REQUEST,WorkPlanTypes.UPDATE_REQUEST], WorkPlanSaga.handleRequest),
 
+        takeLatest([CommonTypes.SETNAME,CommonTypes.SETSTAFFID,CommonTypes.SETUSERID], CommonSaga.handleRequest),
         ]);
 
     //throw e;
