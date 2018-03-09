@@ -54,10 +54,10 @@ class TimeSheetHeader extends React.Component {
         });
 <<<<<<< HEAD
         */
-=======
+ 
     this.renderTimesheet=<Timesheet headerState={this.state}/>
         
->>>>>>> 38da0a43717a0a929ce8b16a353d96ec2b451acb
+ 
     }
     componentDidUpdate(prevProps, prevState) {
         debugger;
