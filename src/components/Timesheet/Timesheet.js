@@ -65,14 +65,14 @@ export class Timesheet extends Component {
                 return;
             }
 
-            var beginningTime = moment(findTime.lunch_end, 'h:mma');
-            var endTime = moment(findTime.lunch_start, 'h:mma');
-            if (beginningTime.isBefore(endTime)) {
-                alert('Please enter valid ' + row + ' for date ' + saveDate);
-                saveTime = '';
-                this.onTimeDismiss(row, saveDate);
-                return;
-            }
+            // var beginningTime = moment(findTime.lunch_end, 'h:mma');
+            // var endTime = moment(findTime.lunch_start, 'h:mma');
+            // if (beginningTime.isBefore(endTime)) {
+            //     alert('Please enter valid ' + row + ' for date ' + saveDate);
+            //     saveTime = '';
+            //     this.onTimeDismiss(row, saveDate);
+            //     return;
+            // }
 
             else {
                 let timesheet_time = {}
@@ -243,7 +243,7 @@ debugger
                 day = day.clone().add(1, 'd');
             }
             const myDays = days
-            const myClock = [{ clock: "Clock In" }, { clock: "Lunch In" }, { clock: "Lunch Out" }, { clock: "Clock Out" },]
+            const myClock = [{ clock: "Clock In" }, { clock: "Lunch In" }, { clock: "Lunch Out" }, { clock: "Clock Out" },,{clock:"Total"}]
             // const contentCol = myDays.map((day) => {
             //     let currentDate = day.toDateString().split(" ")
             //     return <th style={{ textAlign: 'center' }}><TimePicker textFieldStyle={{ width: '60%', textAlign: 'center' }} value={this.state.date} onChange={(event, time) => this.onTimeChange(event, time, currentDate)} autoOk={true} /></th>
@@ -278,22 +278,27 @@ debugger
                                         return (moment(o.timesheet_date).format('MM/DD/YYYY') == moment(k.toDateString()).format('MM/DD/YYYY'))
                                     });
                                 let savedTime = '';
-                                if (time !== undefined) {
+                                                              if (time !== undefined) {
                                     //   alert(time.start_time)
                                     switch (p.clock) {
                                         case 'Clock In':
-                                            savedTime = (time.start_time !== null) ? new Date(time.start_time) : ''
+                                            savedTime = (time.start_time !== null) ? moment(time.start_time, 'YYYY-MM-DD hh:mm A').toDate():''
+                                            // moment(time.start_time).format('MM/DD/YYYY hh:mm A').toDate() : ''
                                             break;
                                         case 'Lunch In':
-                                            savedTime = (time.lunch_start !== null) ? new Date(time.lunch_start) : ''
+                                            savedTime = (time.lunch_start !== null) ?  moment(time.lunch_start, 'YYYY-MM-DD hh:mm A').toDate() : ''
                                             break;
                                         case 'Lunch Out':
-                                            savedTime = (time.lunch_end !== null) ? new Date(time.lunch_end) : ''
+                                            savedTime = (time.lunch_end !== null) ?  moment(time.lunch_end, 'YYYY-MM-DD hh:mm A').toDate() : ''
                                             break;
                                         case 'Clock Out':
-                                            savedTime = (time.end_time !== null) ? new Date(time.end_time) : ''
+                                            savedTime = (time.end_time !== null) ?  moment(time.end_time, 'YYYY-MM-DD hh:mm A').toDate(): ''
                                             break;
                                     }
+                               if(time.start_time!==null || time.end_time!==null)
+                               {
+                                let totalVal=moment.utc(moment(time.start_time,"h:mm A").diff(moment(time.end_time,"h:mm A"))).format('hours')
+                               }
                                 }
                                 this.objTimeSheetClass.setTime(p.clock, this.convertTime(savedTime), this.convertDate(k))
                                 return (<td className="grey1" key={p.id}><TimePicker className="timepick" textFieldStyle={{ width: '90%', height: '20px', textAlign: 'bottom' }} value={savedTime} onChange={(event, time) => {this.onTimeChange(event, time, k, p.clock)}} autoOk={false} /></td>);                           
