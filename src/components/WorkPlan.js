@@ -520,33 +520,33 @@ export class WorkPlan extends Component {
                                         </tr>
                                         :
                                         <tr style={{ backgroundColor: "#ADD8E6", color: "black" }}>
-                                            <th style={{ width: "20px" }}>
+                                            <th style={{ width: "5%" }}>
                                                 <span className="fa-stack fa-lg" style={styles.link} onClick={() => this.addTask()}>
                                                     <i className="fa fa-square-o fa-stack-2x" />
                                                     <i className="fa fa-plus-circle fa-stack-1x" />
                                                 </span>{" "}
                                             </th>
-                                            <th style={{ width: "120px" }} />
-                                            <th style={{ width: "70px" }}>Total</th>
-                                            <th style={{ width: "80px" }}>
+                                            <th style={{ width: "19%" }} />
+                                            <th style={{ width: "6%" }}>Total</th>
+                                            <th style={{ width: "10%" }}>
                                                 <Label>{this.getHours(2)}</Label>
                                             </th>
-                                            <th style={{ width: "80px" }}>
+                                            <th style={{ width: "10%" }}>
                                                 <Label>{this.getHours(3)}</Label>
                                             </th>
-                                            <th style={{ width: "80px" }}>
+                                            <th style={{ width: "10%" }}>
                                                 <Label>{this.getHours(4)}</Label>
                                             </th>
-                                            <th style={{ width: "80px" }}>
+                                            <th style={{ width: "10%" }}>
                                                 <Label>{this.getHours(5)}</Label>
                                             </th>
-                                            <th style={{ width: "80px" }}>
+                                            <th style={{ width: "10%" }}>
                                                 <Label>{this.getHours(6)}</Label>
                                             </th>
-                                            <th style={{ width: "80px" }}>
+                                            <th style={{ width: "10%" }}>
                                                 <Label>{this.getHours(7)}</Label>
                                             </th>
-                                            <th style={{ width: "80px" }}>
+                                            <th style={{ width: "10%" }}>
                                                 <Label>{this.getHours(1)}</Label>
                                             </th>
                                         </tr>

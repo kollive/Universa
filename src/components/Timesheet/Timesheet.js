@@ -296,11 +296,11 @@ debugger
                                     }
                                 }
                                 this.objTimeSheetClass.setTime(p.clock, this.convertTime(savedTime), this.convertDate(k))
-                                return (<td className="grey1" key={p.id}><TimePicker className="timepick" textFieldStyle={{ width: '50%', height: '20px', textAlign: 'bottom' }} value={savedTime} onChange={(event, time) => {this.onTimeChange(event, time, k, p.clock)}} autoOk={false} /></td>);                           
+                                return (<td className="grey1" key={p.id}><TimePicker className="timepick" textFieldStyle={{ width: '90%', height: '20px', textAlign: 'bottom' }} value={savedTime} onChange={(event, time) => {this.onTimeChange(event, time, k, p.clock)}} autoOk={false} /></td>);                           
                             }
                             else
                                 return (<td style={{ width: "130px" }} key={p.id}>
-                                <TimePicker dialogBodyStyle= {{fontSize: 10}}  className="timepick" textFieldStyle={{ width: '50%', textAlign: 'center' }} value='' onChange={(event, time) => this.onTimeChange(event, time, k, p.clock)} autoOk={false} /></td>);
+                                <TimePicker dialogBodyStyle= {{fontSize: 10}}  className="timepick" textFieldStyle={{ width: '90%', textAlign: 'center' }} value='' onChange={(event, time) => this.onTimeChange(event, time, k, p.clock)} autoOk={false} /></td>);
 
                         })}
                     </tr>
