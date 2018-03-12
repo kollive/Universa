@@ -14,8 +14,8 @@ import {
     apply
   } from "redux-saga/effects";
   import { delay, buffers, eventChannel, END } from "redux-saga";
-  import { types as StaffTypes } from "reducers/Staff/managestaffreducer.js";
-  import * as utils from "Utils/common"
+  import { types as StaffTypes } from "../../reducers/Staff/managestaffreducer.js";
+  import * as utils from "../../Utils/common"
 
   function insertStaff(StaffData) {
   // debugger;

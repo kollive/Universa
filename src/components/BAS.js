@@ -37,10 +37,10 @@ import Dialog from "material-ui/Dialog";
 import RaisedButton from "material-ui/RaisedButton";
 import * as _ from "lodash";
 import { bindActionCreators } from "redux";
-import { types as BASTypes } from "reducers/basreducer";
-import { actions as BASActions } from "reducers/basreducer";
+import { types as BASTypes } from "../reducers/basreducer";
+import { actions as BASActions } from "../reducers/basreducer";
 
-import HVSPagination from "customComponents/pagination";
+import HVSPagination from "../customComponents/pagination";
 import Approval from "./Approval";
 import Schedule from "./Schedules"
 import {

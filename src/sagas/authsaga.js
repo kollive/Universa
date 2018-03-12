@@ -16,8 +16,8 @@ import {
 import { delay, buffers, eventChannel, END } from "redux-saga";
 import * as _ from "lodash";
 import * as io from "socket.io-client";
-import { types as authTypes } from "reducers/authreducer";
-import * as utils from "Utils/common"
+import { types as authTypes } from "../reducers/authreducer";
+import * as utils from "../Utils/common"
 
 //import { push } from 'react-router-redux';
 
@@ -68,10 +68,8 @@ function* login(userData) {
     //yield put({ type: authTypes.LOGIN_REQUEST, isLoading: false })
     let resultObj = yield call(authApi.login, userData.payload);
     if (utils.isJSON(resultObj)) {
-      
       resultObj = JSON.parse(resultObj);
-      //console.log("99999999999")
-      //console.log(resultObj)
+
       if (resultObj.message == "ok") {
         //alert(JSON.parse(resultObj).roles)
         yield put({

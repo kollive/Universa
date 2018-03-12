@@ -1,18 +1,18 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import logo from "logo.svg";
-import clientlogo from "images/cadetlogo.png";
-import "App.css";
+
+import clientlogo from "../images/cadetlogo.png";
+
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { types as forgotPWDTypes } from "reducers/forgotpwdreducer";
-import { actions as forgotPWDActions } from "reducers/forgotpwdreducer";
+import { types as forgotPWDTypes } from "../reducers/forgotpwdreducer";
+import { actions as forgotPWDActions } from "../reducers/forgotpwdreducer";
 import * as _ from "lodash";
-import bgImg from "images/cgyca_staffandbdgt.PNG";
-import staffImg from "images/course_cal.PNG";
-import roleImg from "images/role.png";
-import userImg from "images/user.png";
-import secImg from "images/security.png";
+import bgImg from "../images/cgyca_staffandbdgt.PNG";
+import staffImg from "../images/course_cal.PNG";
+import roleImg from "../images/role.png";
+import userImg from "../images/user.png";
+import secImg from "../images/security.png";
 import { List, ListItem } from "material-ui/List";
 import ActionGrade from "material-ui/svg-icons/action/grade";
 import ContentInbox from "material-ui/svg-icons/content/inbox";

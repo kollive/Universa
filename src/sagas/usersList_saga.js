@@ -13,7 +13,7 @@ import {
     race,
     apply
   } from "redux-saga/effects";
-  import { types as usersListTypes } from "reducers/usersList_reducer";
+  import { types as usersListTypes } from "../reducers/usersList_reducer";
 
 
 

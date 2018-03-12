@@ -14,8 +14,8 @@ import {
     apply
   } from "redux-saga/effects";
   import { delay, buffers, eventChannel, END } from "redux-saga";
-  import { types as UserTypes, permissions as Permissions } from "reducers/Users/manageusersreducer.js";
-  import * as utils from "Utils/common"
+  import { types as UserTypes, permissions as Permissions } from "../../reducers/Users/manageusersreducer.js";
+  import * as utils from "../../Utils/common"
 
   function insertUser(userData) {
    // debugger;

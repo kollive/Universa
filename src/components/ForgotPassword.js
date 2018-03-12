@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import logo from "logo.svg";
-import clientlogo from "images/cadetlogo.png";
-import "App.css";
+
+import clientlogo from "../images/cadetlogo.png";
+import "../App.css";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { types as forgotPWDTypes } from "reducers/forgotpwdreducer";
-import { actions as forgotPWDActions } from "reducers/forgotpwdreducer";
+import { types as forgotPWDTypes } from "../reducers/forgotpwdreducer";
+import { actions as forgotPWDActions } from "../reducers/forgotpwdreducer";
 import * as _ from "lodash";
-import bgImg from "images/cgyca_background.png";
+import bgImg from "../images/cgyca_background.png";
 
 import {
   Table,

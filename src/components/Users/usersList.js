@@ -9,10 +9,10 @@ import { InputText } from 'primereact/components/inputtext/InputText';
 import { Dropdown } from 'primereact/components/dropdown/Dropdown';
 import { MultiSelect } from 'primereact/components/multiselect/MultiSelect';
 import { Dialog } from 'primereact/components/dialog/Dialog';
-import { types as UsersListTypes } from "reducers/usersList_reducer";
-import { permissions as Permissions } from "reducers/usersList_reducer";
-import { actions as UsersListActions } from "reducers/usersList_reducer";
-import clientpic from "images/cadet_generic.png";
+import { types as UsersListTypes } from "../../reducers/usersList_reducer";
+import { permissions as Permissions } from "../../reducers/usersList_reducer";
+import { actions as UsersListActions } from "../../reducers/usersList_reducer";
+import clientpic from "../../images/cadet_generic.png";
 import {
   Row,
   Col,
@@ -22,7 +22,7 @@ import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
-import "App.css";
+import "../../App.css";
 import AssignRoles from './AssignRoles';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Alert } from 'reactstrap';
 import * as _ from "lodash";

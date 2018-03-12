@@ -41,10 +41,10 @@ import RaisedButton from "material-ui/RaisedButton";
 import * as _ from "lodash";
 import { bindActionCreators } from "redux";
 
-//import { types as calendarTypes } from "reducers/calendarreducer";
-//import { actions as calendarActions } from "reducers/calendarreducer";
+//import { types as calendarTypes } from "../reducers/calendarreducer";
+//import { actions as calendarActions } from "../reducers/calendarreducer";
 
-import HVSPagination from "customComponents/pagination";
+import HVSPagination from "../customComponents/pagination";
 import {
   Input,
   InputGroup,

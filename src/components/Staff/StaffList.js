@@ -12,7 +12,7 @@ import { Dialog } from 'primereact/components/dialog/Dialog';
 import { types as StaffListTypes } from "../../reducers/Staff/stafflistreducer";
 import { permissions as Permissions } from "../../reducers/Staff/stafflistreducer";
 import { actions as StaffListActions } from "../../reducers/Staff/stafflistreducer";
-import clientpic from "images/cadet_generic.png";
+import clientpic from "../../images/cadet_generic.png";
 import {
   Row,
   Col,
@@ -22,7 +22,7 @@ import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
-import "App.css";
+import "../../App.css";
 import { Modal, ModalHeader, ModalBody, ModalFooter, Alert } from 'reactstrap';
 import * as _ from "lodash";
 import {ProgressSpinner} from 'primereact/components/progressspinner/ProgressSpinner';

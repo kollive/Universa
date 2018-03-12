@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import approvalGrid from 'images/approvals.PNG'
+import approvalGrid from '../images/approvals.PNG'
 
 import {
     Container,

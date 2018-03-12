@@ -13,7 +13,7 @@ import {
     race,
     apply
   } from "redux-saga/effects";
-  import { types as staffListTypes } from "reducers/Staff/stafflistreducer";
+  import { types as staffListTypes } from "../../reducers/Staff/stafflistreducer";
 
 
 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import CourseImg from 'images/course_cal.PNG'
+import CourseImg from '../images/course_cal.PNG'
 
 import {
     Container,

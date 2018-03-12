@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import { types as ManageStaffTypes, permissions as Permissions } from "reducers/Staff/managestaffreducer";
-import { actions as ManageStaffActions } from "reducers/Staff/managestaffreducer";
-import * as utils from "Utils/common";
+import { types as ManageStaffTypes, permissions as Permissions } from "../../reducers/Staff/managestaffreducer";
+import { actions as ManageStaffActions } from "../../reducers/Staff/managestaffreducer";
+import * as utils from "../../Utils/common";
 
 import Paper from "material-ui/Paper";
 import Divider from "material-ui/Divider";

@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import classnames from "classnames";
-import cadetlogo from "images/cadetlogo.png";
-import cadettitle from "images/cadettitl.png";
+import cadetlogo from "../images/cadetlogo.png";
+import cadettitle from "../images/cadettitl.png";
 import CadetHeader from "./cadetheader";
 import AppBar from "material-ui/AppBar";
 import IconButton from "material-ui/IconButton";
@@ -67,7 +67,7 @@ import TimeSheetContainer from "./TimeSheetContainer";
 import BAP from "./BAP";
 import Calendar from "./Calendar"
 
-import "App.css";
+import "../App.css";
 
 const tabStyles = {
   // backgroundColor: "#D3D3D3",

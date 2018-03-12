@@ -16,7 +16,7 @@ import {
   import { delay, buffers, eventChannel, END } from "redux-saga";
   import * as _ from "lodash";
   import * as io from "socket.io-client";
-  import { types as approvalTypes } from "reducers/approvalreducer";
+  import { types as approvalTypes } from "../reducers/approvalreducer";
   
   //import { push } from 'react-router-redux';
   

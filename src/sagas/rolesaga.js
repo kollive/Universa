@@ -16,9 +16,9 @@ import {
 import { delay, buffers, eventChannel, END } from "redux-saga";
 import * as _ from "lodash";
 import * as io from "socket.io-client";
-import { types as roleTypes } from "reducers/rolereducer";
+import { types as roleTypes } from "../reducers/rolereducer";
 import * as download from "downloadjs";
-import * as utils from "Utils/common"
+import * as utils from "../Utils/common"
 //import { push } from 'react-router-redux';
 
 const attribApi = {

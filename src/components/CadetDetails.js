@@ -40,17 +40,17 @@ import {
   DropdownItem
 } from "reactstrap";
 
-import clientpic from "images/cadet_generic.png";
-import cDetail from "images/cDetail.png";
-import bottompic from "images/cadetdetails.png";
+import clientpic from "../images/cadet_generic.png";
+import cDetail from "../images/cDetail.png";
+import bottompic from "../images/cadetdetails.png";
 import Dialog from "material-ui/Dialog";
 import RaisedButton from "material-ui/RaisedButton";
 import * as _ from "lodash";
 import { bindActionCreators } from "redux";
-import { types as cadetDetailsTypes } from "reducers/cadetdetailsreducer";
-import { actions as cadetDetailsActions } from "reducers/cadetdetailsreducer";
+import { types as cadetDetailsTypes } from "../reducers/cadetdetailsreducer";
+import { actions as cadetDetailsActions } from "../reducers/cadetdetailsreducer";
 
-import HVSPagination from "customComponents/pagination";
+import HVSPagination from "../customComponents/pagination";
 import {
   Input,
   InputGroup,

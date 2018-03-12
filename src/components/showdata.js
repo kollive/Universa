@@ -12,9 +12,9 @@ import RaisedButton from "material-ui/RaisedButton";
 import CircularProgress from "material-ui/CircularProgress";
 import * as _ from "lodash";
 import { bindActionCreators } from "redux";
-import { types as showDataTypes } from "reducers/showdatareducer";
-import { actions as showDataActions } from "reducers/showdatareducer";
-import HVSPagination from "customComponents/pagination";
+import { types as showDataTypes } from "../reducers/showdatareducer";
+import { actions as showDataActions } from "../reducers/showdatareducer";
+import HVSPagination from "../customComponents/pagination";
 import { InputGroup, InputGroupAddon, InputGroupButton } from "reactstrap";
 
 import {
@@ -37,7 +37,7 @@ import {
   ModalFooter
 } from "reactstrap";
 
-import HVSTextControl from "customComponents/tdInputText";
+import HVSTextControl from "../customComponents/tdInputText";
 
 const Styles = {
   propContainer: {

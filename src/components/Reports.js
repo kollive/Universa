@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import reportDashboard from 'images/reportsDashboard.png'
-import reportsLibrary from 'images/reportsLibrary.png'
-import reportsAdHoc from 'images/reportsAdHoc.png'
-import export_excel from "images/export_excel.PNG";
-import chart from "images/chart.PNG";
-import budget from "images/Reports_budget.PNG";
-import graduates from "images/graduates.PNG";
+import reportDashboard from '../images/reportsDashboard.png'
+import reportsLibrary from '../images/reportsLibrary.png'
+import reportsAdHoc from '../images/reportsAdHoc.png'
+import export_excel from "../images/export_excel.PNG";
+import chart from "../images/chart.PNG";
+import budget from "../images/Reports_budget.PNG";
+import graduates from "../images/graduates.PNG";
 import {
     Container,
     TabContent,
