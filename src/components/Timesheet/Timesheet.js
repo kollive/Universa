@@ -325,7 +325,7 @@ debugger
 }
  }>
                                 <thead>
-                                    <th></th>
+                                    <th style={{ width: "30%" }}></th>
                                     {contentHeader}
                                 </thead>
                                 <tbody>
