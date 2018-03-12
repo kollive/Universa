@@ -9,7 +9,7 @@ import { Table } from 'reactstrap';
 import moment from 'moment'
 import { Modal, ModalHeader, ModalBody, ModalFooter, Alert, Row, Col, Container } from 'reactstrap';
 import TimeSheetClass from './TimeSheetClass'
-
+import  './TimeSheet.css';
  
 
 export class Timesheet extends Component {
@@ -225,6 +225,7 @@ debugger
         }
     }
     render() {
+        
         let contentHeader, list, startOfWeek, endOfWeek, savedTimesheet, time;
         if (this.props.headerState != undefined) {
             if (this.props.headerState.mode=="D") {
@@ -266,7 +267,7 @@ debugger
             }
             list = myClock.map(p => {
                 return (
-                    <tr key={p.clock}>
+                    <tr style={{height:"20px"}} key={p.clock}>
                         <td style={{ width: "280px"  }}>{p.clock}</td>
                         {myDays.map(k => {
                             let currentDate = k.toDateString().split(" ")
@@ -295,11 +296,11 @@ debugger
                                     }
                                 }
                                 this.objTimeSheetClass.setTime(p.clock, this.convertTime(savedTime), this.convertDate(k))
-                                return (<td className="grey1" key={p.id}><TimePicker textFieldStyle={{ width: '50%', textAlign: 'center' }} value={savedTime} onChange={(event, time) => {this.onTimeChange(event, time, k, p.clock)}} autoOk={false} /></td>);                           
+                                return (<td className="grey1" key={p.id}><TimePicker className="timepick" textFieldStyle={{ width: '50%', height: '20px', textAlign: 'bottom' }} value={savedTime} onChange={(event, time) => {this.onTimeChange(event, time, k, p.clock)}} autoOk={false} /></td>);                           
                             }
                             else
                                 return (<td style={{ width: "130px" }} key={p.id}>
-                                <TimePicker dialogBodyStyle= {{fontSize: 10}} textFieldStyle={{ width: '50%', textAlign: 'center' }} value='' onChange={(event, time) => this.onTimeChange(event, time, k, p.clock)} autoOk={false} /></td>);
+                                <TimePicker dialogBodyStyle= {{fontSize: 10}}  className="timepick" textFieldStyle={{ width: '50%', textAlign: 'center' }} value='' onChange={(event, time) => this.onTimeChange(event, time, k, p.clock)} autoOk={false} /></td>);
 
                         })}
                     </tr>
