@@ -18,7 +18,7 @@ import * as _ from "lodash";
 import * as io from "socket.io-client";
 import { types as aeroleTypes } from "../reducers/aerolereducer";
 import * as download from "downloadjs";
-
+import { API_ROOT } from '../apiconfig';
 //import { push } from 'react-router-redux';
 
 const attribApi = {
@@ -29,7 +29,10 @@ const attribApi = {
     //alert(payload.spName)
     //new Promise((resolve, reject) => {
     //return fetch("http://hvs.selfip.net:4003/ExportToExcel/", {
-    return fetch("http://localhost:4003/ExportToExcel/", {
+    const RestAPIURL = API_ROOT.backendAPIGWsvc;
+    const requestURL = `${RestAPIURL}ExportToExcel/`;
+    return fetch(requestURL, {
+    //return fetch("http://localhost:4003/ExportToExcel/", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -79,7 +82,10 @@ const attribApi = {
     //console.log(userData.password);
 
     //new Promise((resolve, reject) => {
-    return fetch("http://hvs.selfip.net:4003/ExecSP/", {
+    const RestAPIURL = API_ROOT.backendAPIGWsvc;
+    const requestURL = `${RestAPIURL}ExecSP/`;
+    return fetch(requestURL, {
+    //return fetch("http://hvs.selfip.net:4003/ExecSP/", {
       //return fetch("http://localhost:4003/GetRoleTable/", {
 
       method: "POST",
@@ -106,7 +112,10 @@ const attribApi = {
     //console.log(userData.password);
 
     //new Promise((resolve, reject) => {
-    return fetch("http://hvs.selfip.net:4003/insRoleTable/", {
+    const RestAPIURL = API_ROOT.backendAPIGWsvc;
+    const requestURL = `${RestAPIURL}insRoleTable/`;
+    return fetch(requestURL, {
+    //return fetch("http://hvs.selfip.net:4003/insRoleTable/", {
       //return fetch("http://hvs.selfip.net:4000/reactlogin/", {
       method: "POST",
       headers: {
@@ -129,7 +138,10 @@ const attribApi = {
     //console.log(userData.password);
 
     //new Promise((resolve, reject) => {
-    return fetch("http://hvs.selfip.net:4003/ExecSP/", {
+    const RestAPIURL = API_ROOT.backendAPIGWsvc;
+    const requestURL = `${RestAPIURL}ExecSP/`;
+    return fetch(requestURL, {
+    //return fetch("http://hvs.selfip.net:4003/ExecSP/", {
       //return fetch("http://hvs.selfip.net:4000/reactlogin/", {
       method: "POST",
       headers: {
@@ -154,7 +166,10 @@ const attribApi = {
     //console.log(userData.password);
 
     //new Promise((resolve, reject) => {
-    return fetch("http://hvs.selfip.net:4003/ExecSP/", {
+    const RestAPIURL = API_ROOT.backendAPIGWsvc;
+    const requestURL = `${RestAPIURL}ExecSP/`;
+    return fetch(requestURL, {
+    //return fetch("http://hvs.selfip.net:4003/ExecSP/", {
       //return fetch("http://hvs.selfip.net:4000/reactlogin/", {
       method: "POST",
       headers: {
@@ -179,7 +194,10 @@ const attribApi = {
     //console.log(userData.password);
 
     //new Promise((resolve, reject) => {
-    return fetch("http://hvs.selfip.net:4003/ExecSP/", {
+    const RestAPIURL = API_ROOT.backendAPIGWsvc;
+    const requestURL = `${RestAPIURL}ExecSP/`;
+    return fetch(requestURL, {
+    //return fetch("http://hvs.selfip.net:4003/ExecSP/", {
       //return fetch("http://hvs.selfip.net:4000/reactlogin/", {
       method: "POST",
       headers: {
@@ -267,7 +285,7 @@ function* updateRoleTable(userData) {
         type: aeroleTypes.ITEMS,
         items: []
       });
- 
+
       yield put({
         type: aeroleTypes.SELECTED_ROWID,
         rowID: -1
@@ -319,7 +337,7 @@ function* deleteRoleTable(roleID) {
         type: aeroleTypes.ITEMS,
         items: []
       });
- 
+
       yield put({
         type: aeroleTypes.SELECTED_ROWID,
         rowID: -1
@@ -368,7 +386,7 @@ function* deleteRoleTable(roleID) {
         console.log(JSON.parse(resultObj).result)
         const state = yield select();
         const newitems = state.roleleState.items.filter((itm) => _.trim(itm.hv_universal_i) !== _.trim(userData.payload.rowID));
- 
+
         yield put({
           type: aeroleTypes.ITEMS,
           items: newitems
@@ -470,7 +488,7 @@ function* getRoleTable(userData) {
       });
     }
     //yield put({ type: "LOGIN_STATUS", message: JSON.parse(resultObj).token })
-  } catch (e) {   
+  } catch (e) {
     debugger;
     yield put({ type: aeroleTypes.MESSAGE, message: { val: -1, msg: e } });
   } finally {

@@ -17,7 +17,7 @@ import { delay, buffers, eventChannel, END } from "redux-saga";
 import * as _ from "lodash";
 import * as io from "socket.io-client";
 import { types as changePWDTypes } from "../reducers/changepwdreducer";
-
+import { API_ROOT } from '../apiconfig';
 //import { push } from 'react-router-redux';
 
 const attribApi = {
@@ -28,7 +28,10 @@ const attribApi = {
 
     //new Promise((resolve, reject) => {
     //return fetch("http://localhost:4003/changePWD/", {
-    return fetch("http://hvs.selfip.net:4003/changePWD/", {
+    const RestAPIURL = API_ROOT.backendAPIGWsvc;
+    const requestURL = `${RestAPIURL}changePWD/`;
+    return fetch(requestURL, {
+    //return fetch("http://hvs.selfip.net:4003/changePWD/", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -53,7 +56,10 @@ const attribApi = {
 
     //new Promise((resolve, reject) => {
     //return fetch("http://localhost:4003/checkToken/", {
-       return fetch("http://hvs.selfip.net:4003/checkToken/", {
+    const RestAPIURL = API_ROOT.backendAPIGWsvc;
+    const requestURL = `${RestAPIURL}checkToken/`;
+    return fetch(requestURL, {
+       //return fetch("http://hvs.selfip.net:4003/checkToken/", {
       method: "POST",
       headers: {
         Accept: "application/json",

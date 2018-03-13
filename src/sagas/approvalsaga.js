@@ -17,11 +17,11 @@ import {
   import * as _ from "lodash";
   import * as io from "socket.io-client";
   import { types as approvalTypes } from "../reducers/approvalreducer";
-  
+  import { API_ROOT } from '../apiconfig';
   //import { push } from 'react-router-redux';
-  
+
   const approvalApi = {
-    
+
     getApprovalTables(cname) {
       debugger;
       //alert("getApprovalTables")
@@ -30,10 +30,13 @@ import {
       //console.log(userData.password);
     //alert("in Cadets")
       //new Promise((resolve, reject) => {
-      return fetch("http://hvs.selfip.net:4003/getApprovals/", {
+      const RestAPIURL = API_ROOT.backendAPIGWsvc;
+      const requestURL = `${RestAPIURL}getApprovals/`;
+      return fetch(requestURL, {
+      //return fetch("http://hvs.selfip.net:4003/getApprovals/", {
         //return fetch("http://hvs.selfip.net:4003/getCadets/", {
         //return fetch("http://localhost:4003/getCadets/", {
-        
+
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -49,7 +52,7 @@ import {
     }
     //.then(data => data)
   };
-  
+
   function statusHelper(response) {
     debugger;
     if (!response.ok) {
@@ -60,14 +63,14 @@ import {
     }
     return response;
   }
-  
+
   function* getApprovalTables(cname) {
     debugger;
     try {
       //yield call(delay, 5000)
       //yield put({ type: approvalTypes.LOGIN_REQUEST, isLoading: false })
       const resultObj = yield call(approvalApi.getApprovalTables, cname);
-  
+
       debugger;
       if (resultObj.response && !resultObj.response.ok) {
         debugger;
@@ -85,7 +88,7 @@ import {
       }
       //yield put({ type: "LOGIN_STATUS", message: JSON.parse(resultObj).token })
     } catch (e) {
-     
+
       debugger;
       yield put({ type: approvalTypes.MESSAGE, message: {val:-1, msg:e} });
     } finally {
@@ -94,8 +97,8 @@ import {
         yield put({ type: approvalTypes.MESSAGE, message: {val: -1, msg:"Task Cancelled" }});
     }
   }
-  
- 
+
+
   export function* handleRequest(action) {
     debugger;
     //console.log("authSaga request", action);
@@ -104,7 +107,7 @@ import {
     //yield call(updateStatus);
     try {
       switch (action.type) {
-      
+
         case approvalTypes.FETCH_TABLES_REQUEST: {
           //yield all([put({ type: "LOGIN_STATUS", message: '' }), put({ type: "ITEMS_IS_LOADING", isLoading: true })])
           debugger;
@@ -112,7 +115,7 @@ import {
           debugger;
           break;
         }
-  
+
         default: {
           return null;
           break;
@@ -122,4 +125,3 @@ import {
       yield put({ type: approvalTypes.LOGIN_FAILURE, error: e });
     }
   }
-  

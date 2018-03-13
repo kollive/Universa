@@ -17,18 +17,21 @@ import {
   import * as _ from "lodash";
   import * as io from "socket.io-client";
   import { types as attribTypes } from "../reducers/attribreducer";
-  
+  import { API_ROOT } from '../apiconfig';
   //import { push } from 'react-router-redux';
-  
+
   const attribApi = {
-    
+
     getAttribTables(tableTag) {
       debugger;
       //console.log(userData.user);
       //console.log(userData.password);
       //alert("Before call")
       //new Promise((resolve, reject) => {
-      return fetch("http://hvs.selfip.net:4003/getTables/", {
+      const RestAPIURL = API_ROOT.backendAPIGWsvc;
+      const requestURL = `${RestAPIURL}getTables/`;
+      return fetch(requestURL, {
+      //return fetch("http://hvs.selfip.net:4003/getTables/", {
         //return fetch("http://localhost:4003/db/", {
         method: "POST",
         headers: {
@@ -45,7 +48,7 @@ import {
     }
     //.then(data => data)
   };
-  
+
   function statusHelper(response) {
     debugger;
     if (!response.ok) {
@@ -56,14 +59,14 @@ import {
     }
     return response;
   }
-  
+
   function* getAttribTables(tableTag) {
     debugger;
     try {
       //yield call(delay, 5000)
       //yield put({ type: attribTypes.LOGIN_REQUEST, isLoading: false })
       const resultObj = yield call(attribApi.getAttribTables, tableTag);
-  
+
       debugger;
       if (resultObj.response && !resultObj.response.ok) {
         debugger;
@@ -103,8 +106,8 @@ import {
         yield put({ type: attribTypes.MESSAGE, message: "Task Cancelled" });
     }
   }
-  
-  
+
+
   export function* handleRequest(action) {
     debugger;
     console.log("authSaga request", action);
@@ -113,7 +116,7 @@ import {
     //yield call(updateStatus);
     try {
       switch (action.type) {
-      
+
         case attribTypes.FETCH_TABLES_REQUEST: {
           //yield all([put({ type: "LOGIN_STATUS", message: '' }), put({ type: "ITEMS_IS_LOADING", isLoading: true })])
           debugger;
@@ -121,7 +124,7 @@ import {
           debugger;
           break;
         }
-  
+
         default: {
           return null;
           break;
@@ -131,4 +134,3 @@ import {
       yield put({ type: attribTypes.LOGIN_FAILURE, error: e });
     }
   }
-  

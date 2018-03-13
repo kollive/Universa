@@ -17,18 +17,21 @@ import {
   import * as _ from "lodash";
   import * as io from "socket.io-client";
   import { types as timeoutTypes } from "../reducers/timeoutreducer";
-  
+  import { API_ROOT } from '../apiconfig';
   //import { push } from 'react-router-redux';
-  
+
   const authApi = {
     login(userData) {
       debugger;
       console.log(userData.user);
       console.log(userData.password);
-  
+
       //new Promise((resolve, reject) => {
       //return fetch("http://localhost:4003/loginsvc/", {
-      return fetch("http://hvs.selfip.net:4003/loginsvc/", {
+      const RestAPIURL = API_ROOT.backendAPIGWsvc;
+      const requestURL = `${RestAPIURL}loginsvc/`;
+      return fetch(requestURL, {
+      //return fetch("http://hvs.selfip.net:4003/loginsvc/", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -43,10 +46,10 @@ import {
         .then(response => response.json())
         .catch(error => error);
     }
-  
+
     //.then(data => data)
   };
-  
+
   function statusHelper(response) {
     debugger;
     if (!response.ok) {
@@ -57,7 +60,7 @@ import {
     }
     return response;
   }
-  
+
   function* login(userData) {
     debugger;
     try {
@@ -66,7 +69,7 @@ import {
       console.log(userData.payload.password);
       //yield put({ type: timeoutTypes.LOGIN_REQUEST, isLoading: false })
       const resultObj = yield call(authApi.login, userData.payload);
-  
+
       debugger;
       if (resultObj.response && !resultObj.response.ok) {
         debugger;
@@ -77,7 +80,7 @@ import {
       } else {
         //alert("Message" + JSON.parse(resultObj).message)
         //alert("name" + JSON.parse(resultObj).name)
-        
+
         if (JSON.parse(resultObj).message == "ok") {
           sessionStorage.setItem("token", JSON.parse(resultObj).token);
           //alert(JSON.parse(resultObj).name)
@@ -90,12 +93,12 @@ import {
           type: timeoutTypes.MESSAGE,
           message: {
             val: JSON.parse(resultObj).result,
-            msg: JSON.parse(resultObj).message,        
+            msg: JSON.parse(resultObj).message,
           }
         });
         console.log(JSON.parse(resultObj))
         //
-        
+
       }
       //yield put({ type: "LOGIN_STATUS", message: JSON.parse(resultObj).token })
     } catch (e) {
@@ -124,8 +127,8 @@ import {
         });
     }
   }
-  
-  
+
+
   export function* handleRequest(action) {
     debugger;
     //console.log("authSaga request", action);
@@ -134,7 +137,7 @@ import {
     //yield call(updateStatus);
     try {
       switch (action.type) {
-       
+
         case timeoutTypes.LOGIN_REQUEST: {
           //yield all([put({ type: "LOGIN_STATUS", message: '' }), put({ type: "ITEMS_IS_LOADING", isLoading: true })])
           debugger;
@@ -142,7 +145,7 @@ import {
           debugger;
           break;
         }
-  
+
         default: {
           return null;
           break;
@@ -152,4 +155,3 @@ import {
       yield put({ type: timeoutTypes.LOGIN_FAILURE, error: e });
     }
   }
-  

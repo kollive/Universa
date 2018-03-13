@@ -18,7 +18,7 @@ import * as _ from "lodash";
 import * as io from "socket.io-client";
 import { types as authTypes } from "../reducers/authreducer";
 import * as utils from "../Utils/common"
-
+import { API_ROOT } from '../apiconfig';
 //import { push } from 'react-router-redux';
 
 const authApi = {
@@ -29,7 +29,10 @@ const authApi = {
 
     //new Promise((resolve, reject) => {
     //return fetch("http://localhost:4003/loginsvc/", {
-      return fetch("http://hvs.selfip.net:4003/loginsvc/", {
+    const RestAPIURL = API_ROOT.backendAPIGWsvc;
+    const requestURL = `${RestAPIURL}loginsvc/`;
+    return fetch(requestURL, {
+      //return fetch("http://hvs.selfip.net:4003/loginsvc/", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -93,9 +96,9 @@ function* login(userData) {
           msg: resultObj.message,
         }
       });
-      //console.log(JSON.parse(resultObj))    
+      //console.log(JSON.parse(resultObj))
     } else {
-      
+
       yield put({
         type: authTypes.MESSAGE,
         message: { val: resultObj.val, msg: resultObj.result }
@@ -137,7 +140,7 @@ export function* handleRequest(action) {
   //yield call(updateStatus);
   try {
     switch (action.type) {
-      
+
       case authTypes.LOGIN_REQUEST: {
         //yield all([put({ type: "LOGIN_STATUS", message: '' }), put({ type: "ITEMS_IS_LOADING", isLoading: true })])
         //debugger;
