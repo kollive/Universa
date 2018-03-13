@@ -45,8 +45,8 @@ import Dialog from "material-ui/Dialog";
 import RaisedButton from "material-ui/RaisedButton";
 import * as _ from "lodash";
 import { bindActionCreators } from "redux";
-import { types as workplanTypes } from "reducers/workplanreducer";
-import { actions as workplanActions } from "reducers/workplanreducer";
+import { types as workplanTypes } from "../reducers/workplanreducer";
+import { actions as workplanActions } from "../reducers/workplanreducer";
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 

@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import { types as ManageTimeTypes, permissions as Permissions } from "reducers/Timesheet/timesheetreducer";
-import { actions as ManageTimeActions } from "reducers/Timesheet/timesheetreducer";
+import { types as ManageTimeTypes, permissions as Permissions } from "../../reducers/Timesheet/timesheetreducer";
+import { actions as ManageTimeActions } from "../../reducers/Timesheet/timesheetreducer";
 import TimePicker from 'material-ui/TimePicker';
 import * as _ from "lodash";
 import { Table } from 'reactstrap';

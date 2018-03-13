@@ -6,17 +6,17 @@ import IconButton from "material-ui/IconButton";
 import Paper from "material-ui/Paper";
 import Divider from "material-ui/Divider";
 import NotificationsIcon from "material-ui/svg-icons/social/notifications";
-import export_excel from "images/export_excel.PNG";
-import chart from "images/chart.PNG";
+import export_excel from "../images/export_excel.PNG";
+import chart from "../images/chart.PNG";
 
 //import ApprovalsTab from "./Approvals";
 import CadetInlineSearch from "./CadetInlineSearch";
-//import { actions as cadetDetailsActions } from "reducers/cadetdetailsreducer";
+//import { actions as cadetDetailsActions } from "../../reducers/cadetdetailsreducer";
 import TimeSheetHeader from "./TimeSheetHeader";
 import WorkPlan from "./WorkPlan";
 import { bindActionCreators } from "redux";
-import { types as commonTypes } from "reducers/commonreducer";
-import { actions as commonActions } from "reducers/commonreducer";
+import { types as commonTypes } from "../reducers/commonreducer";
+import { actions as commonActions } from "../reducers/commonreducer";
 import Timesheet from './Timesheet/Timesheet'
 
 

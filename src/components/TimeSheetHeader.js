@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import cadetlogo from "images/Universe.png";
-import cadettitle from "images/UTitle.png";
-import "App.css";
-import { actions as headerActions } from "reducers/cdheaderreducer";
-import { types as headertypes } from "reducers/cdheaderreducer";
+import cadetlogo from "../images/Universe.png";
+import cadettitle from "../images/UTitle.png";
+import "../App.css";
+import { actions as headerActions } from "../reducers/cdheaderreducer";
+import { types as headertypes } from "../reducers/cdheaderreducer";
 import { Container, Row, Col, Alert } from "reactstrap";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
