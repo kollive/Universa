@@ -519,12 +519,7 @@ export class Timesheet extends Component {
                     }}>
                     <Row>
                         <Col sm="12" style={{ width: "100%", }}>
-
-                            <TimePicker className="timepick" textFieldStyle={{ width: '90%', height: '20px', textAlign: 'center' }} value={this.state.errorDesc} onChange={(event, time) => {
-                                alert()
-                                this.setState({ errorDesc: time })
-
-                            } } autoOk={false} />
+ 
 
                             <Table bordered id='#Table' striped hover size="sm" className="border-bottom-0"
                                 style={{
