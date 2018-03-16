@@ -451,7 +451,7 @@ export class StaffList extends Component {
           <Column field="hvs_rsc_name" header="Resource Category" sortable={true} style={{ textAlign: 'center', width: '6%' }} sortable={true} filter={true} filterElement={RCFilter} filterMatchMode="contains" />
           <Column field="hv_program_name" header="Program Code" sortable={true} style={{ textAlign: 'center', width: '6%' }} sortable={true} filter={true} filterElement={PNFilter} filterMatchMode="contains" />
           <Column field="hvs_rsc_typ_name" header="Resource Type" sortable={true} style={{ textAlign: 'center', width: '6%' }} sortable={true} filter={true} filterElement={RTFilter} filterMatchMode="contains" />
-          <Column field="hv_manager_name" header="Manager" sortable={true} style={{ textAlign: 'center', width: '6%' }} sortable={true} filter={true} filterElement={MGFilter} filterMatchMode="contains" />        
+          <Column field="hv_manager_name" header="Reporting Manager" sortable={true} style={{ textAlign: 'center', width: '6%' }} sortable={true} filter={true} filterElement={MGFilter} filterMatchMode="contains" />        
                   
           <Column body={this.actionTemplate} header={customHeaderAction} style={{ textAlign: 'center', width: '3%' }} />
         </DataTable>

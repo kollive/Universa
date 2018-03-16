@@ -395,7 +395,7 @@ componentWillUnmount(){
 
                       </div>
                            <div className="col-sm-2 alignCenter" >
-                        <span className="labelfont">Manager </span>
+                        <span className="labelfont">Reporting Manager </span>
                       </div>
                       <div className="col-sm-4 alignCenter">
                         <Dropdown value={this.state.manager} options={this.state.ManagerItems} optionLabel="hv_manager_name"  onChange={this.onManagerChange} style={{ width: "80%", fontSize: '12px' }}
