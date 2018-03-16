@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import classnames from "classnames";
+import { DatePicker, TimePicker } from 'antd';
+
 
 
 import {
@@ -47,7 +49,7 @@ import * as _ from "lodash";
 import { bindActionCreators } from "redux";
 import { types as workplanTypes } from "../reducers/workplanreducer";
 import { actions as workplanActions } from "../reducers/workplanreducer";
-import DatePicker from 'react-datepicker';
+//import DatePicker from 'react-datepicker';
 import moment from 'moment';
 
 //import HVSPagination from "customComponents/pagination";
@@ -68,11 +70,14 @@ const styles = {
     }
 };
 
+const format = 'HH:mm';
+
 export class WorkPlan extends Component {
 
     static propTypes = {
         //name: PropTypes.string.isRequired
     };
+
 
     formatDate = (dt) => {
         let d = new Date(dt);
@@ -345,6 +350,33 @@ export class WorkPlan extends Component {
         })
     }
 
+    /*
+    function hhmmssToSeconds(str)  {
+        var arr = str.split(':').map(Number);
+        return (arr[0] * 3600) + (arr[1] * 60) + arr[2];
+    };
+    
+    function secondsToHHMMSS(seconds) {
+        var hours = parseInt(seconds / 3600, 10),
+            minutes = parseInt((seconds / 60) % 60, 10),
+            seconds = parseInt(seconds % 3600 % 60, 10);
+    
+        return [hours, minutes, seconds].map(function (i) { return i.toString().length === 2 ? i : '0' + i; }).join(':');
+    }
+    */
+    hhmmToSeconds = (str) => {
+        let arr = str.split(':').map(Number);
+        return (arr[0] * 3600) + (arr[1] * 60);
+    };
+
+    secondsToHHMM(seconds) {
+        let hours = parseInt(seconds / 3600, 10),
+            minutes = parseInt((seconds / 60) % 60, 10);
+        //seconds = parseInt(seconds % 3600 % 60, 10);
+
+        return [hours, minutes].map(function (i) { return i.toString().length === 2 ? i : '0' + i; }).join(':');
+    }
+
     getHours = (day) => {
         debugger;
         if (this.props.mode == "W") {
@@ -356,23 +388,35 @@ export class WorkPlan extends Component {
 
             //alert(rows.length)
             if (rows.length > 0) {
-                let hours = 0
+                let hours = 0;
+                let mins = 0;
+
+
+
                 rows.forEach(function (val, indx) {
-                    hours += _.parseInt(val.num_hours);
+                    let time = val.num_hours.split(":");
+                    //hours += Number.parseFloat(val.num_hours);
+                    hours += _.parseInt(time[0]);
+                    mins += _.parseInt(time[1]);
                 })
                 //alert(hours)
-                return hours;
+                return this.secondsToHHMM(this.hhmmToSeconds(hours + ":" + mins));
             } else {
                 return 0;
             }
         } else {
 
             let hours = 0;
+            let mins = 0;
+
             (this.state.items || []).forEach(function (val, indx) {
-                hours += _.parseInt(val.num_hours);
+                let time = val.num_hours.split(":");
+                //hours += Number.parseFloat(val.num_hours);
+                hours += _.parseInt(time[0]);
+                mins += _.parseInt(time[1]);
             })
             //alert(hours)
-            return hours;
+            return this.secondsToHHMM(this.hhmmToSeconds(hours + ":" + mins));
         }
     }
 
@@ -388,13 +432,13 @@ export class WorkPlan extends Component {
                 let d = new Date(itm.task_date);
                 d.setDate(d.getDate() + 1);
                 let d1 = d.getFullYear() + "-" + ('0' + (d.getMonth() + 1)).slice(-2) + "-" + ('0' + (d.getDate())).slice(-2); //d.getHours() 
-                console.log(d1)                                               
+                console.log(d1)
                 return (_.parseInt(itm.task_id) == _.parseInt(tmprow.task_id) && _.parseInt(itm.taskday) == _.parseInt(day) && (d1 != "1900-01-01"))
             });
 
             if (rows.length > 0) {
                 let row = rows[0];
-                return row.num_hours || 0;
+                return moment(row.num_hours || 0, "HH:mm");
             } else {
                 return 0;
             }
@@ -403,18 +447,12 @@ export class WorkPlan extends Component {
             //alert(this.props.startDT)
             let startDT = this.props.startDT;
             let rows = _.filter((this.state.items || []), function (itm) {
-                //alert("itm" + itm.task_id);
-                //alert("row" + row.task_id)
-                //console.log(this.formatDate(itm.task_date))
-                //console.log(this.formatDate(startDT))
-                //console.log(new Date(itm.task_date).setHours(0,0,0,0))
-                //console.log( new Date(startDT).setHours(0,0,0,0))
 
                 //From the database
                 let d = new Date(itm.task_date);
                 d.setDate(d.getDate() + 1);
                 let d1 = d.getFullYear() + "-" + ('0' + (d.getMonth() + 1)).slice(-2) + "-" + ('0' + d.getDate()).slice(-2); //d.getHours() 
-                
+
                 d = new Date(startDT);
                 let d2 = d.getFullYear() + "-" + ('0' + (d.getMonth() + 1)).slice(-2) + "-" + ('0' + d.getDate()).slice(-2); //d.getHours() 
 
@@ -432,21 +470,26 @@ export class WorkPlan extends Component {
             //console.log(rows)
             if (rows.length > 0) {
                 let row = rows[0];
-                return row.num_hours || 0;
+                return moment(row.num_hours || 0, "HH:mm");
             } else {
                 return 0;
             }
         }
     }
 
-    saveHours = (e, date, num, row) => {
+    saveHours = (e, date, num, row, TP) => {
         //alert("in Save")
         debugger;
-        let hrs = e.target.value;
-        if (_.trim(hrs) == "") {
+        TP.setState({ value: e });
+
+        //let hrs = e.target.value;
+        let hrs = e.format("HH:mm");
+
+        if (_.trim(hrs) == "00:00") {
             hrs = 0;
         }
-        hrs = Number(hrs);
+
+        //hrs = Number(hrs);
 
         let items = this.state.items;
 
@@ -506,15 +549,14 @@ export class WorkPlan extends Component {
                                 <thead>
                                     {this.props.mode == "D" ?
                                         <tr style={{ backgroundColor: "#ADD8E6", color: "black" }}>
-                                            <th style={{ width: "20px" }}>
+                                            <th style={{ width: "5%" }}>
                                                 <span className="fa-stack fa-lg" style={styles.link} onClick={() => this.addTask()}>
                                                     <i className="fa fa-square-o fa-stack-2x" />
                                                     <i className="fa fa-plus-circle fa-stack-1x" />
                                                 </span>{" "}
                                             </th>
-                                            <th style={{ width: "120px" }} />
-                                            <th style={{ width: "70px" }}>Total</th>
-                                            <th style={{ width: "80px" }}>
+                                            <th style={{ width: "25%" }} />
+                                            <th style={{ width: "10%" }}>
                                                 <Label>{this.getHours(2)}</Label>
                                             </th>
                                         </tr>
@@ -526,8 +568,7 @@ export class WorkPlan extends Component {
                                                     <i className="fa fa-plus-circle fa-stack-1x" />
                                                 </span>{" "}
                                             </th>
-                                            <th style={{ width: "19%" }} />
-                                            <th style={{ width: "6%" }}>Total</th>
+                                            <th style={{ width: "25%" }} />
                                             <th style={{ width: "10%" }}>
                                                 <Label>{this.getHours(2)}</Label>
                                             </th>
@@ -562,14 +603,12 @@ export class WorkPlan extends Component {
                                                             <i className="fa fa-tasks fa-fw" />
                                                         </td>
                                                         <td>{row.task_description}</td>
-                                                        <td>{""}</td>
                                                         <td>
-                                                            <Input
-                                                                type="text"
-                                                                style={{ width: "40px", height: "22px", lineHeight: "0", padding: "0px" }}
-                                                                value={this.getDayHours(2, row)}
-                                                                onChange={(e) => { this.saveHours(e, this.props.startDT, 0, row) }}  //Monday                                        
-                                                            ></Input>
+                                                            <TimePicker value={this.getDayHours(2, row)}
+                                                                format={format}
+                                                                defaultOpenValue={moment('08:00', format)}
+                                                                ref={el => this.TP = el}
+                                                                onChange={(e) => { this.saveHours(e, this.props.startDT, 0, row, this.TP) }} />
                                                         </td>
                                                         <td colspan={6}>
                                                         </td>
@@ -580,62 +619,48 @@ export class WorkPlan extends Component {
                                                             <i className="fa fa-tasks fa-fw" />
                                                         </td>
                                                         <td>{row.task_description}</td>
-                                                        <td>{""}</td>
                                                         <td>
-                                                            <Input
-                                                                type="text"
-                                                                style={{ width: "40px", height: "22px", lineHeight: "0", padding: "0px" }}
-                                                                value={this.getDayHours(2, row)}
-                                                                onChange={(e) => { this.saveHours(e, this.props.startDT, 0, row) }}  //Monday                                        
-                                                            />
+                                                            <TimePicker value={this.getDayHours(2, row)}
+                                                                format={format}
+                                                                defaultOpenValue={moment('08:00', format)}
+                                                                ref={el => this.TP = el}
+                                                                onChange={(e) => { this.saveHours(e, this.props.startDT, 0, row, this.TP) }} />
                                                         </td>
                                                         <td>
-                                                            <Input
-                                                                type="text"
-                                                                style={{ width: "40px", height: "22px", lineHeight: "0", padding: "0px" }}
-                                                                value={this.getDayHours(3, row)}
-                                                                onChange={(e) => { this.saveHours(e, this.props.startDT, 1, row) }}  //Tuesday          
-                                                            />
+                                                            <TimePicker value={this.getDayHours(3, row)} format={format}
+                                                                ref={el => this.TP = el}
+                                                                defaultOpenValue={moment('08:00', format)}
+                                                                onChange={(e) => { this.saveHours(e, this.props.startDT, 1, row, this.TP) }} />
                                                         </td>
                                                         <td>
-                                                            <Input
-                                                                type="text"
-                                                                style={{ width: "40px", height: "22px", lineHeight: "0", padding: "0px" }}
-                                                                value={this.getDayHours(4, row)}
-                                                                onChange={(e) => { this.saveHours(e, this.props.startDT, 2, row) }}  //Wednesday                                
-                                                            />
+                                                            <TimePicker value={this.getDayHours(4, row)} format={format}
+                                                                ref={el => this.TP = el}
+                                                                defaultOpenValue={moment('08:00', format)}
+                                                                onChange={(e) => { this.saveHours(e, this.props.startDT, 2, row, this.TP) }} />
                                                         </td>
                                                         <td>
-                                                            <Input
-                                                                type="text"
-                                                                style={{ width: "40px", height: "22px", lineHeight: "0", padding: "0px" }}
-                                                                value={this.getDayHours(5, row)}
-                                                                onChange={(e) => { this.saveHours(e, this.props.startDT, 3, row) }}  //Thursday                                
-                                                            />
+                                                            <TimePicker value={this.getDayHours(5, row)} format={format}
+                                                                ref={el => this.TP = el}
+                                                                defaultOpenValue={moment('08:00', format)}
+                                                                onChange={(e) => { this.saveHours(e, this.props.startDT, 3, row, this.TP) }} />
                                                         </td>
                                                         <td>
-                                                            <Input
-                                                                type="text"
-                                                                style={{ width: "40px", height: "22px", lineHeight: "0", padding: "0px" }}
-                                                                value={this.getDayHours(6, row)}
-                                                                onChange={(e) => { this.saveHours(e, this.props.startDT, 4, row) }}  //Friday                                
-                                                            />
+                                                            <TimePicker value={this.getDayHours(6, row)} format={format}
+                                                                ref={el => this.TP = el}
+                                                                defaultOpenValue={moment('08:00', format)}
+                                                                onChange={(e) => { this.saveHours(e, this.props.startDT, 4, row, this.TP) }} />
                                                         </td>
                                                         <td>
-                                                            <Input
-                                                                type="text"
-                                                                style={{ width: "40px", height: "22px", lineHeight: "0", padding: "0px" }}
-                                                                value={this.getDayHours(7, row)}
-                                                                onChange={(e) => { this.saveHours(e, this.props.startDT, 5, row) }}  //Saturday                                
-                                                            />
+                                                            <TimePicker value={this.getDayHours(7, row)} format={format}
+                                                                ref={el => this.TP = el}
+                                                                defaultOpenValue={moment('08:00', format)}
+                                                                onChange={(e) => { this.saveHours(e, this.props.startDT, 5, row, this.TP) }} />
                                                         </td>
                                                         <td>
-                                                            <Input
-                                                                type="text"
-                                                                style={{ width: "40px", height: "22px", lineHeight: "0", padding: "0px" }}
-                                                                value={this.getDayHours(1, row)}
-                                                                onChange={(e) => { this.saveHours(e, this.props.startDT, 6, row) }}  //Sunday                                
-                                                            />
+                                                            <TimePicker value={this.getDayHours(1, row)} format={format}
+                                                                ref={el => this.TP = el}
+                                                                defaultOpenValue={moment('08:00', format)}
+                                                                onChange={(e) => { this.saveHours(e, this.props.startDT, 6, row, this.TP) }} />
                                                         </td>
                                                     </tr>
                                                 )

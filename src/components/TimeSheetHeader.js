@@ -10,21 +10,22 @@ import { connect } from "react-redux";
 import ReactDOM from "react-dom";
 import Avatar from "material-ui/Avatar";
 import Toggle from 'material-ui/Toggle';
-import DatePicker from 'react-datepicker';
+//import DatePicker from 'react-datepicker';
 import moment from 'moment'
 //import DatePicker from 'react-date-picker';
-import { Button } from 'reactstrap';
-import 'react-datepicker/dist/react-datepicker.css'
+//import { Button } from 'reactstrap';
+//import 'react-datepicker/dist/react-datepicker.css'
+import { DatePicker, TimePicker, Button, Icon } from 'antd';
 
 class TimeSheetHeader extends React.Component {
-    
+
     constructor(props) {
         super(props);
 
         this.items = [];
 
         this.state = {
-            weekOrDay:true,
+            weekOrDay: true,
             isOpen: false,
             startDate: moment(),
             items: [
@@ -53,10 +54,10 @@ class TimeSheetHeader extends React.Component {
             }
         });
         */
- 
- 
-        
- 
+
+
+
+
     }
     componentDidUpdate(prevProps, prevState) {
         debugger;
@@ -70,30 +71,11 @@ class TimeSheetHeader extends React.Component {
 
     handleChange = (date) => {
         debugger
-        //console.log(wkStart)
-        //console.log(wkEnd)
-        //this.focus = !this.focus;
-        //alert(this.state.isOpen)    
-        /* 
-        this.DP.setOpen(!this.state.isOpen);
         
-        */
-        //let d1 = new Date(date);
-        //let d2 = new Date(this.state.startDate);
-
-        //if(d1 != d2) {    
-        /*         
-        this.DP.setOpen(!this.state.isOpen);
-        this.setState({
-            isOpen: !this.state.isOpen
-        })*/
-        this.setState({
-            isOpen: !this.state.isOpen
-        })
         this.setState({
             startDate: date
         })
-        //}
+       
     }
 
     toggle = () => {
@@ -105,7 +87,7 @@ class TimeSheetHeader extends React.Component {
     }
 
     setDayOrWeek = (val) => {
-        this.setState({weekOrDay:val}) 
+        this.setState({ weekOrDay: val })
         let mode = (val ? "W" : "D");
         this.props.callParentMode(mode);
     }
@@ -173,37 +155,32 @@ class TimeSheetHeader extends React.Component {
     };
 
     render() {
-    debugger;
-       // const renderTimesheet=<Timesheet headerState={this.state}/>
+        debugger;
+        // const renderTimesheet=<Timesheet headerState={this.state}/>
         // this.renderTimesheet=<Timesheet headerState={this.state}/>
-       
+
         return (
             <div className="m-2 p-2">
                 <Row>
                     <Col sm="3">
                         <div>
-                            <h3 className="d-inline align-middle">Timesheet</h3> <br/>
+                            <h3 className="d-inline align-middle">Timesheet</h3> <br />
                             <h6>{this.props.hv_name}</h6>
                         </div>
                     </Col>
                     <Col sm="3">
                         <div className="d-sm-inline-flex">
-                            <style>
-                                {`.react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box ul.react-datepicker__time-list {
-                                padding-left: 0;
-                                padding-right: 0;
-                            }`}
-                            </style>
-                            <DatePicker ref={(r) => { this.DP = r }} selected={this.state.startDate} onChange={this.handleChange} timeFormat="HH:mm" timeIntervals={15} dateFormat="YYYY-MM-DD" timeCaption="time"
-                            /> {"   "}
-                            <i className="fa fa-calendar fa-lg fa-fw" style={{ cursor: "pointer" }} onClick={(e) => { this.toggle() }}></i>
+
+                            <DatePicker ref={(r) => { this.DP = r }} value={this.state.startDate} onChange={this.handleChange} format={"YYYY-MM-DD"}
+                            />
+
                         </div>
                     </Col>
                     <Col sm="3">
                         <span style={{ border: "1px" }}>
-                            <Button><i className="fa fa-arrow-left fa-lg fa-fw" style={{ cursor: "pointer" }} onClick={() => this.moveWeek("P")}></i></Button>
-                            {" " + this.showWeekOrDay() + " "}
-                            <Button><i className="fa fa-arrow-right fa-lg fa-fw" style={{ cursor: "pointer" }} onClick={() => this.moveWeek("N")}></i></Button>
+                            <Button onClick={() => this.moveWeek("P")}><Icon type="caret-left" style={{ cursor: "pointer" }} /></Button>
+                            {"  " + this.showWeekOrDay() + "  "}
+                            <Button onClick={() => this.moveWeek("N")}><Icon type="caret-right" style={{ cursor: "pointer" }} /></Button>
                         </span>
                     </Col>
                     <Col sm="3">
