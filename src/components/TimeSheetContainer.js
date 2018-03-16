@@ -160,7 +160,7 @@ class TimeSheetContainer extends Component {
                         <Row >
                             {" "}
                             <Col sm="12">
-                                <WorkPlan staffID={ (this.props.commonState.hv_staff_id == "" ? this.props.hv_staff_id : this.props.commonState.hv_staff_id)} startDT={this.state.startDT} endDT={this.state.endDT} mode={this.state.mode} />
+                                <WorkPlan staffID={ (this.props.hv_staff_id == "" ? "7" : this.props.hv_staff_id )} startDT={this.state.startDT} endDT={this.state.endDT} mode={this.state.mode} />
                             </Col>
                         </Row>
                     </div>

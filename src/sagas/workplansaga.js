@@ -81,7 +81,7 @@ const attribApi = {
         //console.log(userData.user);
         //console.log(userData.password);
         //alert("Plan")
-        //alert(PL.payload.staffID)
+        alert(PL.payload.staffID)
         //new Promise((resolve, reject) => {
         const RestAPIURL = API_ROOT.backendAPIGWsvc;
         const requestURL = `${RestAPIURL}ExecSPM/`;
