@@ -5,6 +5,7 @@
   "dependencies": {
     "ag-grid": "^11.0.0",
     "ag-grid-react": "^11.0.0",
+    "antd": "^3.3.0",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-polyfill": "^6.23.0",
     "babel-preset-es2015": "^6.24.1",
