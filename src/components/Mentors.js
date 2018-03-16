@@ -37,10 +37,10 @@ import Dialog from "material-ui/Dialog";
 import RaisedButton from "material-ui/RaisedButton";
 import * as _ from "lodash";
 import { bindActionCreators } from "redux";
-import { types as mentorTypes } from "reducers/mentorreducer";
-import { actions as mentorActions } from "reducers/mentorreducer";
+import { types as mentorTypes } from "../reducers/mentorreducer";
+import { actions as mentorActions } from "../reducers/mentorreducer";
 
-import HVSPagination from "customComponents/pagination";
+import HVSPagination from "../customComponents/pagination";
 import CadetDetails from "./CadetDetails";
 import {
   Input,

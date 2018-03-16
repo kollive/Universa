@@ -13,19 +13,22 @@ import {
     race,
     apply
   } from "redux-saga/effects";
-  import { types as staffListTypes } from "reducers/Staff/stafflistreducer";
-
+  import { types as staffListTypes } from "../../reducers/Staff/stafflistreducer";
+  import { API_ROOT } from '../../apiconfig';
 
 
    function getStaffListFunction(selectedStaffData)
-  { 
+  {
      //alert(sessionStorage.getItem("token"))
         //debugger;
     //console.log(StaffData.Staff);
     //console.log(StaffData.password);
 
     //new Promise((resolve, reject) => {
-    return fetch("http://hvs.selfip.net:4003/ExecSPM/", {
+    const RestAPIURL = API_ROOT.backendAPIGWsvc;
+    const requestURL = `${RestAPIURL}ExecSPM/`;
+    return fetch(requestURL, {
+    //return fetch("http://hvs.selfip.net:4003/ExecSPM/", {
       //return fetch("http://localhost:4003/GetRoleTable/", {
 
       method: "POST",
@@ -36,7 +39,7 @@ import {
       body: JSON.stringify({
         spName: "sps_GetStaffDetails",
         token: sessionStorage.getItem("token"),
-        funcId:selectedStaffData.function_id,        
+        funcId:selectedStaffData.function_id,
         parms: {
             "cname" : ""
         }
@@ -45,15 +48,15 @@ import {
     // .then(statusHelper)
       .then(response => response.json())
       .catch(error => error);
-    
+
   }
 
 
   //.then(data => data)
   function statusHelper(response) {
     debugger;
-      
-   
+
+
     return response;
   }
 
@@ -70,15 +73,15 @@ import {
       debugger;
       if (resultObj.message != "ok") {
      // debugger;
-     
+
         yield put({
           type: staffListTypes.MESSAGE,
           message: {val: resultObj.val,msg:resultObj.result}
         });
       } else {
-      
+
        sessionStorage.setItem("token", resultObj.token);
-      if(resultObj.roles.length != undefined) 
+      if(resultObj.roles.length != undefined)
       sessionStorage.setItem("roles", JSON.stringify(JSON.parse(resultObj).roles));
         yield put({
           type: staffListTypes.ITEMS,
@@ -106,7 +109,7 @@ import {
      body: JSON.stringify({
          spName: 'spd_deleteStaff',
         token: sessionStorage.getItem("token"),
-        funcId:selectedStaffData[1].function_Id,                  
+        funcId:selectedStaffData[1].function_Id,
          parms:{"hv_staff_id":selectedStaffData[0].row.hv_staff_id}
      })
    })
@@ -130,7 +133,7 @@ import {
         });
       } else {
        sessionStorage.setItem("token", resultObj.token);
-      if(resultObj.roles.length != undefined) 
+      if(resultObj.roles.length != undefined)
        sessionStorage.setItem("roles", JSON.stringify(JSON.parse(resultObj).roles));
        let state=yield select()
        debugger
@@ -156,7 +159,7 @@ import {
       if (yield cancelled())
         yield put({ type: staffListTypes.MESSAGE, message: "Task Cancelled" });
     }
-     
+
  }
   export function* handleRequest(action) {
     //debugger;
@@ -172,7 +175,7 @@ import {
           const fetchTask = yield fork(deleteStaff,action.payload);
           break;
         }
-         
+
         default: {
           return null;
           break;

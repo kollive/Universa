@@ -14,13 +14,17 @@ import {
     apply
   } from "redux-saga/effects";
   import { delay, buffers, eventChannel, END } from "redux-saga";
-  import { types as StaffTypes } from "reducers/Staff/managestaffreducer.js";
-  import * as utils from "Utils/common"
-
+  import { types as StaffTypes } from "../../reducers/Staff/managestaffreducer.js";
+  import * as utils from "../../Utils/common"
+  import { API_ROOT } from '../../apiconfig';
+  
   function insertStaff(StaffData) {
   // debugger;
   //  return fetch("http://localhost:4003/ExecSP/", {
-  return fetch("http://hvs.selfip.net:4003/ExecSP/", {
+  const RestAPIURL = API_ROOT.backendAPIGWsvc;
+  const requestURL = `${RestAPIURL}ExecSP/`;
+  return fetch(requestURL, {
+  //return fetch("http://hvs.selfip.net:4003/ExecSP/", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -42,7 +46,10 @@ import {
   function updateStaff(StaffData) {
     debugger;
 //  return fetch("http://localhost:4003/ExecSP/", {
-return fetch("http://hvs.selfip.net:4003/ExecSP/", {
+const RestAPIURL = API_ROOT.backendAPIGWsvc;
+const requestURL = `${RestAPIURL}ExecSP/`;
+return fetch(requestURL, {
+//return fetch("http://hvs.selfip.net:4003/ExecSP/", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -67,7 +74,10 @@ return fetch("http://hvs.selfip.net:4003/ExecSP/", {
         parms : StaffData
       })
       // http://hvs.selfip.net:4003/ExecSP/
-   return fetch("http://hvs.selfip.net:4003/ExecSP/", {
+      const RestAPIURL = API_ROOT.backendAPIGWsvc;
+      const requestURL = `${RestAPIURL}ExecSP/`;
+      return fetch(requestURL, {
+   //return fetch("http://hvs.selfip.net:4003/ExecSP/", {
     // return fetch("http://localhost:4003/ExecSPM/", {
       method: "POST",
       headers: {
@@ -92,7 +102,10 @@ function getStaffResDetailsFunction(StaffData){
         parms : StaffData
       })
       // http://hvs.selfip.net:4003/ExecSP/
-   return fetch("http://hvs.selfip.net:4003/ExecSPM/", {
+      const RestAPIURL = API_ROOT.backendAPIGWsvc;
+      const requestURL = `${RestAPIURL}ExecSP/`;
+      return fetch(requestURL, {
+   //return fetch("http://hvs.selfip.net:4003/ExecSPM/", {
     // return fetch("http://localhost:4003/ExecSPM/", {
       method: "POST",
       headers: {
@@ -125,7 +138,7 @@ function getStaffResDetailsFunction(StaffData){
   function* insertStaffDetails(StaffData){
     try{
    debugger
-    
+
       const resultMessage = yield call(insertStaff, StaffData.payload);
       if (isJSON(resultMessage)) {
         let resultObj = JSON.parse(resultMessage);
@@ -141,7 +154,7 @@ function getStaffResDetailsFunction(StaffData){
        sessionStorage.setItem("token", resultObj.token);
        if(resultObj.roles.length != undefined) {
          sessionStorage.setItem("roles", JSON.stringify(resultObj.roles));
-       } 
+       }
         yield put({
             type: StaffTypes.MESSAGE,
             message: {val :2, statusMsg :resultObj.result}
@@ -175,7 +188,7 @@ function getStaffResDetailsFunction(StaffData){
             message: { val: resultObj.val, statusMsg: resultObj.result }
           });
         }
-      
+
       // if (resultMessage.response && !resultMessage.response.ok) {
       //   debugger;
       //   yield put({
@@ -187,7 +200,7 @@ function getStaffResDetailsFunction(StaffData){
         sessionStorage.setItem("token", resultObj.token);
         if(resultObj.roles.length != undefined) {
           sessionStorage.setItem("roles", JSON.stringify(resultObj.roles));
-        } 
+        }
         yield put({
             type: StaffTypes.MESSAGE,
             message: {val :2, statusMsg :resultObj.result}
@@ -201,31 +214,31 @@ function getStaffResDetailsFunction(StaffData){
       yield put({ type: StaffTypes.MESSAGE, message:{val:-1,statusMsg: "Task Cancelled" }});
     }
   }
- 
+
   function* getStaffDetails(StaffData){
     try {
-          
+
       let resultObj = yield call(getStaffFunction,StaffData.payload);
          // alert('he me ' +resultObj)
       alert(resultObj)
-      
+
       if (isJSON(resultObj)) {
         resultObj = JSON.parse(resultObj);
         if (resultObj.message != "ok") {
-          
+
           yield put({
             type: StaffTypes.MESSAGE,
             message: { val: resultObj.val, statusMsg: resultObj.result }
           });
         } else {
-          
-         
+
+
           sessionStorage.setItem("token", resultObj.token);
           if(resultObj.roles.length != undefined) {
             sessionStorage.setItem("roles", JSON.stringify(resultObj.roles));
-          }       
-         
-          
+          }
+
+
            yield put({
               type: StaffTypes.STAFFITEMS,
               staffrow: resultObj.result
@@ -233,22 +246,22 @@ function getStaffResDetailsFunction(StaffData){
       }
     }
     } catch (e) {
-      
+
       yield put({ type: StaffTypes.MESSAGE, message: e });
     } finally {
-      
+
       if (yield cancelled())
         yield put({ type: StaffTypes.MESSAGE, message: "Task Cancelled" });
     }
   }
-  
- 
+
+
  function* getStaffResDetails(StaffData){
     try {
-          
+
      debugger
       let resultObj = yield call(getStaffResDetailsFunction,StaffData.payload);
-      
+
       if (isJSON(resultObj)) {
         resultObj = JSON.parse(resultObj);
         if (resultObj.message != "ok") {
@@ -262,7 +275,7 @@ function getStaffResDetailsFunction(StaffData){
           sessionStorage.setItem("token", resultObj.token);
           if(resultObj.roles.length != undefined) {
             sessionStorage.setItem("roles", JSON.stringify(resultObj.roles));
-          }       
+          }
            yield put({
               type: StaffTypes.ITEMS,
               items: resultObj.result
@@ -270,36 +283,36 @@ function getStaffResDetailsFunction(StaffData){
       }
     }
     } catch (e) {
-      
+
       yield put({ type: StaffTypes.MESSAGE, message: e });
     } finally {
-      
+
       if (yield cancelled())
         yield put({ type: StaffTypes.MESSAGE, message: "Task Cancelled" });
     }
   }
- 
+
   export function* handleRequest(action) {
-    
+
     try {
       switch (action.type) {
         case StaffTypes.INSERT_REQUEST: {
-          
+
           const fetchTask = yield fork(insertStaffDetails, action.payload);
           break;
-        }   
+        }
         case StaffTypes.UPDATE_STAFF_REQUEST : {
           const fetchTask = yield fork(updateStaffDetails, action.payload);
-          break;          
+          break;
         }
         case StaffTypes.FETCH_STAFF_REQUEST: {
           const fetchTask = yield call(getStaffDetails,action.payload);
           break;
-        } 
+        }
        case StaffTypes.FETCH_STAFF_RESOURCE_DETAILS: {
           const fetchTask = yield call(getStaffResDetails,action.payload);
           break;
-        } 
+        }
         default: {
           return null;
           break;

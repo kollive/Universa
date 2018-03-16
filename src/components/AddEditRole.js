@@ -39,10 +39,10 @@ import Dialog from "material-ui/Dialog";
 import RaisedButton from "material-ui/RaisedButton";
 import * as _ from "lodash";
 import { bindActionCreators } from "redux";
-import { types as aeroleTypes } from "reducers/aerolereducer";
-import { actions as aeroleActions } from "reducers/aerolereducer";
+import { types as aeroleTypes } from "../reducers/aerolereducer";
+import { actions as aeroleActions } from "../reducers/aerolereducer";
 
-import HVSPagination from "customComponents/pagination";
+import HVSPagination from "../customComponents/pagination";
 import {
   Input,
   InputGroup,

@@ -16,21 +16,24 @@ import {
   import { delay, buffers, eventChannel, END } from "redux-saga";
   import * as _ from "lodash";
   import * as io from "socket.io-client";
-  import { types as attribTabTypes } from "reducers/attribtablereducer";
-  
+  import { types as attribTabTypes } from "../reducers/attribtablereducer";
+  import { API_ROOT } from '../apiconfig';
   //import { push } from 'react-router-redux';
-  
+
   const attribApi = {
-    
+
     getAttribTable(userData) {
       debugger;
       //console.log(userData.user);
       //console.log(userData.password);
-  
+
       //new Promise((resolve, reject) => {
-      return fetch("http://hvs.selfip.net:4003/GetAttribTable/", {
+      const RestAPIURL = API_ROOT.backendAPIGWsvc;
+      const requestURL = `${RestAPIURL}GetAttribTable/`;
+      return fetch(requestURL, {
+      //return fetch("http://hvs.selfip.net:4003/GetAttribTable/", {
         //return fetch("http://localhost:4003/GetAttribTable/", {
-        
+
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -50,9 +53,12 @@ import {
       debugger;
       //console.log(userData.user);
       //console.log(userData.password);
-  
+
       //new Promise((resolve, reject) => {
-      return fetch("http://hvs.selfip.net:4003/insAttribTable/", {
+      const RestAPIURL = API_ROOT.backendAPIGWsvc;
+      const requestURL = `${RestAPIURL}insAttribTable/`;
+      return fetch(requestURL, {
+      //return fetch("http://hvs.selfip.net:4003/insAttribTable/", {
         //return fetch("http://hvs.selfip.net:4000/reactlogin/", {
         method: "POST",
         headers: {
@@ -73,9 +79,12 @@ import {
       debugger;
       //console.log(userData.user);
       //console.log(userData.password);
-  
+
       //new Promise((resolve, reject) => {
-      return fetch("http://hvs.selfip.net:4003/delAttribTable/", {
+      const RestAPIURL = API_ROOT.backendAPIGWsvc;
+      const requestURL = `${RestAPIURL}delAttribTable/`;
+      return fetch(requestURL, {
+      //return fetch("http://hvs.selfip.net:4003/delAttribTable/", {
         //return fetch("http://hvs.selfip.net:4000/reactlogin/", {
         method: "POST",
         headers: {
@@ -96,9 +105,12 @@ import {
       debugger;
       //console.log(userData.user);
       //console.log(userData.password);
-  
+
       //new Promise((resolve, reject) => {
-      return fetch("http://hvs.selfip.net:4003/updAttribTable/", {
+      const RestAPIURL = API_ROOT.backendAPIGWsvc;
+      const requestURL = `${RestAPIURL}updAttribTable/`;
+      return fetch(requestURL, {
+      //return fetch("http://hvs.selfip.net:4003/updAttribTable/", {
         //return fetch("http://hvs.selfip.net:4000/reactlogin/", {
         method: "POST",
         headers: {
@@ -117,7 +129,7 @@ import {
     }
     //.then(data => data)
   };
-  
+
   function statusHelper(response) {
     debugger;
     if (!response.ok) {
@@ -132,7 +144,7 @@ import {
 
   function* insertAttribTable(userData){
     try{
-      
+
       yield put({
         type: attribTabTypes.ITEMS,
         items: []
@@ -142,7 +154,7 @@ import {
         type: attribTabTypes.SELECTED_ROWID,
         rowID: -1
       });
-      
+
       const resultObj = yield call(attribApi.insAttribTable, userData.payload);
       //debugger;
       if (resultObj.response && !resultObj.response.ok) {
@@ -171,7 +183,7 @@ import {
         )
 debugger;
       yield put({
-        type: attribTabTypes.SELECTED_ROWID,            
+        type: attribTabTypes.SELECTED_ROWID,
         rowID: -1
       });
 
@@ -205,7 +217,7 @@ debugger;
       */
 
       const resultObj = yield call(attribApi.updAttribTable, userData.payload);
-  
+
       debugger;
       if (resultObj.response && !resultObj.response.ok) {
         debugger;
@@ -233,7 +245,7 @@ debugger;
       })
 
       yield put({
-        type: attribTabTypes.SELECTED_ROWID,            
+        type: attribTabTypes.SELECTED_ROWID,
         rowID: -1
       });
 
@@ -266,7 +278,7 @@ debugger;
       */
 
       const resultObj = yield call(attribApi.delAttribTable, userData.payload);
-  
+
       debugger;
       if (resultObj.response && !resultObj.response.ok) {
         debugger;
@@ -292,7 +304,7 @@ debugger;
 
     }
   }
-  
+
   function* getAttribTable(userData) {
     debugger;
     try {
@@ -310,7 +322,7 @@ debugger;
       });
 
       const resultObj = yield call(attribApi.getAttribTable, userData.payload);
-  
+
       debugger;
       if (resultObj.response && !resultObj.response.ok) {
         debugger;
@@ -351,8 +363,8 @@ debugger;
         yield put({ type: attribTabTypes.MESSAGE, message: "Task Cancelled" });
     }
   }
-  
-  
+
+
   export function* handleRequest(action) {
     debugger;
     console.log("authSaga request", action);
@@ -361,7 +373,7 @@ debugger;
     //yield call(updateStatus);
     try {
       switch (action.type) {
-      
+
         case attribTabTypes.FETCH_TABLE_REQUEST: {
           //yield all([put({ type: "LOGIN_STATUS", message: '' }), put({ type: "ITEMS_IS_LOADING", isLoading: true })])
           debugger;
@@ -390,7 +402,7 @@ debugger;
           //yield all([put({ type: "LOGIN_STATUS", message: '' }), put({ type: "ITEMS_IS_LOADING", isLoading: true })])
           debugger;
           yield put({
-            type: attribTabTypes.SELECTED_ROWID,            
+            type: attribTabTypes.SELECTED_ROWID,
             rowID: action.payload.payload.rowID
           });
           break;
@@ -428,7 +440,7 @@ debugger;
 
         debugger;
           yield put({
-            type: attribTabTypes.SELECTED_ROWID,            
+            type: attribTabTypes.SELECTED_ROWID,
             rowID: -1
           });
 
@@ -438,8 +450,8 @@ debugger;
           });
           break;
         }
-        
-        
+
+
         default: {
           return null;
           break;
@@ -449,4 +461,3 @@ debugger;
       yield put({ type: attribTabTypes.LOGIN_FAILURE, error: e });
     }
   }
-  

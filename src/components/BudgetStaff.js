@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Staffandbdgt from 'images/Staffandbdgt.PNG'
+import Staffandbdgt from '../images/Staffandbdgt.PNG'
 import RaisedButton from "material-ui/RaisedButton";
 import {
     Container,

@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import * as _ from "lodash";
-import { types as roleTypes } from "reducers/rolereducer";
-import { actions as roleActions } from "reducers/rolereducer";
+import { types as roleTypes } from "../../reducers/rolereducer";
+import { actions as roleActions } from "../../reducers/rolereducer";
 import { DataTable } from 'primereact/components/datatable/DataTable';
 import { Column } from 'primereact/components/column/Column';
 import Roles from "../Roles";

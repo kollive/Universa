@@ -13,8 +13,8 @@ import RaisedButton from "material-ui/RaisedButton";
 import CircularProgress from "material-ui/CircularProgress";
 import * as _ from "lodash";
 import { bindActionCreators } from "redux";
-import { types as attribTypes } from "reducers/attribreducer";
-import { actions as attribActions } from "reducers/attribreducer";
+import { types as attribTypes } from "../reducers/attribreducer";
+import { actions as attribActions } from "../reducers/attribreducer";
 import classnames from "classnames";
 import {
   ButtCollapse,

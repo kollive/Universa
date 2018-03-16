@@ -16,9 +16,9 @@ import {
 import { delay, buffers, eventChannel, END } from "redux-saga";
 import * as _ from "lodash";
 import * as io from "socket.io-client";
-import { types as wplanTypes } from "reducers/workplanreducer";
+import { types as wplanTypes } from "../reducers/workplanreducer";
 import * as download from "downloadjs";
-
+import { API_ROOT } from '../apiconfig';
 //import { push } from 'react-router-redux';
 
 const attribApi = {
@@ -29,7 +29,10 @@ const attribApi = {
         //alert(payload.spName)
         //new Promise((resolve, reject) => {
         //return fetch("http://hvs.selfip.net:4003/ExportToExcel/", {
-        return fetch("http://localhost:4003/ExportToExcel/", {
+        const RestAPIURL = API_ROOT.backendAPIGWsvc;
+        const requestURL = `${RestAPIURL}ExportToExcel/`;
+        return fetch(requestURL, {
+        //return fetch("http://localhost:4003/ExportToExcel/", {
             method: "POST",
             headers: {
                 Accept: "application/json",
@@ -80,7 +83,10 @@ const attribApi = {
         //alert("Plan")
         //alert(PL.payload.staffID)
         //new Promise((resolve, reject) => {
-        return fetch("http://hvs.selfip.net:4003/ExecSPM/", {
+        const RestAPIURL = API_ROOT.backendAPIGWsvc;
+        const requestURL = `${RestAPIURL}ExecSPM/`;
+        return fetch(requestURL, {
+        //return fetch("http://hvs.selfip.net:4003/ExecSPM/", {
             //return fetch("http://localhost:4003/GetWPlanTable/", {
 
             method: "POST",
@@ -109,7 +115,10 @@ const attribApi = {
         //console.log(userData.password);
 
         //new Promise((resolve, reject) => {
-        return fetch("http://hvs.selfip.net:4003/ExecSP/", {
+        const RestAPIURL = API_ROOT.backendAPIGWsvc;
+        const requestURL = `${RestAPIURL}ExecSP/`;
+        return fetch(requestURL, {
+        //return fetch("http://hvs.selfip.net:4003/ExecSP/", {
             //return fetch("http://hvs.selfip.net:4000/reactlogin/", {
             method: "POST",
             headers: {
@@ -140,7 +149,10 @@ const attribApi = {
         //console.log(userData.password);
 
         //new Promise((resolve, reject) => {
-        return fetch("http://hvs.selfip.net:4003/ExecSP/", {
+        const RestAPIURL = API_ROOT.backendAPIGWsvc;
+        const requestURL = `${RestAPIURL}ExecSP/`;
+        return fetch(requestURL, {
+        //return fetch("http://hvs.selfip.net:4003/ExecSP/", {
             //return fetch("http://hvs.selfip.net:4000/reactlogin/", {
             method: "POST",
             headers: {
@@ -154,7 +166,7 @@ const attribApi = {
                     task_id: userData.task_id,
                     task_date: userData.task_date,
                     num_hours: userData.num_hours,
-                    user_id: userData.user_id,                    
+                    user_id: userData.user_id,
                 }
             })
         })
@@ -169,7 +181,10 @@ const attribApi = {
         //console.log(userData.password);
 
         //new Promise((resolve, reject) => {
-        return fetch("http://hvs.selfip.net:4003/ExecSP/", {
+        const RestAPIURL = API_ROOT.backendAPIGWsvc;
+        const requestURL = `${RestAPIURL}ExecSP/`;
+        return fetch(requestURL, {
+        //return fetch("http://hvs.selfip.net:4003/ExecSP/", {
             //return fetch("http://hvs.selfip.net:4000/reactlogin/", {
             method: "POST",
             headers: {
@@ -194,7 +209,10 @@ const attribApi = {
         //console.log(userData.password);
 
         //new Promise((resolve, reject) => {
-        return fetch("http://hvs.selfip.net:4003/ExecSP/", {
+        const RestAPIURL = API_ROOT.backendAPIGWsvc;
+        const requestURL = `${RestAPIURL}ExecSP/`;
+        return fetch(requestURL, {
+        //return fetch("http://hvs.selfip.net:4003/ExecSP/", {
             //return fetch("http://hvs.selfip.net:4000/reactlogin/", {
             method: "POST",
             headers: {
@@ -219,7 +237,10 @@ const attribApi = {
         //console.log(userData.password);
 
         //new Promise((resolve, reject) => {
-        return fetch("http://hvs.selfip.net:4003/ExecSP/", {
+        const RestAPIURL = API_ROOT.backendAPIGWsvc;
+        const requestURL = `${RestAPIURL}ExecSP/`;
+        return fetch(requestURL, {
+        //return fetch("http://hvs.selfip.net:4003/ExecSP/", {
             //return fetch("http://hvs.selfip.net:4000/reactlogin/", {
             method: "POST",
             headers: {
@@ -315,12 +336,12 @@ function* insertHourTable(userData) {
             } else {
                 //debugger;
                 //console.log(JSON.parse(resultObj).result);
-                
+
                 yield put({
                     type: wplanTypes.MESSAGE,
                     message: { val: 1, msg: "data" }
                 });
-               
+
             }
         } else {
             yield put({
@@ -341,7 +362,7 @@ function* updateWPlanTable(userData) {
             type: wplanTypes.ITEMS,
             items: []
           });
-     
+
           yield put({
             type: wplanTypes.SELECTED_ROWID,
             rowID: -1
@@ -393,7 +414,7 @@ function* deleteWPlanTable(roleID) {
             type: wplanTypes.ITEMS,
             items: []
           });
-     
+
           yield put({
             type: wplanTypes.SELECTED_ROWID,
             rowID: -1
@@ -442,7 +463,7 @@ function* deleteWPlanTable(roleID) {
               console.log(JSON.parse(resultObj).result)
               const state = yield select();
               const newitems = state.roleleState.items.filter((itm) => _.trim(itm.hv_universal_i) !== _.trim(userData.payload.rowID));
-       
+
               yield put({
                 type: wplanTypes.ITEMS,
                 items: newitems

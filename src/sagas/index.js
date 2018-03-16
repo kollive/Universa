@@ -11,8 +11,8 @@ import { types as changePWDTypes } from './../reducers/changepwdreducer'
 import { types as headerTypes } from './../reducers/cdheaderreducer'
 import { types as cadetSearchTypes } from './../reducers/cadetsearchreducer'
 import { types as cadetDetailsTypes } from './../reducers/cadetdetailsreducer'
-import { types as CadetInlineTypes } from "reducers/cadetinlinesearchreducer";
-import {types as ManageUserTypes} from "reducers/Users/manageusersreducer";
+import { types as CadetInlineTypes } from "../reducers/cadetinlinesearchreducer";
+import {types as ManageUserTypes} from "../reducers/Users/manageusersreducer";
 import { types as mentorTypes } from "./../reducers/mentorreducer";
 import { types as budgetTypes } from "./../reducers/budgetreducer";
 import { types as purchaseTypes } from "./../reducers/purchasereducer";
@@ -24,11 +24,12 @@ import { types as RoleTypes } from "./../reducers/rolereducer";
 import { types as usersListType } from "./../reducers/usersList_reducer";
 import { types as aeroleTypes } from "./../reducers/aerolereducer";
 import { types as timeoutTypes } from "./../reducers/timeoutreducer";
-import {types as ManageStaffTypes} from "reducers/Staff/managestaffreducer";
-import {types as StaffListTypes} from "reducers/Staff/stafflistreducer";
-import  {types as TimehseetTypes} from 'reducers/Timesheet/timesheetreducer';
-import {types as WorkPlanTypes} from "reducers/workplanreducer";
-import {types as CommonTypes} from "reducers/commonreducer";
+import {types as ManageStaffTypes} from "../reducers/Staff/managestaffreducer";
+import {types as StaffListTypes} from "../reducers/Staff/stafflistreducer";
+import  {types as TimehseetTypes} from '../reducers/Timesheet/timesheetreducer';
+import {types as WorkPlanTypes} from "../reducers/workplanreducer";
+import {types as CommonTypes} from "../reducers/commonreducer";
+
 
 
 import  * as authSagas  from './authsaga'

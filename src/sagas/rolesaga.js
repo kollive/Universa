@@ -16,9 +16,10 @@ import {
 import { delay, buffers, eventChannel, END } from "redux-saga";
 import * as _ from "lodash";
 import * as io from "socket.io-client";
-import { types as roleTypes } from "reducers/rolereducer";
+import { types as roleTypes } from "../reducers/rolereducer";
 import * as download from "downloadjs";
-import * as utils from "Utils/common"
+import * as utils from "../Utils/common"
+import { API_ROOT } from '../apiconfig';
 //import { push } from 'react-router-redux';
 
 const attribApi = {
@@ -28,7 +29,10 @@ const attribApi = {
     //console.log(userData.password);
     //alert(payload.spName)
     //new Promise((resolve, reject) => {
-    return fetch("http://hvs.selfip.net:4003/ExportToExcel/", {
+    const RestAPIURL = API_ROOT.backendAPIGWsvc;
+    const requestURL = `${RestAPIURL}ExportToExcel/`;
+    return fetch(requestURL, {
+    //return fetch("http://hvs.selfip.net:4003/ExportToExcel/", {
       //return fetch("http://localhost:4003/ExportToExcel/", {
       method: "POST",
       headers: {
@@ -80,7 +84,10 @@ const attribApi = {
     //alert( sessionStorage.getItem("token"))
 
     //new Promise((resolve, reject) => {
-    return fetch("http://hvs.selfip.net:4003/ExecSP/", {
+    const RestAPIURL = API_ROOT.backendAPIGWsvc;
+    const requestURL = `${RestAPIURL}ExecSP/`;
+    return fetch(requestURL, {
+    //return fetch("http://hvs.selfip.net:4003/ExecSP/", {
     //return fetch("http://localhost:4003/ExecSP/", {
 
       method: "POST",
@@ -110,7 +117,10 @@ const attribApi = {
     //console.log(userData.password);
 
     //new Promise((resolve, reject) => {
-    return fetch("http://hvs.selfip.net:4003/insRoleTable/", {
+    const RestAPIURL = API_ROOT.backendAPIGWsvc;
+    const requestURL = `${RestAPIURL}insRoleTable/`;
+    return fetch(requestURL, {
+    //return fetch("http://hvs.selfip.net:4003/insRoleTable/", {
       //return fetch("http://hvs.selfip.net:4000/reactlogin/", {
       method: "POST",
       headers: {
@@ -133,7 +143,10 @@ const attribApi = {
     //console.log(userData.password);
 
     //new Promise((resolve, reject) => {
-    return fetch("http://hvs.selfip.net:4003/ExecSP/", {
+    const RestAPIURL = API_ROOT.backendAPIGWsvc;
+    const requestURL = `${RestAPIURL}ExecSP/`;
+    return fetch(requestURL, {
+    //return fetch("http://hvs.selfip.net:4003/ExecSP/", {
       //return fetch("http://hvs.selfip.net:4000/reactlogin/", {
       method: "POST",
       headers: {
@@ -158,7 +171,10 @@ const attribApi = {
     //console.log(userData.password);
 
     //new Promise((resolve, reject) => {
-    return fetch("http://hvs.selfip.net:4003/ExecSP/", {
+    const RestAPIURL = API_ROOT.backendAPIGWsvc;
+    const requestURL = `${RestAPIURL}ExecSP/`;
+    return fetch(requestURL, {
+    //return fetch("http://hvs.selfip.net:4003/ExecSP/", {
       //return fetch("http://hvs.selfip.net:4000/reactlogin/", {
       method: "POST",
       headers: {
@@ -184,7 +200,10 @@ const attribApi = {
     //console.log(userData.password);
 
     //new Promise((resolve, reject) => {
-    return fetch("http://hvs.selfip.net:4003/updRoleTable/", {
+    const RestAPIURL = API_ROOT.backendAPIGWsvc;
+    const requestURL = `${RestAPIURL}updRoleTable/`;
+    return fetch(requestURL, {
+    //return fetch("http://hvs.selfip.net:4003/updRoleTable/", {
       //return fetch("http://hvs.selfip.net:4000/reactlogin/", {
       method: "POST",
       headers: {
@@ -221,8 +240,8 @@ function statusHelper(response) {
       var error = {};
       //error.response = response;
       error.message = val.message;
-      return error;   
-      //return JSON.stringify(error);     
+      return error;
+      //return JSON.stringify(error);
       */
       return val;
     })
@@ -317,7 +336,7 @@ function* deleteRoleTable(roleID) {
       } else {
         ////debugger;
         //console.log(JSON.parse(resultObj).result);
-        sessionStorage.setItem("token", resultObj.token);      
+        sessionStorage.setItem("token", resultObj.token);
 
         resultObj = yield call(attribApi.getRoleTable, "");
         resultObj = JSON.parse(resultObj);
@@ -439,7 +458,7 @@ function* getRoleTable(userData) {
           items: resultObj.result
         });
       }
-    } else {      
+    } else {
       yield put({
         type: roleTypes.MESSAGE,
         message: { val: resultObj.val, msg: resultObj.result }

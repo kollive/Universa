@@ -27,15 +27,15 @@ import {
 } from "reactstrap";
 import { FormWithConstraints, FieldFeedbacks, FieldFeedback } from 'react-form-with-constraints';
 
-import { types as ManageUserTypes, permissions as Permissions } from "reducers/Users/manageusersreducer";
-import { actions as ManageUserActions } from "reducers/Users/manageusersreducer";
+import { types as ManageUserTypes, permissions as Permissions } from "../../reducers/Users/manageusersreducer";
+import { actions as ManageUserActions } from "../../reducers/Users/manageusersreducer";
 import AssignRoles from './AssignRoles';
 
 
-import { types as roleTypes  } from "reducers/rolereducer";
-import { actions as roleActions } from "reducers/rolereducer";
+import { types as roleTypes  } from "../../reducers/rolereducer";
+import { actions as roleActions } from "../../reducers/rolereducer";
 import { Accordion, AccordionTab } from 'primereact/components/accordion/Accordion';
-import * as utils from "Utils/common";
+import * as utils from "../../Utils/common";
 // import { DataTable } from 'primereact/components/datatable/DataTable';
 // import { Column } from 'primereact/components/column/Column';
 //var js2xmlparser = require("js2xmlparser");

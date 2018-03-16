@@ -14,12 +14,15 @@ import {
     apply
   } from "redux-saga/effects";
   import { delay, buffers, eventChannel, END } from "redux-saga";
-  import { types as TimesheetTypes } from "reducers/Timesheet/timesheetreducer.js";
-  import * as utils from "Utils/common";
+  import { types as TimesheetTypes } from "../../reducers/Timesheet/timesheetreducer.js";
+  import * as utils from "../../Utils/common";
+  import { API_ROOT } from '../../apiconfig';
 
     function insertTimesheet(timesheetData) {
       //debugger
-  return fetch("http://hvs.selfip.net:4003/ExecSP/", {
+      const RestAPIURL = API_ROOT.backendAPIGWsvc;
+      const requestURL = `${RestAPIURL}ExecSP/`;
+      return fetch(requestURL, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -39,7 +42,9 @@ import {
 
   function updateTimesheet(timesheetData) {
     //debugger;
-return fetch("http://hvs.selfip.net:4003/ExecSP/", {
+    const RestAPIURL = API_ROOT.backendAPIGWsvc;
+    const requestURL = `${RestAPIURL}ExecSP/`;
+    return fetch(requestURL, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -58,7 +63,9 @@ return fetch("http://hvs.selfip.net:4003/ExecSP/", {
   }
 
   function getTimesheet(timesheetData){
-   return fetch("http://hvs.selfip.net:4003/ExecSP/", {
+   const RestAPIURL = API_ROOT.backendAPIGWsvc;
+   const requestURL = `${RestAPIURL}ExecSP/`;
+   return fetch(requestURL, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -96,10 +103,15 @@ return fetch("http://hvs.selfip.net:4003/ExecSP/", {
        if(resultObj.roles.length != undefined) {
          sessionStorage.setItem("roles", JSON.stringify(resultObj.roles));
        } 
-        yield put({
-            type: TimesheetTypes.MESSAGE,
-            message: {val :2, statusMsg :resultObj.result}
-          });
+        // yield put({
+        //     type: TimesheetTypes.MESSAGE,
+        //     message: {val :2, statusMsg :resultObj.result}
+        //   });
+        //alert(resultObj.result.length)
+             yield put({
+              type: TimesheetTypes.ITEMS,
+              items: resultObj.result
+        });
    } }
   }catch (e) {
     yield put({ type: TimesheetTypes.MESSAGE, message: {val:-1, statusMsg:e} });
@@ -187,9 +199,10 @@ return fetch("http://hvs.selfip.net:4003/ExecSP/", {
   export function* handleRequest(action) {
     
     try {
+     
+      
       switch (action.type) {
         case TimesheetTypes.INSERT_TIME_REQUEST: {
-          
           const fetchTask = yield fork(insertTimesheetDetails, action.payload);
           break;
         }   

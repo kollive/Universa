@@ -40,10 +40,10 @@ import Dialog from "material-ui/Dialog";
 import RaisedButton from "material-ui/RaisedButton";
 import * as _ from "lodash";
 import { bindActionCreators } from "redux";
-import { types as roleTypes } from "reducers/rolereducer";
-import { actions as roleActions } from "reducers/rolereducer";
+import { types as roleTypes } from "../reducers/rolereducer";
+import { actions as roleActions } from "../reducers/rolereducer";
 
-import HVSPagination from "customComponents/pagination";
+import HVSPagination from "../customComponents/pagination";
 import AddEditRole from "./AddEditRole";
 import {
   Input,

@@ -13,18 +13,21 @@ import {
     race,
     apply
   } from "redux-saga/effects";
-  import { types as usersListTypes } from "reducers/usersList_reducer";
+  import { types as usersListTypes } from "../reducers/usersList_reducer";
 
-
+  import { API_ROOT } from '../apiconfig';
 
    function getUserListFunction(selectedUserData)
-  { 
+  {
         //debugger;
     //console.log(userData.user);
     //console.log(userData.password);
 
     //new Promise((resolve, reject) => {
-    return fetch("http://hvs.selfip.net:4003/ExecSPM/", {
+    const RestAPIURL = API_ROOT.backendAPIGWsvc;
+    const requestURL = `${RestAPIURL}ExecSPM/`;
+    return fetch(requestURL, {
+    //return fetch("http://hvs.selfip.net:4003/ExecSPM/", {
       //return fetch("http://localhost:4003/GetRoleTable/", {
 
       method: "POST",
@@ -35,7 +38,7 @@ import {
       body: JSON.stringify({
         spName: "sps_getUsers",
         token: sessionStorage.getItem("token"),
-        funcId:selectedUserData.function_id,        
+        funcId:selectedUserData.function_id,
         parms: {
             "cname" : ""
         }
@@ -44,15 +47,15 @@ import {
     // .then(statusHelper)
       .then(response => response.json())
       .catch(error => error);
-    
+
   }
 
 
   //.then(data => data)
   function statusHelper(response) {
     //debugger;
-      
-   
+
+
     return response;
   }
 
@@ -74,9 +77,9 @@ import {
           message: {val: resultObj.val,msg:resultObj.result}
         });
       } else {
-      
+
        sessionStorage.setItem("token", resultObj.token);
-      if(resultObj.roles.length != undefined) 
+      if(resultObj.roles.length != undefined)
       sessionStorage.setItem("roles", JSON.stringify(JSON.parse(resultObj).roles));
         yield put({
           type: usersListTypes.ITEMS,
@@ -95,7 +98,10 @@ import {
   }
   function deleteUserFunction(selectedUserData)
  {
-   return fetch("http://hvs.selfip.net:4003/execSP/", {
+   const RestAPIURL = API_ROOT.backendAPIGWsvc;
+   const requestURL = `${RestAPIURL}ExecSP/`;
+   return fetch(requestURL, {
+   //return fetch("http://hvs.selfip.net:4003/execSP/", {
      method: "POST",
      headers: {
        Accept: "application/json",
@@ -104,7 +110,7 @@ import {
      body: JSON.stringify({
          spName: 'spd_deleteUser',
         token: sessionStorage.getItem("token"),
-        funcId:selectedUserData.function_id,                  
+        funcId:selectedUserData.function_id,
          parms:{"hv_user_id":selectedUserData.hv_user_id}
      })
    })
@@ -128,7 +134,7 @@ import {
         });
       } else {
        sessionStorage.setItem("token", resultObj.token);
-      if(resultObj.roles.length != undefined) 
+      if(resultObj.roles.length != undefined)
        sessionStorage.setItem("roles", JSON.stringify(JSON.parse(resultObj).roles));
        let state=yield select()
        //debugger
@@ -154,7 +160,7 @@ import {
       if (yield cancelled())
         yield put({ type: usersListTypes.MESSAGE, message: "Task Cancelled" });
     }
-     
+
  }
 
   export function* handleRequest(action) {

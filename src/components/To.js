@@ -24,7 +24,7 @@ import ListItem from 'material-ui/List/ListItem';
 import { blue300, indigo900, orange200, deepOrange300, pink400, purple500, } from 'material-ui/styles/colors';
 import Badge from 'material-ui/Badge';
 import NotificationsIcon from 'material-ui/svg-icons/social/notifications';
-import logo from '../logo.svg';
+
 import '../App.css';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';

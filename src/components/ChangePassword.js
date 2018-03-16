@@ -1,15 +1,15 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import passwordRules from "password-rules";
-import logo from "logo.svg";
-import clientlogo from "images/cadetlogo.png";
-import "App.css";
+
+import clientlogo from "../images/cadetlogo.png";
+import "../App.css";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { types as changePWDTypes } from "reducers/changepwdreducer";
-import { actions as changePWDActions } from "reducers/changepwdreducer";
+import { types as changePWDTypes } from "../reducers/changepwdreducer";
+import { actions as changePWDActions } from "../reducers/changepwdreducer";
 import * as _ from "lodash";
-import bgImg from "images/cgyca_background.png";
+import bgImg from "../images/cgyca_background.png";
 
 import {
   Table,

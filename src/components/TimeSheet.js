@@ -11,13 +11,12 @@ import chart from "../images/chart.PNG";
 
 //import ApprovalsTab from "./Approvals";
 import CadetInlineSearch from "./CadetInlineSearch";
-//import { actions as cadetDetailsActions } from "../../reducers/cadetdetailsreducer";
+//import { actions as cadetDetailsActions } from "reducers/cadetdetailsreducer";
 import TimeSheetHeader from "./TimeSheetHeader";
 import WorkPlan from "./WorkPlan";
 import { bindActionCreators } from "redux";
 import { types as commonTypes } from "../reducers/commonreducer";
 import { actions as commonActions } from "../reducers/commonreducer";
-import Timesheet from './Timesheet/Timesheet'
 
 
 import {
@@ -47,7 +46,7 @@ const styles = {
     }
 };
 
-class TimeSheetContainer extends Component {
+class TimeSheet extends Component {
     constructor(props) {
         super(props);
 
@@ -60,14 +59,11 @@ class TimeSheetContainer extends Component {
             staffID: "",
             startDT: null,
             endDT: null,
-            mode: "W",
             name: "",
             hv_staff_id: ""
         };
         // this.onClickAction = this.onClickAction.bind(this);
         this.setDate = this.setDate.bind(this);
-        this.setMode = this.setMode.bind(this);
-        
     }
 
     componentWillMount = () => {
@@ -119,20 +115,8 @@ class TimeSheetContainer extends Component {
         });
 
     }
- 
-    setMode(mode) {
-        debugger;
-        //alert(this.state.hv_staff_id);
-        this.setState({
-            mode: mode
-        });
-
-    }
-
 
     render() {
-        this.renderTimesheet=<Timesheet headerState={this.state} staffID={ (this.props.commonState.hv_staff_id == "" ? this.props.hv_staff_id : this.props.commonState.hv_staff_id)}/>
-
         return (
             <Container
                 fluid
@@ -142,25 +126,23 @@ class TimeSheetContainer extends Component {
                         <Row >
                             {" "}
                             <Col sm="12">
-                                <TimeSheetHeader hv_name={(this.props.commonState.hv_name == "" ? this.props.name : this.props.commonState.hv_name )} callParentDates={this.setDate} callParentMode={this.setMode} />
+                                <TimeSheetHeader hv_name={(this.props.commonState.hv_name == "" ? this.props.name : this.props.commonState.hv_name )} callParentDates={this.setDate} />
                             </Col>
                         </Row>
                     </div>
                     <Divider />
-                      <div >                        
+                    <div >
                         <Row >
                             {" "}
                             <Col sm="12">
-                                              {this.renderTimesheet}
-
+                                <CadetInlineSearch />
                             </Col>
                         </Row>
-                    </div>
-                    <div >                        
+                        <Divider />
                         <Row >
                             {" "}
                             <Col sm="12">
-                                <WorkPlan staffID={ (this.props.commonState.hv_staff_id == "" ? this.props.hv_staff_id : this.props.commonState.hv_staff_id)} startDT={this.state.startDT} endDT={this.state.endDT} mode={this.state.mode} />
+                                <WorkPlan staffID={ (this.props.commonState.hv_staff_id == "" ? this.props.hv_staff_id : this.props.commonState.hv_staff_id)} startDT={this.state.startDT} endDT={this.state.endDT} />
                             </Col>
                         </Row>
                     </div>
@@ -187,4 +169,4 @@ const mapDispatchToProps = dispatch => ({
 
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(TimeSheetContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(TimeSheet);

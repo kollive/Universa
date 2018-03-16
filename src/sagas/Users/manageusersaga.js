@@ -14,13 +14,17 @@ import {
     apply
   } from "redux-saga/effects";
   import { delay, buffers, eventChannel, END } from "redux-saga";
-  import { types as UserTypes, permissions as Permissions } from "reducers/Users/manageusersreducer.js";
-  import * as utils from "Utils/common"
+  import { types as UserTypes, permissions as Permissions } from "../../reducers/Users/manageusersreducer.js";
+  import * as utils from "../../Utils/common"
+  import { API_ROOT } from '../../apiconfig';
 
   function insertUser(userData) {
    // debugger;
   //  return fetch("http://localhost:4003/ExecSP/", {
-  return fetch("http://hvs.selfip.net:4003/ExecSP/", {
+  const RestAPIURL = API_ROOT.backendAPIGWsvc;
+  const requestURL = `${RestAPIURL}ExecSP/`;
+  return fetch(requestURL, {
+  //return fetch("http://hvs.selfip.net:4003/ExecSP/", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -42,7 +46,10 @@ import {
   function updateUser(userData) {
     //debugger;
 //  return fetch("http://localhost:4003/ExecSP/", {
-return fetch("http://hvs.selfip.net:4003/ExecSP/", {
+const RestAPIURL = API_ROOT.backendAPIGWsvc;
+const requestURL = `${RestAPIURL}ExecSP/`;
+return fetch(requestURL, {
+//return fetch("http://hvs.selfip.net:4003/ExecSP/", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -67,7 +74,10 @@ return fetch("http://hvs.selfip.net:4003/ExecSP/", {
         parms : user
       })
       // http://hvs.selfip.net:4003/ExecSP/
-   return fetch("http://hvs.selfip.net:4003/ExecSPM/", {
+      const RestAPIURL = API_ROOT.backendAPIGWsvc;
+      const requestURL = `${RestAPIURL}ExecSPM/`;
+      return fetch(requestURL, {
+   //return fetch("http://hvs.selfip.net:4003/ExecSPM/", {
     // return fetch("http://localhost:4003/ExecSPM/", {
       method: "POST",
       headers: {
@@ -100,7 +110,7 @@ return fetch("http://hvs.selfip.net:4003/ExecSP/", {
   function* insertUserDetails(userData){
     try{
     // debugger
-    
+
       const resultMessage = yield call(insertUser, userData.user);
       if (isJSON(resultMessage)) {
         let resultObj = JSON.parse(resultMessage);
@@ -116,7 +126,7 @@ return fetch("http://hvs.selfip.net:4003/ExecSP/", {
        sessionStorage.setItem("token", resultObj.token);
        if(resultObj.roles.length != undefined) {
          sessionStorage.setItem("roles", JSON.stringify(resultObj.roles));
-       } 
+       }
         yield put({
             type: UserTypes.MESSAGE,
             message: {val :2, statusMsg :resultObj.result}
@@ -150,7 +160,7 @@ return fetch("http://hvs.selfip.net:4003/ExecSP/", {
             message: { val: resultObj.val, statusMsg: resultObj.result }
           });
         }
-      
+
       // if (resultMessage.response && !resultMessage.response.ok) {
       //   debugger;
       //   yield put({
@@ -162,7 +172,7 @@ return fetch("http://hvs.selfip.net:4003/ExecSP/", {
         sessionStorage.setItem("token", resultObj.token);
         if(resultObj.roles.length != undefined) {
           sessionStorage.setItem("roles", JSON.stringify(resultObj.roles));
-        } 
+        }
         yield put({
             type: UserTypes.MESSAGE,
             message: {val :2, statusMsg :resultObj.result}
@@ -176,10 +186,10 @@ return fetch("http://hvs.selfip.net:4003/ExecSP/", {
       yield put({ type: UserTypes.MESSAGE, message:{val:-1,statusMsg: "Task Cancelled" }});
     }
   }
- 
+
   function* getUserDetails(userData){
     try {
-     
+
       let resultObj = yield call(getUser,userData.user);
       //debugger
       if (isJSON(resultObj)) {
@@ -195,7 +205,7 @@ return fetch("http://hvs.selfip.net:4003/ExecSP/", {
           sessionStorage.setItem("token", resultObj.token);
           if(resultObj.roles.length != undefined) {
             sessionStorage.setItem("roles", JSON.stringify(resultObj.roles));
-          }       
+          }
            yield put({
               type: UserTypes.ITEMS,
               items: resultObj.result
@@ -203,33 +213,33 @@ return fetch("http://hvs.selfip.net:4003/ExecSP/", {
       }
     }
     } catch (e) {
-      
+
       yield put({ type: UserTypes.MESSAGE, message: e });
     } finally {
-      
+
       if (yield cancelled())
         yield put({ type: UserTypes.MESSAGE, message: "Task Cancelled" });
     }
   }
   export function* handleRequest(action) {
-    
+
     try {
       switch (action.type) {
         case UserTypes.INSERT_REQUEST: {
-          
+
           const fetchTask = yield fork(insertUserDetails, action.user);
           break;
-        }   
+        }
         case UserTypes.UPDATE_USER_REQUEST : {
           const fetchTask = yield fork(updateUserDetails, action.user);
-          break;          
+          break;
         }
         case UserTypes.FETCH_USER_REQUEST: {
-          
+
           const fetchTask = yield fork(getUserDetails,action.user);
           break;
-        } 
-        
+        }
+
         default: {
           return null;
           break;

@@ -16,20 +16,23 @@ import {
   import { delay, buffers, eventChannel, END } from "redux-saga";
   import * as _ from "lodash";
   import * as io from "socket.io-client";
-  import { types as forgotPWDTypes } from "reducers/forgotpwdreducer";
-  
+  import { types as forgotPWDTypes } from "../reducers/forgotpwdreducer";
+  import { API_ROOT } from '../apiconfig';
   //import { push } from 'react-router-redux';
-  
+
   const attribApi = {
-    
+
     checkEmail(email) {
       //debugger;
       //console.log(userData.user);
       //console.log(userData.password);
-  
+
       //new Promise((resolve, reject) => {
       //return fetch("http://localhost:4003/sendEmail/", {
-      return fetch("http://hvs.selfip.net:4003/sendEmail/", {
+      const RestAPIURL = API_ROOT.backendAPIGWsvc;
+      const requestURL = `${RestAPIURL}sendEmail/`;
+      return fetch(requestURL, {
+      //return fetch("http://hvs.selfip.net:4003/sendEmail/", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -45,7 +48,7 @@ import {
     }
     //.then(data => data)
   };
-  
+
   function statusHelper(response) {
     //debugger;
     if (!response.ok) {
@@ -56,14 +59,14 @@ import {
     }
     return response;
   }
-  
+
   function* checkEmail(email) {
     //debugger;
     try {
       //yield call(delay, 5000)
       //yield put({ type: forgotPWDTypes.LOGIN_REQUEST, isLoading: false })
       const resultObj = yield call(attribApi.checkEmail, email);
-  
+
       //debugger;
       if (resultObj.response && !resultObj.response.ok) {
         //debugger;
@@ -103,8 +106,8 @@ import {
         yield put({ type: forgotPWDTypes.MESSAGE, message: "Task Cancelled" });
     }
   }
-  
-  
+
+
   export function* handleRequest(action) {
     //debugger;
     console.log("forgotPwdSaga request", action);
@@ -113,7 +116,7 @@ import {
     //yield call(updateStatus);
     try {
       switch (action.type) {
-      
+
         case forgotPWDTypes.CHECK_EMAIL_REQUEST: {
           //yield all([put({ type: "LOGIN_STATUS", message: '' }), put({ type: "ITEMS_IS_LOADING", isLoading: true })])
           //debugger;
@@ -121,7 +124,7 @@ import {
           //debugger;
           break;
         }
-  
+
         default: {
           return null;
           break;
@@ -131,4 +134,3 @@ import {
       yield put({ type: forgotPWDTypes.MESSAGE, error: e });
     }
   }
-  
