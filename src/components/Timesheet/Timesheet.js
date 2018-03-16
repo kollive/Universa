@@ -1,16 +1,19 @@
+
 import React, { Component } from 'react'
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { types as ManageTimeTypes, permissions as Permissions } from "../../reducers/Timesheet/timesheetreducer";
 import { actions as ManageTimeActions } from "../../reducers/Timesheet/timesheetreducer";
-import TimePicker from 'material-ui/TimePicker';
+import TimePicker1 from 'material-ui/TimePicker';
 import * as _ from "lodash";
 import { Table } from 'reactstrap';
 import moment from 'moment'
 import { Modal, ModalHeader, ModalBody, ModalFooter, Alert, Row, Col, Container } from 'reactstrap';
 import TimeSheetClass from './TimeSheetClass'
-import  './TimeSheet.css';
- 
+import './TimeSheet.css';
+import { TimePicker, Button } from 'antd';
+
+import 'antd/dist/antd.css';  // or 'antd/dist/antd.less'
 
 export class Timesheet extends Component {
     objTimeSheetClass;
@@ -40,86 +43,176 @@ export class Timesheet extends Component {
             date: new Date(),
             staff_id: "1",//this.props.staffID==''?'1':this.props.staffID,
             loggedIn: userid,
-            errorDesc:''
+            errorDesc: '',
+    
+            entry: {
+                start_time: null,
+                lunch_start: null,
+                lunch_end: null,
+                end_time: null,
+                staff_id: null,
+                createdate: null,
+                timesheet_date: null,
+                createuserid: null,
+                timepickerOpen: null,
+                
+
+            }
         }
 
 
     }
+   
+    //ca137226189
     onTimeChange = (event, time, date, row) => {
-        //debugger
-        //alert()
-        let saveTime = this.convertTime(time.toLocaleTimeString())
+        debugger
+        let startOfWeek, endOfWeek;
+        let saveTime = this.convertTimeHH(time.state.value, 'YYYY-MM-DD HH:mm')//time.state.value //this.convertTime(time)
         let saveDate = this.convertDate(date.toDateString())
-        this.objTimeSheetClass.setTime(row, saveTime, saveDate)
-        let findTime = _.find(this.objTimeSheetClass.getTime(), ['timesheet_date', saveDate])
-        //let sum = this.sumTime(findTime.savedTime)
-        //this.objTimeSheetClass.setTime('sum', sum, saveDate)
-
+        let saveDateString = this.convertDateString(date.toDateString())
+       
+        let findTime = _.find(this.state.entry, ['timesheet_date', saveDateString])
         if (findTime !== undefined)
         // if(findTime.length>0)
         {
-            var beginningTime = moment(findTime.start_time, 'hh:mm A')//moment(findTime.end_time, 'h:mma');
-            var endTime = moment(findTime.end_time, 'hh:mm A')//moment(findTime.start_time, 'h:mma');
-            if (beginningTime > endTime) {
-             //   event.preventDefault()
-               saveTime = '';
-               this.onTimeDismiss(row, saveDate);  
-               alert('Please enter valid ' + row + ' for date ' + saveDate);
-               return false
-               
-           
+            let timesheet_time = {}
+            switch (row) {
+                case 'Clock In':
+                    {
+                        findTime.start_time = moment(saveDateString + " " + saveTime)//saveTime
+                        break;
+                    }
+                case 'Lunch In':
+                    {
+                        findTime.lunch_start = moment(saveDateString + " " + saveTime)//saveTime
+                        break;
+                    } case 'Lunch Out':
+                    {
+                        findTime.lunch_end =moment(saveDateString + " " + saveTime)// saveTime
+                        break;
+                    } case 'Clock Out':
+                    {
+                        findTime.end_time = moment(saveDateString + " " + saveTime)//saveTime
+                        break;
+                    }
             }
+           //let calTime=moment(saveDateString + " " + this.convertTimeHH(time.state.value), 'YYYY-MM-DD HH:mm')
+            var beginningTime = this.convertDateWithTime(findTime.start_time)//moment(findTime.start_time, 'h:mm a')//moment(findTime.end_time, 'h:mma');
+            var endTime = this.convertDateWithTime(findTime.end_time)//this.convertTime(findTime.end_time)//moment(findTime.end_time, 'h:mm a')//moment(findTime.start_time, 'h:mma');
 
+            if (beginningTime > endTime) {
+                let removedArray = []
+                removedArray = _.remove(this.state.entry, function (n) {
+                    return n.timesheet_date != findTime.timesheet_date;
+                });
+                let updatedArray = []
+                if(row=='Clock Out')                
+                updatedArray = Object.assign({}, findTime, {
+                    end_time: null,
+                });
+                else
+                 updatedArray = Object.assign({}, findTime, {
+                    start_time: null,
+                });
+                removedArray.push(updatedArray);
+                this.setState({ entry: removedArray })
+                alert('Please enter valid ' + row + ' for date ' + saveDate);  
+                return false;
+            }
         
 
-            else {
-                
-                let timesheet_time = {}
-                switch (row) {
-                    case 'Clock In':
-                        {
-                            timesheet_time.start_time = saveTime
-                            break;
-                        }
-                    case 'Lunch In':
-                        {
-                            timesheet_time.lunch_start = saveTime
-                            break;
-                        } case 'Lunch Out':
-                        {
-                            timesheet_time.lunch_end = saveTime
-                            break;
-                        } case 'Clock Out':
-                        {
-                            timesheet_time.end_time = saveTime
-                            break;
-                        }
-                }
-                //this.objTimeSheetClass.setTime(row,timesheet_time,saveDate)
+            var lunch_start = this.convertDateWithTime(findTime.lunch_start)//moment(findTime.start_time, 'h:mm a')//moment(findTime.end_time, 'h:mma');
+            var lunch_end = this.convertDateWithTime(findTime.lunch_end)//this.convertTime(findTime.end_time)//moment(findTime.end_time, 'h:mm a')//moment(findTime.start_time, 'h:mma');
 
-                this.props.insertTimesheet({
-                    type: ManageTimeTypes.INSERT_TIME_REQUEST,
-                    payload: [{
-                        staff_id: this.state.staff_id,
-                        timesheet_date: saveDate,
-                        timesheet_time: JSON.stringify(timesheet_time),
-                        createuserid: this.state.loggedIn
-                    },
-                    {
-                        function_Id: 65
-                    }
-                    ]
+            if (lunch_start > lunch_end) {
+                let removedArray = []
+                removedArray = _.remove(this.state.entry, function (n) {
+                    return n.timesheet_date != findTime.timesheet_date;
                 });
-                this.renderSavedTimesheet();
+
+                let updatedArray = []
+                if(row=='Lunch Out')
+                updatedArray = Object.assign({}, findTime, {
+                    lunch_end: null,
+                });
+                else
+                   updatedArray = Object.assign({}, findTime, {
+                    lunch_start: null,
+                });
+                removedArray.push(updatedArray);
+                this.setState({ entry: removedArray })
+                alert('Please enter valid ' + row + ' for date ' + saveDate);  
+                return false;
+            }
+        
+        }
+        let timesheet_time = {}
+        
+        switch (row) {
+            case 'Clock In':
+                {
+                    timesheet_time.start_time = saveTime
+                    break;
+                }
+            case 'Lunch In':
+                {
+                    timesheet_time.lunch_start = saveTime
+                    break;
+                } case 'Lunch Out':
+                {
+                    timesheet_time.lunch_end = saveTime
+                    break;
+                } case 'Clock Out':
+                {
+                    timesheet_time.end_time = saveTime
+                    break;
+                }
+        }
+         if (this.props.headerState != undefined) {
+            if (this.props.headerState.mode == "D") {
+                startOfWeek = moment(this.props.headerState.startDT)//this.props.headerState.startDT//this.state.start_timesheet_date
+                endOfWeek = moment(this.props.headerState.startDT)//this.props.headerState.endDate//this.state.end_timesheet_date
+            }
+            else {
+                startOfWeek = moment(this.props.headerState.startDT).startOf('isoWeek')//this.props.headerState.startDT//this.state.start_timesheet_date
+                endOfWeek = moment(this.props.headerState.startDT).endOf('isoWeek')
             }
         }
+        this.props.insertTimesheet({
+            type: ManageTimeTypes.INSERT_TIME_REQUEST,
+            payload: [{
+                staff_id: this.state.staff_id,
+                timesheet_date: saveDate,
+                timesheet_time: JSON.stringify(timesheet_time),
+                createuserid: this.state.loggedIn,
+                start_timesheet_date: this.convertDate(startOfWeek), 
+                end_timesheet_date: this.convertDate(endOfWeek),
+                
+            },
+            {
+                function_Id: 65
+            }
+            ]
+        });
+        //this.renderSavedTimesheet();
+        return true;
+
     }
     convertDate = (dateString) => {
         var dateObj = new Date(dateString);
         var momentObj = moment(dateObj);
         return (momentObj.format('MM/DD/YYYY'))
     }
-    convertTime = (timeString => moment(timeString, ["h:mm A"]).format("HH:mm"));
+    convertDateString = (dateString) => {
+        var dateObj = new Date(dateString);
+        var momentObj = moment(dateObj);
+        return (momentObj.format('YYYY-MM-DD'))
+    }
+    convertTime = (timeString => moment(timeString, ["hh:mm A"]).format("hh:mm"));
+    convertTimeHH = (timeString => moment(timeString, ["HH:mm A"]).format("HH:mm"));
+    
+    convertDateWithTime = (timeString => moment(timeString, 'YYYY-MM-DD HH:mm A'));
+
     onTimeDismiss(row, saveDate) {
         this.objTimeSheetClass.setTime(row, '', saveDate)
     }
@@ -164,9 +257,10 @@ export class Timesheet extends Component {
     componentDidMount() {
 
         this.renderSavedTimesheet();
-
     }
     componentWillReceiveProps(nextProps) {
+        debugger
+        this.setState({ entry: nextProps.TimesheetState.items })
         //alert('componentWillReceiveProps')
         let startOfWeek, endOfWeek;
         //debugger
@@ -221,10 +315,18 @@ export class Timesheet extends Component {
             });
             //}
 
+
         }
     }
-    render() {
 
+    getSavedValue = (savedTime) => {
+        if (savedTime != '')
+            return savedTime
+        else
+            return new Date()
+    }
+    render() {
+        debugger
         let contentHeader, list, startOfWeek, endOfWeek, savedTimesheet, time, totalVal;
         if (this.props.headerState != undefined) {
             if (this.props.headerState.mode == "D") {
@@ -260,8 +362,10 @@ export class Timesheet extends Component {
 
             if (this.props.TimesheetState !== undefined) {
                 if (this.props.TimesheetState.items !== undefined) {
-                    if (this.props.TimesheetState.items.length !== 0)
-                        savedTimesheet = this.props.TimesheetState.items
+                    if (this.props.TimesheetState.items.length !== 0) {
+
+                    }
+                    //savedTimesheet = this.props.TimesheetState.items
                 }
             }
             list = myClock.map(p => {
@@ -271,11 +375,13 @@ export class Timesheet extends Component {
                         {myDays.map(k => {
                             if (p.clock !== 'Total') {
                                 let currentDate = k.toDateString().split(" ")
-                                if (savedTimesheet !== undefined) {
+                                if (this.state.entry !== null) {
                                     var self = this;
-                                    time = _.find(savedTimesheet,
+
+                                    time = _.find(this.state.entry,
                                         function (o) {
-                                            return (moment(o.timesheet_date).format('MM/DD/YYYY') == moment(k.toDateString()).format('MM/DD/YYYY'))
+                                            if (o !== null)
+                                                return (moment(o.timesheet_date).format('MM/DD/YYYY') == moment(k.toDateString()).format('MM/DD/YYYY'))
                                         });
 
                                     let savedTime = '';
@@ -283,55 +389,88 @@ export class Timesheet extends Component {
                                         //   alert(time.start_time)
                                         switch (p.clock) {
                                             case 'Clock In':
-                                                savedTime = (time.start_time !== null) ? moment(time.start_time, 'YYYY-MM-DD hh:mm A').toDate() : ''
+                                                savedTime = (time.start_time !== null) ? moment(time.start_time, 'YYYY-MM-DD hh:mm A') : ''
                                                 // moment(time.start_time).format('MM/DD/YYYY hh:mm A').toDate() : ''
                                                 break;
                                             case 'Lunch In':
-                                                savedTime = (time.lunch_start !== null) ? moment(time.lunch_start, 'YYYY-MM-DD hh:mm A').toDate() : ''
+                                                savedTime = (time.lunch_start !== null) ? moment(time.lunch_start, 'YYYY-MM-DD hh:mm A') : ''
                                                 break;
                                             case 'Lunch Out':
-                                                savedTime = (time.lunch_end !== null) ? moment(time.lunch_end, 'YYYY-MM-DD hh:mm A').toDate() : ''
+                                                savedTime = (time.lunch_end !== null) ? moment(time.lunch_end, 'YYYY-MM-DD hh:mm A') : ''
                                                 break;
                                             case 'Clock Out':
-                                                savedTime = (time.end_time !== null) ? moment(time.end_time, 'YYYY-MM-DD hh:mm A').toDate() : ''
+                                                savedTime = (time.end_time !== null) ? moment(time.end_time, 'YYYY-MM-DD hh:mm A') : ''//new Date("2015-03-04T00:00");
+
                                                 break;
                                         }
 
                                     }
-                                    this.objTimeSheetClass.setTime(p.clock, this.convertTime(savedTime), this.convertDate(k))
+
+                                    //this.objTimeSheetClass.setTime(p.clock, this.convertTime(savedTime), this.convertDate(k))
+                                    //   <TimePicker1 className="timepick" textFieldStyle={{ width: '90%', height: '20px', textAlign: 'bottom' }} value={this.getSavedValue(savedTime)} onChange={(event, time) => { this.onTimeChange(event, time, k, p.clock) } } autoOk={false} />
+                                    //  <TimePicker1   className="timepick" textFieldStyle={{ width: '90%',  height: '20px',textAlign: 'center' }} value='' onChange={(event, time) => this.onTimeChange(event, time, k, p.clock)} autoOk={false} />
+                                    //
+                                    var inputElement;
+
                                     return (<td className="grey1" key={p.id}>
-                                    <TimePicker className="timepick" textFieldStyle={{ width: '90%', height: '20px', textAlign: 'bottom' }} value={savedTime} onChange={(event, time) => { this.onTimeChange(event, time, k, p.clock) } } autoOk={false} /></td>);
+
+                                        <TimePicker  ref={el => inputElement = el}   
+                                        use12Hours format="hh:mm A" value={savedTime} onChange={(time, timeString) => {
+                                            //this.onTimeChange(timeString, time, k, p.clock) 
+                                            inputElement.setState({ value: time })
+                                        } }
+                                            addon={() => (
+                                                <Button size="small" type="primary" onClick={() => {
+                                                    //if(
+                                                        //)
+                                                 //   {
+                                                      //  debugger
+                                              inputElement.timePickerRef.setState({open:false})
+                                            this.onTimeChange('', inputElement, k, p.clock)
+
+                                                   // }
+                                                   
+
+                                                } }    >
+                                                    OK
+          </Button>
+                                            )}
+                                            />
+
+                                    </td>);
+
                                 }
                                 else
                                     return (<td style={{ width: "130px" }} key={p.id}>
-                                        <TimePicker   className="timepick" textFieldStyle={{ width: '90%',  height: '20px',textAlign: 'center' }} value='' onChange={(event, time) => this.onTimeChange(event, time, k, p.clock)} autoOk={false} /></td>);
+                                        <TimePicker use12Hours format="hh:mm A" value='' onChange={(event, time) => { this.onTimeChange(event, time, k, p.clock) } } />
+
+                                    </td>);
                             }
                             else if (p.clock == 'Total') {
 
-                                if (savedTimesheet !== undefined) {
+                                if (this.state.entry !== undefined) {
                                     var self = this;
-                                    time = _.find(savedTimesheet,
+                                    time = _.find(this.state.entry,
                                         function (o) {
-                                            return (moment(o.timesheet_date).format('MM/DD/YYYY') == moment(k.toDateString()).format('MM/DD/YYYY'))
+                                            if (o !== null)
+                                                return (moment(o.timesheet_date).format('MM/DD/YYYY') == moment(k.toDateString()).format('MM/DD/YYYY'))
                                         });
                                 }
                                 if (time !== undefined) {
-                                   
-                                totalVal = calculateTotalHrs(time.start_time, time.end_time,time.lunch_start, time.lunch_end)
+
+                                    totalVal = calculateTotalHrs(time.start_time, time.end_time, time.lunch_start, time.lunch_end)
                                 }
-                                if(totalVal !=='' )
-                                {
-                                 let val=''
-                                 val=totalVal
-                               // alert(val)
-                                 
-                                 totalVal=''
-                                 return (<td className="grey1"><span>{val}</span></td>);
+                                if (totalVal !== '') {
+                                    let val = ''
+                                    val = totalVal
+                                    // alert(val)
+
+                                    totalVal = ''
+                                    return (<td><span style={{marginLeft:'30px',  fontWeight: 'bold'}}>{val}</span></td>);
                                 }
-                                else
-                                {
-                                totalVal=''
-                                return (<td className="grey1"><span className="timepick" textFieldStyle={{ width: '90%', height: '20px', textAlign: 'bottom' }}></span></td>);
+                                else {
+                                    totalVal = ''
+                                    return (<td className="grey1"><span className="timepick" textFieldStyle={{ width: '90%', height: '20px', textAlign: 'bottom' }}></span></td>);
                                 }
                             }
                         })}
@@ -339,31 +478,32 @@ export class Timesheet extends Component {
                 );
             });
         }
-        function calculateTotalHrs(StartTime, EndTime,LunchStart,LunchEnd) {
+
+        function calculateTotalHrs(StartTime, EndTime, LunchStart, LunchEnd) {
             debugger
             if (StartTime !== null && EndTime !== null) {
-              
-            //     var startTime = moment(StartTime, "hh:mm:ss A");
-            //     var endTime = moment(EndTime, "hh:mm:ss A");
-            //     var mins = moment(moment(endTime, "hh:mm:ss").diff(moment(startTime, "hh:mm:ss"))).format("mm")
-            //     var hrs = moment(moment(endTime, "hh:mm:ss").diff(moment(startTime, "hh:mm:ss"))).format("hh")
 
-            //     return (hrs + "." + mins  )
-            // }
+                //     var startTime = moment(StartTime, "hh:mm:ss A");
+                //     var endTime = moment(EndTime, "hh:mm:ss A");
+                //     var mins = moment(moment(endTime, "hh:mm:ss").diff(moment(startTime, "hh:mm:ss"))).format("mm")
+                //     var hrs = moment(moment(endTime, "hh:mm:ss").diff(moment(startTime, "hh:mm:ss"))).format("hh")
 
-            // var startTime = moment(StartTime, 'YYYY-MM-DD hh:mm A').toDate()
-            // var endTime = moment(EndTime, 'YYYY-MM-DD hh:mm A').toDate()
-         
-            // var diffMs = (endTime - startTime); // milliseconds between now & Christmas
-            // var diffHrs = Math.floor((diffMs % 86400000) / 3600000); // hours
-            // var diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000); // minutes
-            // return (diffHrs + ":" + diffMins);\
-     //  alert(EndTime)
-           var ms =moment(EndTime,"YYYY-MM-DD hh:mm A").diff(moment(StartTime,"YYYY-MM-DD hh:mm A"));
-           var msl =moment(LunchEnd,"YYYY-MM-DD hh:mm A").diff(moment(LunchStart,"YYYY-MM-DD hh:mm A"));
-           var d =moment.duration(ms).subtract(moment.duration(msl), 'duration')          
-           // alert("EndTime "+ EndTime  + ' ' +moment.duration(ms).hours()+ ":"+ d.minutes())   
-           return (moment.duration(ms).hours()+ ":"+ moment.duration(ms).minutes())
+                //     return (hrs + "." + mins  )
+                // }
+
+                // var startTime = moment(StartTime, 'YYYY-MM-DD hh:mm A').toDate()
+                // var endTime = moment(EndTime, 'YYYY-MM-DD hh:mm A').toDate()
+
+                // var diffMs = (endTime - startTime); // milliseconds between now & Christmas
+                // var diffHrs = Math.floor((diffMs % 86400000) / 3600000); // hours
+                // var diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000); // minutes
+                // return (diffHrs + ":" + diffMins);\
+                //  alert(EndTime)
+                var ms = moment(EndTime, "YYYY-MM-DD hh:mm A").diff(moment(StartTime, "YYYY-MM-DD hh:mm A"));
+                var msl = moment(LunchEnd, "YYYY-MM-DD hh:mm A").diff(moment(LunchStart, "YYYY-MM-DD hh:mm A"));
+                var d = moment.duration(ms).subtract(moment.duration(msl), 'duration')
+                // alert("EndTime "+ EndTime  + ' ' +moment.duration(ms).hours()+ ":"+ d.minutes())   
+                return (d.hours() + ":" +d.minutes())
             }
             else return ''
         }
@@ -379,13 +519,13 @@ export class Timesheet extends Component {
                     }}>
                     <Row>
                         <Col sm="12" style={{ width: "100%", }}>
-               
-                                        <TimePicker   className="timepick" textFieldStyle={{ width: '90%',  height: '20px',textAlign: 'center' }} value={this.state.errorDesc}  onChange={(event, time) => {
-alert()
-            this.setState({errorDesc:time})
 
-                                        }} autoOk={false} />
-                        
+                            <TimePicker className="timepick" textFieldStyle={{ width: '90%', height: '20px', textAlign: 'center' }} value={this.state.errorDesc} onChange={(event, time) => {
+                                alert()
+                                this.setState({ errorDesc: time })
+
+                            } } autoOk={false} />
+
                             <Table bordered id='#Table' striped hover size="sm" className="border-bottom-0"
                                 style={{
                                     width: '100%',

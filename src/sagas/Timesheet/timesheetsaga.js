@@ -103,10 +103,15 @@ import {
        if(resultObj.roles.length != undefined) {
          sessionStorage.setItem("roles", JSON.stringify(resultObj.roles));
        } 
-        yield put({
-            type: TimesheetTypes.MESSAGE,
-            message: {val :2, statusMsg :resultObj.result}
-          });
+        // yield put({
+        //     type: TimesheetTypes.MESSAGE,
+        //     message: {val :2, statusMsg :resultObj.result}
+        //   });
+        //alert(resultObj.result.length)
+             yield put({
+              type: TimesheetTypes.ITEMS,
+              items: resultObj.result
+        });
    } }
   }catch (e) {
     yield put({ type: TimesheetTypes.MESSAGE, message: {val:-1, statusMsg:e} });
@@ -194,9 +199,10 @@ import {
   export function* handleRequest(action) {
     
     try {
+     
+      
       switch (action.type) {
         case TimesheetTypes.INSERT_TIME_REQUEST: {
-          
           const fetchTask = yield fork(insertTimesheetDetails, action.payload);
           break;
         }   
