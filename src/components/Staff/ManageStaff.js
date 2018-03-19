@@ -151,7 +151,9 @@ class ManageStaff extends Component {
             initials: staff.hv_initials,
             resourcecategory: _.find(nextProps.manageStaffState.items[0], { 'hvs_rsc_name': staff.hvs_rsc_name }),
             program: _.find(nextProps.manageStaffState.items[2], { 'hv_program': staff.hv_program }),
-            resourcetype:_.find(nextProps.manageStaffState.items[1], { 'hvs_rsc_typ_name': staff.hvs_rsc_typ_name }),  
+            resourcetype:_.find(nextProps.manageStaffState.items[1], { 'hvs_rsc_typ_name': staff.hvs_rsc_typ_name }),
+            manager:_.find(nextProps.manageStaffState.items[3], { 'hv_manager_id': staff.hv_manager_id }),  
+              
             userid: staff.hv_user_id,
            // manager: staff.hv_staff_id,
             
