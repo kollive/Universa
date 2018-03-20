@@ -103,7 +103,7 @@ function getStaffResDetailsFunction(StaffData){
       })
       // http://hvs.selfip.net:4003/ExecSP/
       const RestAPIURL = API_ROOT.backendAPIGWsvc;
-      const requestURL = `${RestAPIURL}ExecSP/`;
+      const requestURL = `${RestAPIURL}ExecSPM/`;
       return fetch(requestURL, {
    //return fetch("http://hvs.selfip.net:4003/ExecSPM/", {
     // return fetch("http://localhost:4003/ExecSPM/", {

@@ -37,24 +37,24 @@ class ManageStaff extends Component {
       resourcecategory: "",
       resourcetype: '',
       program:'',
+      manager:'',
       userid: '',
       permissions: '',
       btndisabled: false,
       ResourceCategoryItems: [],//[{ hvs_rsc_id: 1, hvs_rsc_name: 'a' }],
       ResourceTypeItems:[],// [{ hvs_rsc_typ_id: 1, hvs_rsc_typ_name: 'b' }],
       ProgramItems: [],//[{ hv_program: 1, hv_program_name: 'DELTA' }],
+      ManagerItems: [],//[{ hv_program: 1, hv_program_name: 'DELTA' }],
       loggedinuser:'',
       parentProps:props
     }
     this.submitForm = this.submitForm.bind(this);
     this.CloseDialog = this.CloseDialog.bind(this);
     this.handleChange = this.handleChange.bind(this);
-//alert(props)
-debugger
+
   }
 
   setUser = () => {
-    debugger
    // let functions = JSON.parse(sessionStorage.getItem("roles"));
 //if(functions.length>0)
   //  this.setState({ loggedinuser:functions[0].hv_user_id})
@@ -67,134 +67,10 @@ debugger
   shouldComponentUpdate(nextProps, nextState){
     // return a boolean value
     debugger
-
     return true;
 }
-  // componentDidMount() {
-
-  //   this.setUser();
-  //   this.props.getStaffResDetails({
-  //    type: ManageStaffTypes .FETCH_STAFF_RESOURCE_DETAILS,
-  //    payload: [{},{ function_Id: '66' }]
-  //    });
-  //   if(this.props.staffObject!==undefined)
-  //   {
-    
-  //  if (this.props.staffObject.currectSelectedStaff != null) {
-  //       // this.props.getStaffDetails({
-  //       //   type: ManageStaffTypes.FETCH_STAFF_REQUEST,
-  //       //   payload: [{
-  //       //     hv_staff_id: this.props.staffObject.currectSelectedStaff.hv_staff_id, 
-  //       //   },
-  //       //   {
-  //       //     function_Id:'65'
-  //       //   }]
-  //       // });
-  //   }
-  //   } 
-    
-
-  // }
- 
-
-  // componentDidUpdate(prevProps, prevState) {
-     
-
-  //   if (this.props.manageStaffState.message.val == 2) {
-  //     if (this.props.manageStaffState.message.statusMsg != undefined) {
-  //       if (this.props.manageStaffState.message.statusMsg[0].hasOwnProperty('ReturnMessage')) {
-  
-  //         alert(this.props.manageStaffState.message.statusMsg[0].ReturnMessage);
-  //         debugger
-  //       //this.onDialogClose()
-              
-  //       }
-  //       else
-  //         alert('Error in transaction!!');
-  //     }
-  //     else
-  //       alert("Error in the transaction!!");
-  //     //this.props.onDialogClose();
-  //     this.props.resetMessage({
-  //       type: ManageStaffTypes.MESSAGE,
-  //       message: { val: 0, statusMsg: "" }
-  //     });
-  //   }
-  //   else if (this.props.manageStaffState.message.statusMsg != "" && this.props.manageStaffState.message.val < 0) {
-  //     if (this.props.manageStaffState.message.val == -2)
-  //       this.props.showTimeOut(this.props.manageStaffState.message.statusMsg);
-  //     else
-  //       alert(this.props.manageStaffState.message.statusMsg);
-  //     this.props.resetMessage({
-  //       type: ManageStaffTypes.MESSAGE,
-  //       message: { val: 0, statusMsg: "" }
-  //     });
-  //   }
-  // }
-   
-  componentWillReceiveProps(nextProps) {
-    debugger
-  
-    // if (nextProps.manageStaffState!==undefined) {
-    //   if (nextProps.manageStaffState.items.length > 0) {
-    //    this.setState({ ResourceCategoryItems: nextProps.manageStaffState.items[0] })
-    //    this.setState({ ResourceTypeItems: nextProps.manageStaffState.items[1] })
-    //    this.setState({ ProgramItems: nextProps.manageStaffState.items[2] })
-    //   }
-    // }
-   
-    //         if(this.props.staffObject!==undefined)
-    // {
-
-    //      var staff = this.props.staffObject.currectSelectedStaff//nextProps.manageStaffState.staffrow[0];  
-    //       if(staff!==null)
-    //       {
-    //       this.setState({
-    //         firstName: staff.hv_first_name,
-    //         lastName: staff.hv_last_name,
-    //         initials: staff.hv_initials,
-    //         resourcecategory: _.find(this.state.ResourceCategoryItems, { 'hvs_rsc_name': staff.hvs_rsc_name }),
-    //         program: _.find(this.state.ProgramItems, { 'hv_program_name': staff.hv_program_name }),
-    //         resourcetype:_.find(this.state.ResourceTypeItems, { 'hvs_rsc_typ_name': staff.hvs_rsc_typ_name }),  
-    //         userid: staff.hv_user_id,
-    //       })
-    //       }
-    // }
-        //if (nextProps.manageStaffState.staffrow[0]!==undefined) {
-          
-          // var staff = nextProps.staffObject.currectSelectedStaff//nextProps.manageStaffState.staffrow[0];  
-          
-          // this.setState({
-          //   firstName: staff.hv_first_name,
-          //   lastName: staff.hv_last_name,
-          //   initials: staff.hv_initials,
-          //   resourcecategory: _.find(this.state.ResourceCategoryItems, { 'hvs_rsc_name': staff.hvs_rsc_name }),
-          //   program: _.find(this.state.ProgramItems, { 'hv_program_name': staff.hv_program_name }),
-          //   resourcetype:_.find(this.state.ResourceTypeItems, { 'hvs_rsc_typ_name': staff.hvs_rsc_typ_name }),  
-          //   userid: staff.hv_user_id,
-          // })
-     // }
-   // }
-
-  }
-  //}
-
-  // componentWillUnmount() {
-  //   this.props.clearItemsState({
-  //     type: ManageStaffTypes.ITEMS,
-  //     items: []
-  //   });
-
-  //   this.props.clearStaffItemsState({
-  //     type: ManageStaffTypes.STAFFITEMS,
-  //     staffrow: []
-  //   });
-  // }
-
-
 
     componentDidMount() {
-
     if (this.props.staffObject != null) {
       if (!this.props.staffObject.isNewUser)
         this.setState({ isReadOnly: true });        
@@ -203,29 +79,12 @@ debugger
           this.props.showTimeOut("Please login to proceed !!!");
         }
       }
-
-
       this.setUser();
       this.props.getStaffResDetails({
       type: ManageStaffTypes .FETCH_STAFF_RESOURCE_DETAILS,
       payload: [{},{ function_Id: '66' }]
       });
-      //this.getPermissions();
-      // if (this.props.staffObject.currectSelectedStaff != null) {
-      //   this.props.getStaffDetails({
-      //     type: ManageStaffTypes.FETCH_STAFF_REQUEST,
-      //     payload: [  {
-      //       hv_staff_id: this.props.staffObject.currectSelectedStaff.hv_staff_id
-      //     },
-      //     {
-      //       function_Id:65
-      //     }
-      //     ]
-      //   });
-      // }
-
     }
-
   }
 
  
@@ -276,6 +135,7 @@ debugger
        this.setState({ ResourceCategoryItems: nextProps.manageStaffState.items[0] })
        this.setState({ ResourceTypeItems: nextProps.manageStaffState.items[1] })
        this.setState({ ProgramItems: nextProps.manageStaffState.items[2] })
+       this.setState({ ManagerItems: nextProps.manageStaffState.items[3] })
       }
     }
  
@@ -291,8 +151,12 @@ debugger
             initials: staff.hv_initials,
             resourcecategory: _.find(nextProps.manageStaffState.items[0], { 'hvs_rsc_name': staff.hvs_rsc_name }),
             program: _.find(nextProps.manageStaffState.items[2], { 'hv_program': staff.hv_program }),
-            resourcetype:_.find(nextProps.manageStaffState.items[1], { 'hvs_rsc_typ_name': staff.hvs_rsc_typ_name }),  
+            resourcetype:_.find(nextProps.manageStaffState.items[1], { 'hvs_rsc_typ_name': staff.hvs_rsc_typ_name }),
+            manager:_.find(nextProps.manageStaffState.items[3], { 'hv_manager_id': staff.hv_manager_id }),  
+              
             userid: staff.hv_user_id,
+           // manager: staff.hv_staff_id,
+            
       })
    }
 
@@ -315,7 +179,9 @@ componentWillUnmount(){
           hv_resource_category: this.state.resourcecategory.hvs_rsc_id,
           hv_program: this.state.program.hv_program,
           hv_resource_type: this.state.resourcetype.hvs_rsc_typ_id,
-         // hv_user_id:''//this.state.loggedinuser,
+          hv_user_id:this.state.loggedinuser,
+          hv_manager_id:this.state.manager.hv_manager_id,
+          
         },
         {
           function_Id:65
@@ -338,6 +204,8 @@ componentWillUnmount(){
           hv_program: this.state.program.hv_program,
           hv_resource_type: this.state.resourcetype.hvs_rsc_typ_id,
           hv_user_id: this.state.loggedinuser,
+          hv_manager_id:this.state.manager.hv_manager_id,
+          
         },
         {
           function_Id:65
@@ -403,6 +271,10 @@ componentWillUnmount(){
 
     this.setState({ program: e.value });
   }
+      onManagerChange = (e) => {
+
+    this.setState({ manager: e.value });
+  }
   
   render() {
     debugger
@@ -420,7 +292,6 @@ componentWillUnmount(){
         <FormWithConstraints ref={formwithConstraints => this.form = formwithConstraints} noValidate>
           <div id="divUsers" >
             <div className="row">
-              
               <div className="col-sm-12">
                 <div className="box box-info">
                   <div className='box-body' style={{ minHeight: "300px", width: '100%' }}>
@@ -522,11 +393,17 @@ componentWillUnmount(){
 
                       </div>
 
-                      <div className="col-sm-auto labelWidth alignCenter" >
+                      <div className="col-sm-1 alignCenter" >
 
                       </div>
-                      <div className="col-sm-auto ">
-
+                           <div className="col-sm-2 alignCenter" >
+                        <span className="labelfont">Reporting Manager </span>
+                      </div>
+                      <div className="col-sm-4 alignCenter">
+                        <Dropdown value={this.state.manager} options={this.state.ManagerItems} optionLabel="hv_manager_name"  onChange={this.onManagerChange} style={{ width: "80%", fontSize: '12px' }}
+                           
+                          placeholder="Select Manager" id="ddlManager" />
+                      
 
                       </div>
                     </div>

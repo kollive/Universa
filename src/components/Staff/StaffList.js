@@ -282,6 +282,9 @@ export class StaffList extends Component {
       case 'hv_last_name':
         filters['hv_last_name'] = { value: e.target.value };
         break;
+          case 'hv_manager_name':
+        filters['hv_manager_name'] = { value: e.target.value };
+        break;
       
     }
     this.setState({ filters: filters });
@@ -370,6 +373,7 @@ export class StaffList extends Component {
     let LNFilter = <input style={{ display: this.state.displayFilter }} type="text" id="hv_last_name" className="" value={this.state.filters.hv_last_name ? this.state.filters.hv_last_name.value : ''} onChange={this.onfilterChange} />
     let RCFilter = <input style={{ display: this.state.displayFilter }} type="text" id="hvs_rsc_name" className="" value={this.state.filters.hvs_rsc_name ? this.state.filters.hvs_rsc_name.value : ''} onChange={this.onfilterChange} />
     let RTFilter = <input style={{ display: this.state.displayFilter }} type="text" id="hvs_rsc_typ_name" className="" value={this.state.filters.hvs_rsc_typ_name ? this.state.filters.hvs_rsc_typ_name.value : ''} onChange={this.onfilterChange} />  
+    let MGFilter = <input style={{ display: this.state.displayFilter }} type="text" id="hv_manager_name" className="" value={this.state.filters.hv_manager_name ? this.state.filters.hv_manager_name.value : ''} onChange={this.onfilterChange} />
    var header = <Row style={{ "backgroundColor": "white" }}>
       <Col sm="10">
         <div className="float-left">
@@ -446,7 +450,9 @@ export class StaffList extends Component {
           <Column field="hv_person_name" header="Person Name" sortable={true} style={{ textAlign: 'center', width: '6%' }} sortable={true} filter={true} filterElement={FNFilter} filterMatchMode="contains" />
           <Column field="hvs_rsc_name" header="Resource Category" sortable={true} style={{ textAlign: 'center', width: '6%' }} sortable={true} filter={true} filterElement={RCFilter} filterMatchMode="contains" />
           <Column field="hv_program_name" header="Program Code" sortable={true} style={{ textAlign: 'center', width: '6%' }} sortable={true} filter={true} filterElement={PNFilter} filterMatchMode="contains" />
-          <Column field="hvs_rsc_typ_name" header="Resource Type" sortable={true} style={{ textAlign: 'center', width: '6%' }} sortable={true} filter={true} filterElement={RTFilter} filterMatchMode="contains" />        
+          <Column field="hvs_rsc_typ_name" header="Resource Type" sortable={true} style={{ textAlign: 'center', width: '6%' }} sortable={true} filter={true} filterElement={RTFilter} filterMatchMode="contains" />
+          <Column field="hv_manager_name" header="Reporting Manager" sortable={true} style={{ textAlign: 'center', width: '6%' }} sortable={true} filter={true} filterElement={MGFilter} filterMatchMode="contains" />        
+                  
           <Column body={this.actionTemplate} header={customHeaderAction} style={{ textAlign: 'center', width: '3%' }} />
         </DataTable>
  
