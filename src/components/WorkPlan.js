@@ -3,6 +3,10 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import classnames from "classnames";
 import { DatePicker, TimePicker } from 'antd';
+import {
+    Form, Select, InputNumber, Switch, Radio,
+    Slider, Button, Upload, Icon, Rate,
+} from 'antd';
 
 
 
@@ -23,7 +27,7 @@ import {
     Card,
     Collapse,
     CardBody,
-    Button,
+    //Button,
     CardTitle,
     CardText,
     Row,
@@ -72,12 +76,60 @@ const styles = {
 
 const format = 'HH:mm';
 
+const FormItem = Form.Item;
+const Option = Select.Option;
+const RadioButton = Radio.Button;
+const RadioGroup = Radio.Group;
+
+
 export class WorkPlan extends Component {
 
     static propTypes = {
         //name: PropTypes.string.isRequired
     };
 
+    handleSubmit = (e) => {
+        debugger;
+        e.preventDefault();
+        /*
+        this.props.form.validateFields((err, values) => {
+            if (!err) {
+                console.log('Received values of form: ', values);
+            }
+        });
+        */
+
+        //console.log(this.props.form.getFieldsError());
+        //console.log(this.props.form.getFieldsValue());
+
+        this.props.form.validateFields((err, fieldsValue) => {
+            debugger;
+            if (err) {
+                return;
+            }
+
+            if (new Date(fieldsValue['taskStartDate']) > new Date(fieldsValue['taskEndDate'])) {
+                alert("Please select Start date less than end date");
+                return false;
+            }
+
+            // Should format date value before submit.
+            //const rangeValue = fieldsValue['range-picker'];
+            //const rangeTimeValue = fieldsValue['range-time-picker'];
+            const values = {
+                ...fieldsValue,
+                'changeOrder': fieldsValue['changeOrder'],
+                'taskName': fieldsValue['taskName'],
+                'taskDesc': fieldsValue['taskDesc'],
+                'taskStartDate': fieldsValue['taskStartDate'].format('YYYY-MM-DD'),
+                'taskEndDate': fieldsValue['taskEndDate'].format('YYYY-MM-DD'),
+                'taskStatus': fieldsValue['taskStatus'],
+            };
+            console.log('Received values of form: ', values);
+
+            this.saveTask(values);
+        });
+    }
 
     formatDate = (dt) => {
         let d = new Date(dt);
@@ -92,6 +144,8 @@ export class WorkPlan extends Component {
         //debugger;
 
         if ((new Date(nextProps.startDT).setHours(0, 0, 0, 0) != new Date(this.props.startDT).setHours(0, 0, 0, 0)) || (new Date(nextProps.endDT).setHours(0, 0, 0, 0) != new Date(this.props.endDT).setHours(0, 0, 0, 0))) {
+
+            //alert("in Receive")
             this.props.getWorkPlans({
                 type: workplanTypes.FETCH_TABLES_REQUEST,
                 payload: {
@@ -103,44 +157,24 @@ export class WorkPlan extends Component {
         }
 
         if (nextProps.WorkPlanState.items) {
-            //if(this.props != nextProps) {
-            //debugger;
-            //alert("in Data")
-            this.setState({
-                items: nextProps.WorkPlanState.items[0],
-                changeOrders: nextProps.WorkPlanState.items[1],
-                taskStatusDesc: nextProps.WorkPlanState.items[2]
-            })
-            /*
-            let moHrs = 0;
-            let tuHrs = 0;
-            let wdHrs = 0;
-            let thHrs = 0;
-            let frHrs = 0;
-            let stHrs = 0;
-            let suHrs = 0;
-
-            moHrs = this.getHours(2);
-            tuHrs = this.getHours(3);
-            wdHrs = this.getHours(4);
-            thHrs = this.getHours(5);
-            frHrs = this.getHours(6);
-            stHrs = this.getHours(7);
-            suHrs = this.getHours(1);
-            //alert(mondayHrs)
-
-            this.setState({
-                mondayHrs: this.getHours(2),
-                tuedayHrs: this.getHours(3),
-                weddayHrs: this.getHours(4),
-                thudayHrs: this.getHours(5),
-                fridayHrs: this.getHours(6),
-                satdayHrs: this.getHours(7),
-                sundayHrs: this.getHours(1),
-            })       
-            */
-            //alert(this.state.mondayHrs);
+            //if (this.props != nextProps) {
+                //debugger;
+                //alert("in Data")
+                //let diff = _.isMatch((this.state.items || []), nextProps.WorkPlanState.items[0]);
+                //let diff = JSON.stringify((this.state.items || [])) ===  JSON.stringify(nextProps.WorkPlanState.items[0]) 
+                //alert(diff)
+                //console.log("Diff")              
+                //if (!diff) {
+                    //debugger;                    
+                    this.setState({
+                        items: nextProps.WorkPlanState.items[0],
+                        changeOrders: nextProps.WorkPlanState.items[1],
+                        taskStatusDesc: nextProps.WorkPlanState.items[2]
+                    })
+                //}
+            //}
         }
+
         //this.setState({pageOfItems: this.props.attribTableState.items});
         //console.log("nextProps ");
         //debugger;
@@ -153,6 +187,7 @@ export class WorkPlan extends Component {
         //console.log("componentDidUpdate");
         //console.log(this.state);
         if (_.trim(this.props.WorkPlanState.message.msg) == "data") {
+
             this.props.getWorkPlans({
                 type: workplanTypes.FETCH_TABLES_REQUEST,
                 payload: {
@@ -160,8 +195,7 @@ export class WorkPlan extends Component {
                     startDT: this.formatDate(this.props.startDT),
                     endDT: this.formatDate(this.props.endDT)
                 }
-            });
-
+            });            
 
             this.props.resetMessage({
                 type: workplanTypes.MESSAGE,
@@ -173,6 +207,8 @@ export class WorkPlan extends Component {
             alert(this.props.WorkPlanState.message.msg);
 
             if (this.props.WorkPlanState.message.val == "1") {
+
+                //alert("MM")
                 this.setState({ modal: !this.state.modal });
 
                 this.props.getWorkPlans({
@@ -183,6 +219,7 @@ export class WorkPlan extends Component {
                         endDT: this.formatDate(this.props.endDT)
                     }
                 });
+
             }
 
             this.props.resetMessage({
@@ -217,6 +254,7 @@ export class WorkPlan extends Component {
 
     constructor(props) {
         super(props);
+        this.TPRefs = new Map();
 
         this.state = {
             activeTab: "1",
@@ -246,6 +284,14 @@ export class WorkPlan extends Component {
             fridayHrs: 0,
             satdayHrs: 0,
             sundayHrs: 0,
+            openM: false,
+            openTu: false,
+            openW: false,
+            openTh: false,
+            openF: false,
+            openS: false,
+            openSu: false,
+            openD: false,
         };
 
         this.tableID = 0;
@@ -258,17 +304,20 @@ export class WorkPlan extends Component {
         this.toggle = this.toggle.bind(this);
         this.getDayHours = this.getDayHours.bind(this);
         this.saveHours = this.saveHours.bind(this);
+        this.closeTP = this.closeTP.bind(this);
         this.getHours = this.getHours.bind(this);
 
-        this.handleStartChange = this.handleStartChange.bind(this);
-        this.handleEndChange = this.handleEndChange.bind(this);
+        this.handleStartEvent = this.handleStartEvent.bind(this);
+        this.handleEndEvent = this.handleEndEvent.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+
 
         this.addTask = this.addTask.bind(this);
-        this.saveTask = this.saveTask.bind(this);
         //this.newAttribVal = "";
     }
 
     toggle = () => {
+        //alert("in Toggle")
         this.setState({
             modal: !this.state.modal,
         });
@@ -286,7 +335,7 @@ export class WorkPlan extends Component {
         });
     }
 
-    saveTask = () => {
+    saveTask = (values) => {
         //taskOrderCtl
         //taskNameCtl
         //taskDescCtl
@@ -294,6 +343,7 @@ export class WorkPlan extends Component {
         //endDT
         //taskStatusCtl
         debugger;
+        /*
         if (_.trim(this.taskNameCtl.value) == "") {
             alert("Please enter task name.")
             this.taskNameCtl.focus();
@@ -303,10 +353,9 @@ export class WorkPlan extends Component {
         if (_.trim(this.taskDescCtl.value) == "") {
             alert("Please enter task description.")
             this.taskDescCtl.focus();
-            return false;
+            return false;            
         }
-
-        this.props.insertTaskTable({
+         this.props.insertTaskTable({
             type: workplanTypes.INSERT_REQUEST,
             payload: {
                 staff_id: this.props.staffID,
@@ -317,6 +366,25 @@ export class WorkPlan extends Component {
                 task_status: this.taskStatusCtl.value
             }
         });
+
+         'taskName': fieldsValue['taskName'],
+              'taskDesc': fieldsValue['taskDesc'],
+              'taskStartDate': fieldsValue['taskStartDate'].format('YYYY-MM'),
+              'taskEndDate': fieldsValue['taskEndDate'].format('YYYY-MM'),
+              'taskStatus': fieldsValue['taskStatus'],
+        */
+        this.props.insertTaskTable({
+            type: workplanTypes.INSERT_REQUEST,
+            payload: {
+                staff_id: this.props.staffID,
+                change_order_id: values.changeOrder,
+                task_start_date: values.taskStartDate,
+                task_end_date: values.taskEndDate,
+                task_desc: values.taskDesc,
+                task_status: values.taskStatus,
+            }
+        });
+
     }
 
     popToggle = () => {
@@ -338,15 +406,27 @@ export class WorkPlan extends Component {
         alert(msg);
     }
 
+
     handleStartChange = (date) => {
+        debugger;
+        return;
+        //e.preventDefault();
         this.setState({
             startDate: date
+        })
+        this.props.form.setFieldsValue({
+            taskStartDate: date
         })
     }
 
     handleEndChange = (date) => {
+        //e.preventDefault();
+        return;
         this.setState({
             endDate: date
+        })
+        this.props.form.setFieldsValue({
+            taskEndDate: date
         })
     }
 
@@ -378,7 +458,7 @@ export class WorkPlan extends Component {
     }
 
     getHours = (day) => {
-        debugger;
+        //debugger;
         if (this.props.mode == "W") {
             let rows = _.filter((this.state.items || []), function (itm) {
                 //alert("itm" + itm.task_id);
@@ -432,7 +512,7 @@ export class WorkPlan extends Component {
                 let d = new Date(itm.task_date);
                 d.setDate(d.getDate() + 1);
                 let d1 = d.getFullYear() + "-" + ('0' + (d.getMonth() + 1)).slice(-2) + "-" + ('0' + (d.getDate())).slice(-2); //d.getHours() 
-                console.log(d1)
+                //console.log(d1)
                 return (_.parseInt(itm.task_id) == _.parseInt(tmprow.task_id) && _.parseInt(itm.taskday) == _.parseInt(day) && (d1 != "1900-01-01"))
             });
 
@@ -440,7 +520,7 @@ export class WorkPlan extends Component {
                 let row = rows[0];
                 return moment(row.num_hours || 0, "HH:mm");
             } else {
-                return 0;
+                return "";
             }
         } else {
             //alert("in")
@@ -456,9 +536,9 @@ export class WorkPlan extends Component {
                 d = new Date(startDT);
                 let d2 = d.getFullYear() + "-" + ('0' + (d.getMonth() + 1)).slice(-2) + "-" + ('0' + d.getDate()).slice(-2); //d.getHours() 
 
-                console.log(itm.task_date)
-                console.log(d1)
-                console.log(d2)
+                //console.log(itm.task_date)
+                //console.log(d1)
+                //console.log(d2)
                 //let d1 = this.formatDate(itm.task_date);
                 //let d2 = this.formatDate(itm.startDT);
 
@@ -472,15 +552,24 @@ export class WorkPlan extends Component {
                 let row = rows[0];
                 return moment(row.num_hours || 0, "HH:mm");
             } else {
-                return 0;
+                return "";
             }
         }
     }
 
-    saveHours = (e, date, num, row, TP) => {
+    closeTP = (index) => {
         //alert("in Save")
-        debugger;
-        TP.setState({ value: e });
+        //debugger;
+        let TP = this.TPRefs.get(index);
+        TP.timePickerRef.setState({ open: false });
+    }
+
+    //hrs = N
+    saveHours = (e, date, num, row, index) => {
+        //alert("in Save")
+        //debugger;
+        let TP = this.TPRefs.get(index);
+        TP.timePickerRef.setState({ value: e, open: false });
 
         //let hrs = e.target.value;
         let hrs = e.format("HH:mm");
@@ -490,8 +579,7 @@ export class WorkPlan extends Component {
         }
 
         //hrs = Number(hrs);
-
-        let items = this.state.items;
+        //let items = this.state.items;
 
         let dt = new Date(date);
         dt = dt.setDate(dt.getDate() + num);
@@ -524,8 +612,43 @@ export class WorkPlan extends Component {
         return className;
     };
 
+    handleStartEvent = (e) => {
+        debugger;
+        return;
+        //e.preventDefault();
+        //alert(e)
+        //alert(e.target.value)
+        //debugger;
+        this.props.form.setFieldsValue({
+            taskStartDate: e
+        });
+        //return e;
+    }
+
+    handleEndEvent = (e) => {
+        debugger;
+        return;
+        //e.preventDefault();
+        //alert(e)
+        //alert(e.target.value)
+        //debugger;
+        this.props.form.setFieldsValue({
+            taskEndDate: e
+        });
+        //return e;
+    }
+
+
     render() {
 
+        const { getFieldDecorator } = this.props.form;
+        const formItemLayout = {
+            labelCol: { span: 10 },
+            wrapperCol: { span: 14 },
+        };
+
+        let HTML;
+        var TPM, TPTu, TPW, TPTh, TPF, TPS, TPSu, TPD;
         return (
             <div style={{ height: "100%", width: "100%" }}>
                 <Container
@@ -536,7 +659,6 @@ export class WorkPlan extends Component {
                         width: "100%"
                     }}
                 >
-
                     <Row>
                         <Col sm="12" style={{ width: "100%" }}>
                             <Table
@@ -607,13 +729,22 @@ export class WorkPlan extends Component {
                                                             <TimePicker value={this.getDayHours(2, row)}
                                                                 format={format}
                                                                 defaultOpenValue={moment('08:00', format)}
-                                                                ref={el => this.TP = el}
-                                                                onChange={(e) => { this.saveHours(e, this.props.startDT, 0, row, this.TP) }} />
+                                                                ref={el => this.TPRefs.set((index * 10 + 0), el)}
+                                                                onChange={(e) => { this.saveHours(e, this.props.startDT, 0, row, (index * 10 + 0)) }}
+                                                                addon={() => (
+                                                                    <Button size="small" type="primary"
+                                                                        onClick={() => this.closeTP((index * 10 + 0))}
+                                                                    >
+                                                                        Ok
+                                                                    </Button>
+                                                                )}
+                                                            />
                                                         </td>
                                                         <td colspan={6}>
                                                         </td>
                                                     </tr>
                                                 ) : (
+
                                                     <tr key={index}>
                                                         <td style={styles.link}>
                                                             <i className="fa fa-tasks fa-fw" />
@@ -622,45 +753,103 @@ export class WorkPlan extends Component {
                                                         <td>
                                                             <TimePicker value={this.getDayHours(2, row)}
                                                                 format={format}
+                                                                //open={this.state.openM}
+                                                                //onOpenChange={() => this.setState({ openM: true })}
                                                                 defaultOpenValue={moment('08:00', format)}
-                                                                ref={el => this.TP = el}
-                                                                onChange={(e) => { this.saveHours(e, this.props.startDT, 0, row, this.TP) }} />
+                                                                ref={el => this.TPRefs.set((index * 10 + 0), el)}
+                                                                onChange={(e) => { this.saveHours(e, this.props.startDT, 0, row, (index * 10 + 0)) }}
+                                                                addon={() => (
+                                                                    <Button size="small" type="primary"
+                                                                        onClick={() => this.closeTP((index * 10 + 0))}
+                                                                    >
+                                                                        Ok
+                                                                    </Button>
+                                                                )}
+                                                            />
                                                         </td>
                                                         <td>
                                                             <TimePicker value={this.getDayHours(3, row)} format={format}
-                                                                ref={el => this.TP = el}
+                                                                ref={el => this.TPRefs.set((index * 10 + 1), el)}
                                                                 defaultOpenValue={moment('08:00', format)}
-                                                                onChange={(e) => { this.saveHours(e, this.props.startDT, 1, row, this.TP) }} />
+                                                                onChange={(e) => { this.saveHours(e, this.props.startDT, 1, row, (index * 10 + 1)) }}
+                                                                addon={() => (
+                                                                    <Button size="small" type="primary" style={{}}
+                                                                        onClick={() => this.closeTP((index * 10 + 1))}
+                                                                    >
+                                                                        Ok
+                                                                    </Button>
+                                                                )}
+                                                            />
                                                         </td>
                                                         <td>
                                                             <TimePicker value={this.getDayHours(4, row)} format={format}
-                                                                ref={el => this.TP = el}
+                                                                ref={el => this.TPRefs.set((index * 10 + 2), el)}
                                                                 defaultOpenValue={moment('08:00', format)}
-                                                                onChange={(e) => { this.saveHours(e, this.props.startDT, 2, row, this.TP) }} />
+                                                                onChange={(e) => { this.saveHours(e, this.props.startDT, 2, row, (index * 10 + 2)) }}
+                                                                addon={() => (
+                                                                    <Button size="small" type="primary" style={{}}
+                                                                        onClick={() => this.closeTP((index * 10 + 2))}
+                                                                    >
+                                                                        Ok
+                                                                    </Button>
+                                                                )}
+                                                            />
                                                         </td>
                                                         <td>
                                                             <TimePicker value={this.getDayHours(5, row)} format={format}
-                                                                ref={el => this.TP = el}
+                                                                ref={el => this.TPRefs.set((index * 10 + 3), el)}
                                                                 defaultOpenValue={moment('08:00', format)}
-                                                                onChange={(e) => { this.saveHours(e, this.props.startDT, 3, row, this.TP) }} />
+                                                                onChange={(e) => { this.saveHours(e, this.props.startDT, 3, row, (index * 10 + 3)) }}
+                                                                addon={() => (
+                                                                    <Button size="small" type="primary" style={{}}
+                                                                        onClick={() => this.closeTP((index * 10 + 3))}
+                                                                    >
+                                                                        Ok
+                                                                    </Button>
+                                                                )}
+                                                            />
                                                         </td>
                                                         <td>
                                                             <TimePicker value={this.getDayHours(6, row)} format={format}
-                                                                ref={el => this.TP = el}
+                                                                ref={el => this.TPRefs.set((index * 10 + 4), el)}
                                                                 defaultOpenValue={moment('08:00', format)}
-                                                                onChange={(e) => { this.saveHours(e, this.props.startDT, 4, row, this.TP) }} />
+                                                                onChange={(e) => { this.saveHours(e, this.props.startDT, 4, row, (index * 10 + 4)) }}
+                                                                addon={() => (
+                                                                    <Button size="small" type="primary" style={{}}
+                                                                        onClick={() => this.closeTP((index * 10 + 4))}
+                                                                    >
+                                                                        Ok
+                                                                    </Button>
+                                                                )}
+                                                            />
                                                         </td>
                                                         <td>
                                                             <TimePicker value={this.getDayHours(7, row)} format={format}
-                                                                ref={el => this.TP = el}
+                                                                ref={el => this.TPRefs.set((index * 10 + 5), el)}
                                                                 defaultOpenValue={moment('08:00', format)}
-                                                                onChange={(e) => { this.saveHours(e, this.props.startDT, 5, row, this.TP) }} />
+                                                                onChange={(e) => { this.saveHours(e, this.props.startDT, 5, row, (index * 10 + 5)) }}
+                                                                addon={() => (
+                                                                    <Button size="small" type="primary" style={{}}
+                                                                        onClick={() => this.closeTP((index * 10 + 5))}
+                                                                    >
+                                                                        Ok
+                                                                    </Button>
+                                                                )}
+                                                            />
                                                         </td>
                                                         <td>
                                                             <TimePicker value={this.getDayHours(1, row)} format={format}
-                                                                ref={el => this.TP = el}
+                                                                ref={el => this.TPRefs.set((index * 10 + 6), el)}
                                                                 defaultOpenValue={moment('08:00', format)}
-                                                                onChange={(e) => { this.saveHours(e, this.props.startDT, 6, row, this.TP) }} />
+                                                                onChange={(e) => { this.saveHours(e, this.props.startDT, 6, row, (index * 10 + 6)) }}
+                                                                addon={() => (
+                                                                    <Button size="small" type="primary" style={{}}
+                                                                        onClick={() => this.closeTP((index * 10 + 6))}
+                                                                    >
+                                                                        Ok
+                                                                    </Button>
+                                                                )}
+                                                            />
                                                         </td>
                                                     </tr>
                                                 )
@@ -670,82 +859,112 @@ export class WorkPlan extends Component {
                             </Table>
                         </Col>
                     </Row>
-                    <Modal isOpen={this.state.modal} toggle={this.toggle} autoFocus={false} size="md">
+                    <Modal isOpen={this.state.modal} autoFocus={false} size="md">
                         <ModalHeader toggle={this.toggle}>Add Task</ModalHeader>
                         <ModalBody>
                             <Container fluid>
-                                <Row>
-                                    <Col>Change Order:</Col>
-                                    <Col>
-                                        <Input
-                                            type="select"
-                                            style={{ width: "250px", lineHeight: "0", padding: "0px" }}
-                                            placeholder={"Please select a change Order"}
-                                            innerRef={(ref) => { this.taskOrderCtl = ref }}
-                                        >
-                                            {(this.state.changeOrders || []).map((order, index) => (
-                                                <option key={order.change_order_id} value={order.change_order_id}>{order.change_order_desc}</option>
-                                            ))}
-                                        </Input>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col>Task Name:</Col>
-                                    <Col>
-                                        <Input
-                                            type="text"
-                                            style={{ width: "250px", lineHeight: "0", padding: "0px" }}
-                                            placeholder={"Please enter task name"}
-                                            innerRef={(ref) => { this.taskNameCtl = ref }}
-                                        />
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col>Task Description:</Col>
-                                    <Col>
-                                        <Input
-                                            type="text"
-                                            style={{ width: "250px", lineHeight: "0", padding: "0px" }}
-                                            placeholder={"Please enter task description"}
-                                            innerRef={(ref) => { this.taskDescCtl = ref }}
-                                        />
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col>Task Start Date:</Col>
-                                    <Col>
-                                        <DatePicker ref={(r) => { this.startDT = r }} selected={this.state.startDate} onChange={this.handleStartChange} dateFormat="YYYY-MM-DD" />
-                                    </Col>
+                                <Form onSubmit={this.handleSubmit}>
+                                    <FormItem
+                                        {...formItemLayout}
+                                        label="Change Order"
+                                        hasFeedback
+                                        colon
+                                    >
+                                        {getFieldDecorator('changeOrder', {
+                                            rules: [
+                                                { required: true, message: 'Please select a Change Order!' },
+                                            ],
+                                        })(
+                                            <Select placeholder="Please select change order">
+                                                {(this.state.changeOrders || []).map((order, index) => (
+                                                    <Option key={order.change_order_id} value={order.change_order_id}>{order.change_order_desc}</Option>
+                                                ))}
+                                            </Select>
+                                        )}
+                                    </FormItem>
+                                    <FormItem {...formItemLayout} label="Task Name">
+                                        {getFieldDecorator('taskName', {
+                                            initialValue: "",
+                                            rules: [{
+                                                required: true,
+                                                message: 'Please input task name',
+                                            }],
+                                        })(
+                                            <Input placeholder="Please input task name" size="small" />
+                                        )}
+                                    </FormItem>
+                                    <FormItem {...formItemLayout} label="Task Description">
+                                        {getFieldDecorator('taskDesc', {
+                                            initialValue: "",
+                                            rules: [{
+                                                required: true,
+                                                message: 'Please input task description',
+                                            }],
+                                        })(
+                                            <Input placeholder="Please input task description" size="small" />
+                                        )}
+                                    </FormItem>
+                                    <FormItem
+                                        {...formItemLayout}
+                                        label="Task Start Date"
+                                        colon
+                                    >
+                                        {getFieldDecorator('taskStartDate', {
+                                            initialValue: this.state.startDate,
+                                            //getValueFromEvent: this.handleStartEvent,                                     
+                                            rules: [{
+                                                required: true,
+                                                message: 'Please select task start date',
+                                            }],
+                                        })(
+                                            <DatePicker format={"YYYY-MM-DD"}
+                                            />
 
-                                </Row>
-                                <Row>
-                                    <Col>Task End Date:</Col>
-                                    <Col>
-                                        <DatePicker ref={(r) => { this.endDT = r }} selected={this.state.endDate} onChange={this.handleEndChange} dateFormat="YYYY-MM-DD" />
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col>Task Status:</Col>
-                                    <Col>
-                                        <Input
-                                            type="select"
-                                            style={{ width: "250px", lineHeight: "0", padding: "0px" }}
-                                            placeholder={"Please select a change Order"}
-                                            innerRef={(ref) => { this.taskStatusCtl = ref }}
-                                        >
-                                            {(this.state.taskStatusDesc || []).map((status, index) => (
-                                                <option key={status.task_status_id} value={status.task_status_id}> {status.task_status_desc}</option>
-                                            ))}
-                                        </Input>
-                                    </Col>
-                                </Row>
+                                        )}
+                                    </FormItem>
+                                    <FormItem
+                                        {...formItemLayout}
+                                        label="Task End Date"
+                                        colon
+                                    >
+                                        {getFieldDecorator('taskEndDate', {
+                                            initialValue: this.state.endDate,
+                                            //getValueFromEvent: this.handleEndEvent,
+                                            rules: [{
+                                                required: true,
+                                                message: 'Please select task end date',
+                                            }],
+                                        })(
+                                            <DatePicker format={"YYYY-MM-DD"}
+                                            />
+                                        )}
+                                    </FormItem>
+                                    <FormItem
+                                        {...formItemLayout}
+                                        label="Task Status"
+                                        hasFeedback
+                                        colon
+                                    >
+                                        {getFieldDecorator('taskStatus', {
+                                            rules: [
+                                                { required: true, message: 'Please select Task Status!' },
+                                            ],
+                                        })(
+                                            <Select placeholder="Please select Task Status">
+                                                {(this.state.taskStatusDesc || []).map((status, index) => (
+                                                    <Option key={status.task_status_id} value={status.task_status_id}> {status.task_status_desc}</Option>
+                                                ))}
+                                            </Select>
+                                        )}
+                                    </FormItem>
+                                </Form>
                             </Container>
                         </ModalBody>
                         <ModalFooter>
-                            <Button color="primary" onClick={this.saveTask}>
+                            <Button type="primary" onClick={this.handleSubmit}>
                                 Save
                             </Button>{" "}
-                            <Button color="secondary" onClick={this.toggle}>
+                            <Button type="secondary" onClick={this.toggle}>
                                 Cancel
                             </Button>
                         </ModalFooter>
@@ -773,4 +992,5 @@ const mapDispatchToProps = dispatch => ({
     )
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(WorkPlan);
+const WrappedWorkplan = Form.create()(WorkPlan)
+export default connect(mapStateToProps, mapDispatchToProps)(WrappedWorkplan);
