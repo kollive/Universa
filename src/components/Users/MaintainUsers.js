@@ -73,7 +73,7 @@ export class UserComponent extends Component {
       rows: [
         { phone_type: "", phone_number: "" }],
       permissions :''
-         
+
     }
 
     this.insertUserDetails = this.insertUserDetails.bind(this);
@@ -91,7 +91,7 @@ export class UserComponent extends Component {
   componentDidMount() {
     if (this.props.userObject != null) {
       if (!this.props.userObject.isNewUser)
-        this.setState({ isReadOnly: true });        
+        this.setState({ isReadOnly: true });
       else if (this.props.userObject.isNewUser){
         if(sessionStorage.getItem("token") == undefined){
           this.props.showTimeOut("Please login to proceed !!!");
@@ -114,7 +114,7 @@ export class UserComponent extends Component {
   getPermissions = () => {
     let functions = JSON.parse(sessionStorage.getItem("roles"));
     debugger
-   let flist = _.uniqBy(_.filter(functions, function(o) 
+   let flist = _.uniqBy(_.filter(functions, function(o)
    {return (_.find(Permissions, {'function_id' : o.function_id} )) }
   ),'function_id');
   // flist =  _.filter(flist,{'function_id':2});
@@ -124,12 +124,12 @@ export class UserComponent extends Component {
   checkPermission = (function_id) => {
     // let permissions = utils.getPermissions();
     //   if( _.findIndex(permissions , {'function_id' : function_id}) > -1 )
-    //     return true;  
+    //     return true;
     // return false;
     debugger
     return utils.checkPermission(Permissions,function_id);
   }
-  
+
   componentDidUpdate(prevProps,prevState){
     debugger
     if (this.props.userState.message.val == 2) {
@@ -142,18 +142,18 @@ export class UserComponent extends Component {
           alert('Error in transaction!!');
       }
       else
-        alert("Error in the transaction!!");     
+        alert("Error in the transaction!!");
       this.props.onDialogClose();
       this.props.resetMessage({
         type: ManageUserTypes.MESSAGE,
         message: { val: 0, statusMsg: "" }
       });
-    }      
+    }
     else if (this.props.userState.message.statusMsg != "" && this.props.userState.message.val < 0 ){
       debugger
     if (this.props.userState.message.val == -2)
             this.props.showTimeOut(this.props.userState.message.statusMsg);
-     else 
+     else
        alert(this.props.userState.message.statusMsg);
       this.props.resetMessage({
         type: ManageUserTypes.MESSAGE,
@@ -172,18 +172,18 @@ export class UserComponent extends Component {
     //             alert('Error in transaction!!');
     //         }
     //         else
-    //           alert("Error in the transaction!!");     
+    //           alert("Error in the transaction!!");
     //         this.props.onDialogClose();
     //         this.props.resetMessage({
     //           type: ManageUserTypes.MESSAGE,
     //           message: { val: 0, statusMsg: "" }
     //         });
-    //       }      
+    //       }
     //       else if (nextProps.userState.message.statusMsg != "" && nextProps.userState.message.val < 0 ){
     //         debugger
     //       if (nextProps.userState.message.val == -2)
     //               nextProps.showTimeOut(nextProps.userState.message.statusMsg);
-    //        else 
+    //        else
     //          alert(nextProps.userState.message.statusMsg);
     //         this.props.resetMessage({
     //           type: ManageUserTypes.MESSAGE,
@@ -192,7 +192,7 @@ export class UserComponent extends Component {
     //       }
     if (nextProps.userState.items) {
     if (nextProps.userState.items.length>0) {
-      
+
     if (nextProps.userState.items) {
       var user = nextProps.userState.items[0][0];
       this.setState({
@@ -210,7 +210,7 @@ export class UserComponent extends Component {
         let phonelist = nextProps.userState.items[2];
         this.setState({ rows: phonelist });
       }
-      
+
       this.setState({seleactedRoles:nextProps.userState.items[1]})
     }
   }
@@ -225,13 +225,13 @@ componentWillUnmount(){
       });
 }
   insertUserDetails() {
-    debugger
+
     let res=this.buildJSON()
        if(res!==false)
     {
     // Build json for phone numbers
     let saveStr = res
- 
+
     this.props.insertUserDetails({
       type: ManageUserTypes.INSERT_REQUEST,
       user: {
@@ -248,10 +248,10 @@ componentWillUnmount(){
     });
     }
   }
-  
+
 
   updateUserDetails() {
-    debugger
+
     let res=this.buildJSON()
        if(res!==false)
     {
@@ -274,7 +274,7 @@ componentWillUnmount(){
     });
     }
 
-        
+
 
   }
 
@@ -284,32 +284,31 @@ componentWillUnmount(){
   }
 
   buildJSON() {
-    let saveStr = "";
-    this.state.rows.forEach((phone) => {
-      debugger
-      if (phone.phone_number != "" && phone.phone_type == "")
-      {
-        alert('Please Enter Phone Type');
-        saveStr= false;
-      }   
-      if (phone.phone_number == "" && phone.phone_type != "")
-      {
-        alert('Please Enter Phone Number');
-        saveStr= false;
-      }      
-      if (phone.phone_number != "" && phone.phone_type != ""){
-        debugger
-        saveStr += '{"phone_type":"' + phone.phone_type + '","phone_number":"' + phone.phone_number + '"},'
-      if (_.trim(saveStr) != "") {
-      saveStr = saveStr.substr(0, saveStr.length - 1);
-      saveStr = '[' + saveStr + ']';
-    }
-      }
-    })
-    return saveStr
+       let saveStr = "";
+       this.state.rows.forEach((phone) => {
 
-  
-  }
+         if (phone.phone_number != "" && phone.phone_type == "")
+         {
+           alert('Please Enter Phone Type');
+           saveStr= false;
+         }
+         if (phone.phone_number == "" && phone.phone_type != "")
+         {
+           alert('Please Enter Phone Number');
+           saveStr= false;
+         }
+         if (phone.phone_number != "" && phone.phone_type != ""){
+
+           saveStr += '{"phone_type":"' + phone.phone_type + '","phone_number":"' + phone.phone_number + '"},'
+
+         }
+       })
+       if (_.trim(saveStr) != "") {
+         saveStr = saveStr.substr(0, saveStr.length - 1);
+         saveStr = '[' + saveStr + ']';
+       }
+       return saveStr
+     }
 
   CloseDialog(e) {
     e.preventDefault();
@@ -404,7 +403,7 @@ componentWillUnmount(){
     });
   }
 
- 
+
   CloseDialog(e) {
     e.preventDefault();
     if (this.props) {
@@ -531,7 +530,7 @@ componentWillUnmount(){
         this.updateUserDetails();
     }
   }
-  else 
+  else
   alert("Please check the permissions. You don't have access to make changes!!");
   }
 
@@ -553,7 +552,7 @@ componentWillUnmount(){
     </div>;
   }
   onEditorValueChange(props, field, value) {
-    
+
     let phones = [...this.state.rows];
     phones[props.rowIndex][field] = value;
     this.setState({
@@ -561,7 +560,7 @@ componentWillUnmount(){
       warningClass: 'normal'
     });
   }
- 
+
 
   deleteRow(rowdata) {
     debugger
@@ -580,7 +579,7 @@ componentWillUnmount(){
     </div>;
   }
   onEditorValueChange(props, field, value) {
-    
+
     let phones = [...this.state.rows];
     phones[props.rowIndex][field] = value;
     this.setState({
@@ -596,7 +595,7 @@ componentWillUnmount(){
   render() {
     let assingRoles = null
     assingRoles = <AssignRoles rolesObject={this.state.seleactedRoles} callParentAssignRoles={this.myCallback} />
-   
+
     let showSaveButton = '';
     if (this.checkPermission(1)){
       showSaveButton = <Button label="Save" style={{ float: "right", background: "grey", borderColor: "grey" }}
@@ -814,14 +813,14 @@ componentWillUnmount(){
                         </Col>
                       </Row>
                     </Paper>
-                 
+
                   </div>
                 </div>
               </div>
             </div>
           </div>
           {assingRoles}
-           
+
            <Row>
                       <Col sm="12" style={{ paddingTop: '1%',paddingBottom: '1%'}}>
                         <br/>
@@ -858,5 +857,3 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserComponent);
-
- 
