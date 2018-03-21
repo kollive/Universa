@@ -136,6 +136,13 @@ export class WorkPlan extends Component {
         return d.getFullYear() + "-" + ('0' + (d.getMonth() + 1)).slice(-2) + "-" + ('0' + d.getDate()).slice(-2); //d.getHours() d.getMinutes()
     }
 
+    
+    shouldComponentUpdate = (nextProps, nextState) => {
+       return true;
+       //return ((new Date(nextProps.startDT).setHours(0, 0, 0, 0) != new Date(this.props.startDT).setHours(0, 0, 0, 0)) || (new Date(nextProps.endDT).setHours(0, 0, 0, 0) != new Date(this.props.endDT).setHours(0, 0, 0, 0))) 
+    }
+   
+
     componentWillReceiveProps(nextProps) {
         //alert("componentWillReceiveProps");
         //console.log(nextProps);
@@ -146,6 +153,7 @@ export class WorkPlan extends Component {
         if ((new Date(nextProps.startDT).setHours(0, 0, 0, 0) != new Date(this.props.startDT).setHours(0, 0, 0, 0)) || (new Date(nextProps.endDT).setHours(0, 0, 0, 0) != new Date(this.props.endDT).setHours(0, 0, 0, 0))) {
 
             //alert("in Receive")
+            //this.setState({ refreshData: true });
             this.props.getWorkPlans({
                 type: workplanTypes.FETCH_TABLES_REQUEST,
                 payload: {
@@ -155,26 +163,30 @@ export class WorkPlan extends Component {
                 }
             });
         }
+        else {
+            //alert(this.state.refreshData)
+            if (nextProps.WorkPlanState.items ) {
 
-        if (nextProps.WorkPlanState.items) {
-            //if (this.props != nextProps) {
-                //debugger;
-                //alert("in Data")
-                //let diff = _.isMatch((this.state.items || []), nextProps.WorkPlanState.items[0]);
-                //let diff = JSON.stringify((this.state.items || [])) ===  JSON.stringify(nextProps.WorkPlanState.items[0]) 
-                //alert(diff)
-                //console.log("Diff")              
-                //if (!diff) {
-                    //debugger;                    
-                    this.setState({
-                        items: nextProps.WorkPlanState.items[0],
-                        changeOrders: nextProps.WorkPlanState.items[1],
-                        taskStatusDesc: nextProps.WorkPlanState.items[2]
-                    })
-                //}
-            //}
+                //alert((this.state.items || []).length)
+                //alert( (nextProps.WorkPlanState.items[0] || []).length)
+
+                //let dif = _.differenceWith((this.state.items || []), (nextProps.WorkPlanState.items[0] || []), _.isEqual);
+                //let dif = _.isMatch((this.state.items || []), (nextProps.WorkPlanState.items[0] || []));
+
+                //if(!dif) {
+                //if (!_.isEqual((this.state.items || []), (nextProps.WorkPlanState.items[0] || []))) {
+                this.setState({
+                    items: nextProps.WorkPlanState.items[0],
+                    changeOrders: nextProps.WorkPlanState.items[1],
+                    taskStatusDesc: nextProps.WorkPlanState.items[2]
+                })
+                /*
+                if ((nextProps.WorkPlanState.items[0] || []).length > 0) {
+                    this.setState({ refreshData: false });
+                }
+                */
+            }
         }
-
         //this.setState({pageOfItems: this.props.attribTableState.items});
         //console.log("nextProps ");
         //debugger;
@@ -195,7 +207,11 @@ export class WorkPlan extends Component {
                     startDT: this.formatDate(this.props.startDT),
                     endDT: this.formatDate(this.props.endDT)
                 }
-            });            
+            });
+            //alert("NN")
+            //alert(this.state.refreshData)
+
+            //this.setState({ refreshData: true });
 
             this.props.resetMessage({
                 type: workplanTypes.MESSAGE,
@@ -210,6 +226,7 @@ export class WorkPlan extends Component {
 
                 //alert("MM")
                 this.setState({ modal: !this.state.modal });
+                //this.setState({ refreshData: true });
 
                 this.props.getWorkPlans({
                     type: workplanTypes.FETCH_TABLES_REQUEST,
@@ -234,20 +251,22 @@ export class WorkPlan extends Component {
 
     componentDidMount() {
         debugger;
-        //alert(this.props.staffID)
-        //if (this.props) {
         /*
-    if (this.props.startDT != null) {
-        //alert(this.props.CommonState.hv_staff_id)
-        this.props.getWorkPlans({
-            type: workplanTypes.FETCH_TABLES_REQUEST,
-            payload: {
-                staffID: (this.props.staffID == "" ? this.props.CommonState.hv_staff_id : this.props.staffID),
-                startDT: this.formatDate(this.props.startDT),
-                endDT: this.formatDate(this.props.endDT)
-            }
-        });
-    }
+        //this.setState({ modal: !this.state.modal });
+        this.setState({ refreshData: true });
+
+        alert(this.props.startDT)
+        if (this.props.startDT != null) {           
+            this.props.getWorkPlans({
+                type: workplanTypes.FETCH_TABLES_REQUEST,
+                payload: {
+                    staffID: (this.props.staffID == "" ? "7" : this.props.staffID),
+                    startDT: this.formatDate(this.props.startDT),
+                    endDT: this.formatDate(this.props.endDT)
+                }
+            });
+        }
+       
     */
 
     }
@@ -284,15 +303,9 @@ export class WorkPlan extends Component {
             fridayHrs: 0,
             satdayHrs: 0,
             sundayHrs: 0,
-            openM: false,
-            openTu: false,
-            openW: false,
-            openTh: false,
-            openF: false,
-            openS: false,
-            openSu: false,
-            openD: false,
+            refreshData: false
         };
+
 
         this.tableID = 0;
         this.newUpdateValue = "";
@@ -567,9 +580,14 @@ export class WorkPlan extends Component {
     //hrs = N
     saveHours = (e, date, num, row, index) => {
         //alert("in Save")
-        //debugger;
+        debugger;
+        let items = [];
+       
         let TP = this.TPRefs.get(index);
         TP.timePickerRef.setState({ value: e, open: false });
+
+        let dt = new Date(date);
+        dt = dt.setDate(dt.getDate() + num);
 
         //let hrs = e.target.value;
         let hrs = e.format("HH:mm");
@@ -578,12 +596,26 @@ export class WorkPlan extends Component {
             hrs = 0;
         }
 
+        items = this.state.items.map((itm, index) => {
+            //debugger;
+            let d = new Date(itm.task_date);
+            d.setDate(d.getDate() + 1);
+
+            if(itm.task_id == row.task_id && new Date(dt).setHours(0, 0, 0, 0) == new Date(d).setHours(0, 0, 0, 0)){
+                //debugger;
+                //alert(itm.num_hours)
+                itm.num_hours = hrs;
+                return itm;
+            } else {
+                return itm;
+            }        
+        });
+
+        this.setState({items});
         //hrs = Number(hrs);
         //let items = this.state.items;
 
-        let dt = new Date(date);
-        dt = dt.setDate(dt.getDate() + num);
-
+      
         this.props.insertHourTable({
             type: workplanTypes.INSERTHOUR_REQUEST,
             payload: {
