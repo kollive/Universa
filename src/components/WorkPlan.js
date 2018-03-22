@@ -5,10 +5,8 @@ import classnames from "classnames";
 import { DatePicker, TimePicker } from 'antd';
 import {
     Form, Select, InputNumber, Switch, Radio,
-    Slider, Button, Upload, Icon, Rate,
+    Slider, Button, Upload, Icon, Rate, Menu, Dropdown, message, Popconfirm
 } from 'antd';
-
-
 
 import {
     Modal,
@@ -41,7 +39,7 @@ import {
     ListGroup,
     ListGroupItem,
     Badge,
-    Dropdown,
+    //Dropdown,
     DropdownToggle,
     DropdownMenu,
     DropdownItem
@@ -80,6 +78,7 @@ const FormItem = Form.Item;
 const Option = Select.Option;
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
+
 
 
 export class WorkPlan extends Component {
@@ -136,12 +135,12 @@ export class WorkPlan extends Component {
         return d.getFullYear() + "-" + ('0' + (d.getMonth() + 1)).slice(-2) + "-" + ('0' + d.getDate()).slice(-2); //d.getHours() d.getMinutes()
     }
 
-    
+
     shouldComponentUpdate = (nextProps, nextState) => {
-       return true;
-       //return ((new Date(nextProps.startDT).setHours(0, 0, 0, 0) != new Date(this.props.startDT).setHours(0, 0, 0, 0)) || (new Date(nextProps.endDT).setHours(0, 0, 0, 0) != new Date(this.props.endDT).setHours(0, 0, 0, 0))) 
+        return true;
+        //return ((new Date(nextProps.startDT).setHours(0, 0, 0, 0) != new Date(this.props.startDT).setHours(0, 0, 0, 0)) || (new Date(nextProps.endDT).setHours(0, 0, 0, 0) != new Date(this.props.endDT).setHours(0, 0, 0, 0))) 
     }
-   
+
 
     componentWillReceiveProps(nextProps) {
         //alert("componentWillReceiveProps");
@@ -165,7 +164,7 @@ export class WorkPlan extends Component {
         }
         else {
             //alert(this.state.refreshData)
-            if (nextProps.WorkPlanState.items ) {
+            if (nextProps.WorkPlanState.items) {
 
                 //alert((this.state.items || []).length)
                 //alert( (nextProps.WorkPlanState.items[0] || []).length)
@@ -200,6 +199,8 @@ export class WorkPlan extends Component {
         //console.log(this.state);
         if (_.trim(this.props.WorkPlanState.message.msg) == "data") {
 
+            //this.setState({ modal: !this.state.modal });
+
             this.props.getWorkPlans({
                 type: workplanTypes.FETCH_TABLES_REQUEST,
                 payload: {
@@ -208,11 +209,7 @@ export class WorkPlan extends Component {
                     endDT: this.formatDate(this.props.endDT)
                 }
             });
-            //alert("NN")
-            //alert(this.state.refreshData)
-
-            //this.setState({ refreshData: true });
-
+            
             this.props.resetMessage({
                 type: workplanTypes.MESSAGE,
                 message: { val: 0, msg: "" }
@@ -221,7 +218,6 @@ export class WorkPlan extends Component {
         } else if (_.trim(this.props.WorkPlanState.message.msg) != "") {
             //debugger;      
             alert(this.props.WorkPlanState.message.msg);
-
             if (this.props.WorkPlanState.message.val == "1") {
 
                 //alert("MM")
@@ -303,7 +299,13 @@ export class WorkPlan extends Component {
             fridayHrs: 0,
             satdayHrs: 0,
             sundayHrs: 0,
-            refreshData: false
+            refreshData: false,
+            headerDesc: "Add Task",
+            changeOrderID: "",
+            taskName: "",
+            taskDesc: "",
+            taskStatusID: "",
+            taskID: ""
         };
 
 
@@ -319,15 +321,27 @@ export class WorkPlan extends Component {
         this.saveHours = this.saveHours.bind(this);
         this.closeTP = this.closeTP.bind(this);
         this.getHours = this.getHours.bind(this);
+        this.onMenuClick = this.onMenuClick.bind(this);
 
         this.handleStartEvent = this.handleStartEvent.bind(this);
         this.handleEndEvent = this.handleEndEvent.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-
+        this.deleteTask = this.deleteTask.bind(this);
+        this.editTask = this.editTask.bind(this);
 
         this.addTask = this.addTask.bind(this);
+        //this.getMenu = this.getMenu.bind(this);
         //this.newAttribVal = "";
     }
+
+    onMenuClick = (itm, row) => {
+        //debugger;
+        //alert(row.task_id)
+        //message.info(`Click on item ${itm.key}`);
+        if (itm.key == 0) {
+            this.editTask(row);
+        }
+    };
 
     toggle = () => {
         //alert("in Toggle")
@@ -343,9 +357,17 @@ export class WorkPlan extends Component {
 
         this.setState({
             modal: !this.state.modal,
-            selectedRoleRow: row,
-            roleMode: "A"
+            taskMode: "A",
+            headerDesc: "Add Row",
+            changeOrderID: "",
+            taskName: "",
+            taskDesc: "",
+            startDate: moment(new Date(this.props.startDT)),
+            endDate: moment(new Date(this.props.endDT)),
+            taskStatusID: "",
+            taskID: ""
         });
+
     }
 
     saveTask = (values) => {
@@ -386,17 +408,32 @@ export class WorkPlan extends Component {
               'taskEndDate': fieldsValue['taskEndDate'].format('YYYY-MM'),
               'taskStatus': fieldsValue['taskStatus'],
         */
-        this.props.insertTaskTable({
-            type: workplanTypes.INSERT_REQUEST,
-            payload: {
-                staff_id: this.props.staffID,
-                change_order_id: values.changeOrder,
-                task_start_date: values.taskStartDate,
-                task_end_date: values.taskEndDate,
-                task_desc: values.taskDesc,
-                task_status: values.taskStatus,
-            }
-        });
+        if (this.state.taskMode == "A") {
+            this.props.insertTaskTable({
+                type: workplanTypes.INSERT_REQUEST,
+                payload: {
+                    staff_id: this.props.staffID,
+                    change_order_id: values.changeOrder,
+                    task_start_date: values.taskStartDate,
+                    task_end_date: values.taskEndDate,
+                    task_desc: values.taskDesc,
+                    task_status: values.taskStatus,
+                }
+            });
+        } else {
+            this.props.updateTaskTable({
+                type: workplanTypes.UPDATE_REQUEST,
+                payload: {
+                    task_id: this.state.taskID,
+                    staff_id: this.props.staffID,
+                    change_order_id: values.changeOrder,
+                    task_start_date: values.taskStartDate,
+                    task_end_date: values.taskEndDate,
+                    task_desc: values.taskDesc,
+                    task_status: values.taskStatus,
+                }
+            });
+        }
 
     }
 
@@ -582,7 +619,7 @@ export class WorkPlan extends Component {
         //alert("in Save")
         debugger;
         let items = [];
-       
+
         let TP = this.TPRefs.get(index);
         TP.timePickerRef.setState({ value: e, open: false });
 
@@ -601,21 +638,21 @@ export class WorkPlan extends Component {
             let d = new Date(itm.task_date);
             d.setDate(d.getDate() + 1);
 
-            if(itm.task_id == row.task_id && new Date(dt).setHours(0, 0, 0, 0) == new Date(d).setHours(0, 0, 0, 0)){
+            if (itm.task_id == row.task_id && new Date(dt).setHours(0, 0, 0, 0) == new Date(d).setHours(0, 0, 0, 0)) {
                 //debugger;
                 //alert(itm.num_hours)
                 itm.num_hours = hrs;
                 return itm;
             } else {
                 return itm;
-            }        
+            }
         });
 
-        this.setState({items});
+        this.setState({ items });
         //hrs = Number(hrs);
         //let items = this.state.items;
 
-      
+
         this.props.insertHourTable({
             type: workplanTypes.INSERTHOUR_REQUEST,
             payload: {
@@ -670,6 +707,66 @@ export class WorkPlan extends Component {
         //return e;
     }
 
+    deleteTask = (row) => {
+        debugger;
+        if (Number(row.taskhourrows) > 0) {
+            alert("This task has hours entered, delete is not allowed.")
+            return false;
+        }
+
+        this.props.deleteTaskTable({
+            type: workplanTypes.DELETE_REQUEST,
+            payload: {
+                task_id: row.task_id         
+            }
+        });
+
+    }
+
+    editTask = (row) => {
+
+        debugger;
+        //alert(row.task_start_date)
+        let sdt = new Date(row.task_start_date);
+        sdt.setDate(sdt.getDate() + 1);
+        //alert(sdt)
+
+        let edt = new Date(row.task_est_comp_date);
+        edt.setDate(edt.getDate() + 1);
+
+        this.setState({
+            modal: !this.state.modal,
+            taskMode: "E",
+            headerDesc: "Edit Row",
+            changeOrderID: row.change_order_id,
+            taskName: row.task_description,
+            taskDesc: row.task_description,
+            startDate: moment(sdt),
+            endDate: moment(edt),
+            taskStatusID: row.status_id,
+            taskID: row.task_id
+        });
+
+    }
+
+    getMenu = (row) => {
+        //alert(row.task_id)
+        const menu = (
+            <Menu style={{ width: 100 }} onClick={(key) => this.onMenuClick(key, row)}>
+                <Menu.Item key="0">
+                    <span><Icon type="edit"></Icon>{" "}Edit</span>
+                </Menu.Item>
+                <Menu.Item key="1">
+                    <Popconfirm placement="topRight" title="Are you sure to delete this task?" onConfirm={(e) => this.deleteTask(row)} okText="Yes" cancelText="No">
+                        <span><Icon type="delete"></Icon>{" "}Delete</span>
+                    </Popconfirm>
+                </Menu.Item>
+            </Menu>
+        );
+
+        return menu;
+    }
+
 
     render() {
 
@@ -678,6 +775,7 @@ export class WorkPlan extends Component {
             labelCol: { span: 10 },
             wrapperCol: { span: 14 },
         };
+
 
         let HTML;
         var TPM, TPTu, TPW, TPTh, TPF, TPS, TPSu, TPD;
@@ -779,7 +877,9 @@ export class WorkPlan extends Component {
 
                                                     <tr key={index}>
                                                         <td style={styles.link}>
-                                                            <i className="fa fa-tasks fa-fw" />
+                                                            <Dropdown overlay={this.getMenu(row)} trigger={['click']}>
+                                                                <i className="fa fa-tasks fa-fw" />
+                                                            </Dropdown>
                                                         </td>
                                                         <td>{row.task_description}</td>
                                                         <td>
@@ -892,7 +992,7 @@ export class WorkPlan extends Component {
                         </Col>
                     </Row>
                     <Modal isOpen={this.state.modal} autoFocus={false} size="md">
-                        <ModalHeader toggle={this.toggle}>Add Task</ModalHeader>
+                        <ModalHeader toggle={this.toggle}>{this.state.headerDesc}</ModalHeader>
                         <ModalBody>
                             <Container fluid>
                                 <Form onSubmit={this.handleSubmit}>
@@ -903,6 +1003,7 @@ export class WorkPlan extends Component {
                                         colon
                                     >
                                         {getFieldDecorator('changeOrder', {
+                                            initialValue: this.state.changeOrderID,
                                             rules: [
                                                 { required: true, message: 'Please select a Change Order!' },
                                             ],
@@ -916,7 +1017,7 @@ export class WorkPlan extends Component {
                                     </FormItem>
                                     <FormItem {...formItemLayout} label="Task Name">
                                         {getFieldDecorator('taskName', {
-                                            initialValue: "",
+                                            initialValue: this.state.taskName,
                                             rules: [{
                                                 required: true,
                                                 message: 'Please input task name',
@@ -927,7 +1028,7 @@ export class WorkPlan extends Component {
                                     </FormItem>
                                     <FormItem {...formItemLayout} label="Task Description">
                                         {getFieldDecorator('taskDesc', {
-                                            initialValue: "",
+                                            initialValue: this.state.taskDesc,
                                             rules: [{
                                                 required: true,
                                                 message: 'Please input task description',
@@ -978,6 +1079,7 @@ export class WorkPlan extends Component {
                                         colon
                                     >
                                         {getFieldDecorator('taskStatus', {
+                                            initialValue: this.state.taskStatusID,
                                             rules: [
                                                 { required: true, message: 'Please select Task Status!' },
                                             ],

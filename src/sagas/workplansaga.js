@@ -32,7 +32,7 @@ const attribApi = {
         const RestAPIURL = API_ROOT.backendAPIGWsvc;
         const requestURL = `${RestAPIURL}ExportToExcel/`;
         return fetch(requestURL, {
-        //return fetch("http://localhost:4003/ExportToExcel/", {
+            //return fetch("http://localhost:4003/ExportToExcel/", {
             method: "POST",
             headers: {
                 Accept: "application/json",
@@ -86,7 +86,7 @@ const attribApi = {
         const RestAPIURL = API_ROOT.backendAPIGWsvc;
         const requestURL = `${RestAPIURL}ExecSPM/`;
         return fetch(requestURL, {
-        //return fetch("http://hvs.selfip.net:4003/ExecSPM/", {
+            //return fetch("http://hvs.selfip.net:4003/ExecSPM/", {
             //return fetch("http://localhost:4003/GetWPlanTable/", {
 
             method: "POST",
@@ -118,7 +118,7 @@ const attribApi = {
         const RestAPIURL = API_ROOT.backendAPIGWsvc;
         const requestURL = `${RestAPIURL}ExecSP/`;
         return fetch(requestURL, {
-        //return fetch("http://hvs.selfip.net:4003/ExecSP/", {
+            //return fetch("http://hvs.selfip.net:4003/ExecSP/", {
             //return fetch("http://hvs.selfip.net:4000/reactlogin/", {
             method: "POST",
             headers: {
@@ -152,7 +152,7 @@ const attribApi = {
         const RestAPIURL = API_ROOT.backendAPIGWsvc;
         const requestURL = `${RestAPIURL}ExecSP/`;
         return fetch(requestURL, {
-        //return fetch("http://hvs.selfip.net:4003/ExecSP/", {
+            //return fetch("http://hvs.selfip.net:4003/ExecSP/", {
             //return fetch("http://hvs.selfip.net:4000/reactlogin/", {
             method: "POST",
             headers: {
@@ -184,7 +184,7 @@ const attribApi = {
         const RestAPIURL = API_ROOT.backendAPIGWsvc;
         const requestURL = `${RestAPIURL}ExecSP/`;
         return fetch(requestURL, {
-        //return fetch("http://hvs.selfip.net:4003/ExecSP/", {
+            //return fetch("http://hvs.selfip.net:4003/ExecSP/", {
             //return fetch("http://hvs.selfip.net:4000/reactlogin/", {
             method: "POST",
             headers: {
@@ -203,16 +203,16 @@ const attribApi = {
             .catch(error => error);
     },
 
-    delWPlanTable(roleID) {
+    delWPlanTable(userData) {
         debugger;
         //console.log(userData.user);
         //console.log(userData.password);
-
+        //alert( userData.task_id   )
         //new Promise((resolve, reject) => {
         const RestAPIURL = API_ROOT.backendAPIGWsvc;
         const requestURL = `${RestAPIURL}ExecSP/`;
         return fetch(requestURL, {
-        //return fetch("http://hvs.selfip.net:4003/ExecSP/", {
+            //return fetch("http://hvs.selfip.net:4003/ExecSP/", {
             //return fetch("http://hvs.selfip.net:4000/reactlogin/", {
             method: "POST",
             headers: {
@@ -220,9 +220,10 @@ const attribApi = {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                spName: "spd_WPlan",
+                spName: "spd_tunivtasks",
+                token: sessionStorage.getItem("token"),
                 parms: {
-                    roleID: roleID
+                    task_id: userData.task_id                    
                 }
             })
         })
@@ -240,7 +241,7 @@ const attribApi = {
         const RestAPIURL = API_ROOT.backendAPIGWsvc;
         const requestURL = `${RestAPIURL}ExecSP/`;
         return fetch(requestURL, {
-        //return fetch("http://hvs.selfip.net:4003/ExecSP/", {
+            //return fetch("http://hvs.selfip.net:4003/ExecSP/", {
             //return fetch("http://hvs.selfip.net:4000/reactlogin/", {
             method: "POST",
             headers: {
@@ -248,14 +249,16 @@ const attribApi = {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                spName: "spu_getWPlanScreenFunctions",
+                spName: "spu_tunivtasks",
                 token: sessionStorage.getItem("token"),
                 parms: {
-                    role_id: userData.role_id,
-                    role_name: userData.role_name,
-                    role_desc: userData.role_desc,
-                    userId: "sv",
-                    funcData: userData.functions
+                    task_id: userData.task_id,
+                    staff_id: userData.staff_id,
+                    change_order_id: userData.change_order_id,
+                    task_start_date: userData.task_start_date,
+                    task_end_date: userData.task_end_date,
+                    task_desc: userData.task_desc,
+                    task_status: userData.task_status
                 }
             })
         })
@@ -380,20 +383,10 @@ function* updateWPlanTable(userData) {
                     message: { val: -1, msg: resultObj.result }
                 });
             } else {
-                //debugger;
-                //console.log(JSON.parse(resultObj).result);
-                sessionStorage.setItem("token", resultObj.token);
-                if (userData.payload.mode == "A") {
-                    yield put({
-                        type: wplanTypes.MESSAGE,
-                        message: { val: 1, msg: "Permissions were added." }
-                    });
-                } else {
-                    yield put({
-                        type: wplanTypes.MESSAGE,
-                        message: { val: 1, msg: "Permissions were updated." }
-                    });
-                }
+                yield put({
+                    type: wplanTypes.MESSAGE,
+                    message: { val: 1, msg: "Task was Updated." }
+                });
             }
         } else {
             yield put({
@@ -407,7 +400,7 @@ function* updateWPlanTable(userData) {
     }
 }
 
-function* deleteWPlanTable(roleID) {
+function* deleteWPlanTable(userData) {
     try {
         /*
           yield put({
@@ -421,55 +414,29 @@ function* deleteWPlanTable(roleID) {
           });
           */
 
-        const resultObj = yield call(attribApi.delWPlanTable, roleID);
+        let resultObj = yield call(attribApi.delWPlanTable, userData.payload);
 
-        debugger;
-        if (resultObj.response && !resultObj.response.ok) {
-            debugger;
-            yield put({
-                type: wplanTypes.MESSAGE,
-                message: resultObj.response.statusText
-            });
-        } else {
-            debugger;
-            yield put({
-                type: wplanTypes.ITEMS,
-                items: []
-            });
-
-            yield put({
-                type: wplanTypes.SELECTED_ROWID,
-                rowID: -1
-            });
-
-            const resultObj = yield call(attribApi.getWPlanTable, "");
-            debugger;
-            if (resultObj.response && !resultObj.response.ok) {
-                debugger;
+        if (isJSON(resultObj)) {
+            resultObj = JSON.parse(resultObj);
+            if (resultObj.message != "ok") {
+                //debugger;
                 yield put({
                     type: wplanTypes.MESSAGE,
-                    message: resultObj.response.statusText
+                    message: { val: -1, msg: resultObj.result }
                 });
             } else {
-                debugger;
-                console.log(JSON.parse(resultObj).result);
-                //sessionStorage.setItem("token", JSON.parse(resultObj).token);
                 yield put({
-                    type: wplanTypes.ITEMS,
-                    items: JSON.parse(resultObj).result
+                    type: wplanTypes.MESSAGE,
+                    message: { val: 1, msg: "data" }
                 });
             }
-            /*
-              console.log(JSON.parse(resultObj).result)
-              const state = yield select();
-              const newitems = state.roleleState.items.filter((itm) => _.trim(itm.hv_universal_i) !== _.trim(userData.payload.rowID));
-
-              yield put({
-                type: wplanTypes.ITEMS,
-                items: newitems
-              });
-              */
+        } else {
+            yield put({
+                type: wplanTypes.MESSAGE,
+                message: { val: -1, msg: resultObj }
+            });
         }
+
     } catch (e) {
     } finally {
     }
@@ -639,7 +606,7 @@ export function* handleRequest(action) {
             case wplanTypes.DELETE_REQUEST: {
                 //yield all([put({ type: "LOGIN_STATUS", message: '' }), put({ type: "ITEMS_IS_LOADING", isLoading: true })])
                 debugger;
-                const fetchTask = yield fork(deleteWPlanTable, action.roleID);
+                const fetchTask = yield fork(deleteWPlanTable, action.payload);
                 debugger;
                 break;
             }

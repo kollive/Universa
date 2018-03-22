@@ -58,11 +58,11 @@ export const types = {
     makeRowEditable: payload => ({ type: types.MAKE_ROW_EDITABLE, payload }),
     insertTaskTable: payload => ({ type: types.INSERT_REQUEST, payload }),
     insertHourTable: payload => ({ type: types.INSERTHOUR_REQUEST, payload }),
-    updateWorkplanTable: payload => ({ type: types.UPDATE_REQUEST, payload }),  
+    updateTaskTable: payload => ({ type: types.UPDATE_REQUEST, payload }),  
     //updateStoreWorkplanTable: payload => ({ type: types.UPDATE_STORE_REQUEST, payload }),
-    deleteWorkplanTable: payload => ({
+    deleteTaskTable: payload => ({
       type: types.DELETE_REQUEST,
-      roleID: payload.roleID
+      payload
     }),
     cancelWorkplanTable: payload => ({ type: types.CANCEL_REQUEST, payload }),
     exportToExcel: payload => ({ type: types.EXCEL_REQUEST, payload }),
