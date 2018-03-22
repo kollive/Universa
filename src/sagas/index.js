@@ -74,7 +74,7 @@ export default function* rootSaga () {
         takeLatest([showDataTypes.FETCH_TABLE_REQUEST], showDataSagas.handleRequest),
         takeLatest([forgotPWDTypes.CHECK_EMAIL_REQUEST], forgotPWDSagas.handleRequest),
         takeLatest([changePWDTypes.UPD_PWD_REQUEST,changePWDTypes.CHK_TOKEN_REQUEST], changePWDSagas.handleRequest),
-        takeLatest([headerTypes.FETCH_REQUEST], headersaga.handleRequest),
+        takeLatest([headerTypes.FETCH_REQUEST ,headerTypes.GET_STAFF_DETAILS], headersaga.handleRequest),
         takeLatest([cadetSearchTypes.FETCH_TABLES_REQUEST], cadetSearchSaga.handleRequest),
         takeLatest([cadetDetailsTypes.FETCH_TABLES_REQUEST], cadetDetailsSaga.handleRequest),
         takeLatest([CadetInlineTypes.FETCH_TABLES_REQUEST], cadetInlineSaga.handleRequest),

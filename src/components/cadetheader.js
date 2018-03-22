@@ -41,7 +41,7 @@ class CadetHeader extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     //debugger;
     console.log("componentDidUpdate");
-    console.log(this.state.items[0].user);
+    //console.log(this.state.items[0].user);
   }
   componentWillReceiveProps(nextProps) {
     //debugger;

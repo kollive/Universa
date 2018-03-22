@@ -1,6 +1,7 @@
 export const types = {
 FETCH_REQUEST: "HEADER/FETCH_REQUEST",
-ITEMS: "HEADER/ITEMS"
+ITEMS: "HEADER/ITEMS",
+GET_STAFF_DETAILS : "TIMESHEET/GET_STAFF_DETAILS",
 };
 
 export const initialState = {
@@ -33,6 +34,8 @@ export default (state = initialState, action) => {
   
 
 export const actions = {
-   renderHeader: (loadheader) => ({ type: types.FETCH_REQUEST, loadheader })
+   renderHeader: (loadheader) => ({ type: types.FETCH_REQUEST, loadheader }),
+  getStaffDetails : (payload)  => ({type:types.GET_STAFF_DETAILS,payload}),
+
 };
 

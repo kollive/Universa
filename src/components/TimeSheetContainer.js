@@ -18,6 +18,7 @@ import { bindActionCreators } from "redux";
 import { types as commonTypes } from "../reducers/commonreducer";
 import { actions as commonActions } from "../reducers/commonreducer";
 import Timesheet from './Timesheet/Timesheet'
+import * as _ from "lodash";
 
 
 import {
@@ -52,6 +53,7 @@ class TimeSheetContainer extends Component {
         super(props);
 
         this.state = {
+            staff_id:'',
             notifycollapse: true,
             indicatorscollapse: true,
             showApprovals: false,
@@ -67,7 +69,25 @@ class TimeSheetContainer extends Component {
         // this.onClickAction = this.onClickAction.bind(this);
         this.setDate = this.setDate.bind(this);
         this.setMode = this.setMode.bind(this);
+        this.parentStaffID = this.parentStaffID.bind(this);
         
+        this.getStaffID();
+    }
+    getStaffID=()=>{
+        let userid;
+     if (JSON.parse(sessionStorage.getItem("roles")) && !!sessionStorage.getItem("roles")) {
+            //debugger
+            _.map(JSON.parse(sessionStorage.getItem("roles")), function (o) {
+                userid = o.hv_user_id
+            })
+        }
+       // alert(userid)
+         this.props.setStaffID({
+            type: commonTypes.STAFFID,
+            payload: {
+                hv_staff_id:userid //this.props.hv_staff_id               
+            }
+        });
     }
 
     componentWillMount = () => {
@@ -80,12 +100,12 @@ class TimeSheetContainer extends Component {
             }
         });
 
-        this.props.setStaffID({
-            type: commonTypes.STAFFID,
-            payload: {
-                hv_staff_id: this.props.hv_staff_id               
-            }
-        });
+        // this.props.setStaffID({
+        //     type: commonTypes.STAFFID,
+        //     payload: {
+        //         hv_staff_id: this.props.hv_staff_id               
+        //     }
+        // });
     }
     
     componentWillReceiveProps(nextProps) {
@@ -128,10 +148,17 @@ class TimeSheetContainer extends Component {
         });
 
     }
+parentStaffID (staffID){
+       this.setState({
+            staff_id: staffID
+        });
+}
 
 
     render() {
-        this.renderTimesheet=<Timesheet headerState={this.state} staffID={ (this.props.commonState.hv_staff_id == "" ? this.props.hv_staff_id : this.props.commonState.hv_staff_id)}/>
+        this.renderTimesheet=<Timesheet headerState={this.state}
+        // staffID={ (this.props.commonState.hv_staff_id == "" ? this.props.hv_staff_id : this.props.commonState.hv_staff_id)}
+        staffID={ (this.state.staff_id=="") ?  this.props.hv_staff_id : this.state.staff_id   } />
 
         return (
             <Container
@@ -142,7 +169,9 @@ class TimeSheetContainer extends Component {
                         <Row >
                             {" "}
                             <Col sm="12">
-                                <TimeSheetHeader hv_name={(this.props.commonState.hv_name == "" ? this.props.name : this.props.commonState.hv_name )} callParentDates={this.setDate} callParentMode={this.setMode} />
+                                <TimeSheetHeader staffID={ (this.props.hv_staff_id == "" ? "7" : this.props.hv_staff_id )} hv_name={(this.props.commonState.hv_name == "" ? this.props.name : this.props.commonState.hv_name )} callParentDates={this.setDate} callParentMode={this.setMode} 
+                                callParentStaffID={this.parentStaffID}
+                                />
                             </Col>
                         </Row>
                     </div>
@@ -160,7 +189,7 @@ class TimeSheetContainer extends Component {
                         <Row >
                             {" "}
                             <Col sm="12">
-                                <WorkPlan staffID={ (this.props.hv_staff_id == "" ? "7" : this.props.hv_staff_id )} startDT={this.state.startDT} endDT={this.state.endDT} mode={this.state.mode} />
+                                <WorkPlan staffID={ (this.state.staff_id=="") ?  this.props.hv_staff_id : this.state.staff_id   } startDT={this.state.startDT} endDT={this.state.endDT} mode={this.state.mode} />
                             </Col>
                         </Row>
                     </div>

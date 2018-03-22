@@ -16,6 +16,8 @@ import moment from 'moment'
 //import { Button } from 'reactstrap';
 //import 'react-datepicker/dist/react-datepicker.css'
 import { DatePicker, TimePicker, Button, Icon } from 'antd';
+import { Dropdown } from 'primereact/components/dropdown/Dropdown';
+ import * as _ from "lodash";
 
 class TimeSheetHeader extends React.Component {
 
@@ -25,6 +27,9 @@ class TimeSheetHeader extends React.Component {
         this.items = [];
 
         this.state = {
+            staffItem:'',
+            StaffList:[],
+            selectedStaffID:'',
             weekOrDay: true,
             isOpen: false,
             startDate: moment(),
@@ -40,33 +45,35 @@ class TimeSheetHeader extends React.Component {
         this.moveWeek = this.moveWeek.bind(this);
         this.toggle = this.toggle.bind(this);
         //this.renderTimesheet;
+
     }
 
     componentDidMount() {
-        //debugger;
-        //alert(this.props.location.state.params.hv_table_i)
-        //alert(this.props.name)
-        /*
-        this.props.renderHeader({
-            type: headerActions.renderHeader,
-            loadheader: {
-                userid: "sv"
-            }
-        });
-        */
-
-
-
-
+     this.props.getStaffDetails({
+      type: headertypes.GET_STAFF_DETAILS,
+      payload: [{hv_staff_id : (!this.props.staffID=='')?this.props.staffID:0},{ function_Id: '66' }]
+      });
     }
     componentDidUpdate(prevProps, prevState) {
         debugger;
         console.log("componentDidUpdate");
-        console.log(this.state.items[0].user);
+       // console.log(this.state.items[0].user);
     }
     componentWillReceiveProps(nextProps) {
         debugger;
         this.state.items = nextProps.headerState.items;
+        if(nextProps.headerState.items!==undefined)
+        {
+        var self = this;
+        let findID = _.find(nextProps.headerState.items,
+         function (o) {return (o.hv_staff_id==self.props.staffID)});
+                                        
+                                        // ['hv_staff_id', this.props.staffID])
+        if(findID!==undefined)
+        {
+        this.setState({ staffItem: findID  });
+        }
+        }
     }
 
     handleChange = (date) => {
@@ -153,19 +160,31 @@ class TimeSheetHeader extends React.Component {
     componentWillMount = () => {
         //debugger;  HH:mm A
     };
-
+    onStaffListChange = (e) => {
+        this.setState({ staffItem: e.value });
+        this.setState({ selectedStaffID: e.value.hv_staff_id });
+        this.props.callParentStaffID(e.value.hv_staff_id)
+    }
     render() {
         debugger;
         // const renderTimesheet=<Timesheet headerState={this.state}/>
         // this.renderTimesheet=<Timesheet headerState={this.state}/>
-
+                        //alert(this.props.headerState.items)
+                        //<h3 className="d-inline align-middle">Timesheet</h3> <br />
+{this.state.staffItem}
         return (
             <div className="m-2 p-2">
                 <Row>
+                    <Col sm="1">
+                        <h6 className="d-inline align-middle">Timesheet</h6> <br />
+                    
+                </Col>
                     <Col sm="3">
                         <div>
-                            <h3 className="d-inline align-middle">Timesheet</h3> <br />
-                            <h6>{this.props.hv_name}</h6>
+                            
+                             <Dropdown value={this.state.staffItem} options={this.props.headerState.items} optionLabel="hv_staff_name"  onChange={this.onStaffListChange} style={{ width: "80%", fontSize: '12px' }}
+                          required
+                          placeholder="Select Program" id="ddlProgram" />
                         </div>
                     </Col>
                     <Col sm="3">
@@ -183,7 +202,7 @@ class TimeSheetHeader extends React.Component {
                             <Button onClick={() => this.moveWeek("N")}><Icon type="caret-right" style={{ cursor: "pointer" }} /></Button>
                         </span>
                     </Col>
-                    <Col sm="3">
+                    <Col sm="2">
                         <div className="d-sm-inline-flex">Day<Toggle defaultToggled={true} ref={(r) => { this.togCtl = r }} style={{ width: "50px" }} onToggle={(e, val) => { this.setDayOrWeek(val) }} />Week</div>
                     </Col>
                 </Row>

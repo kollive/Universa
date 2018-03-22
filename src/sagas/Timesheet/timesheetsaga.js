@@ -82,7 +82,7 @@ import {
       .catch(error => error);
   }
  
-
+ 
   function* insertTimesheetDetails(timesheetData){
     try{
    //debugger
@@ -195,7 +195,7 @@ import {
     }
   }
   
-  
+ 
   export function* handleRequest(action) {
     
     try {
@@ -214,6 +214,7 @@ import {
           const fetchTask = yield call(getTimesheetDetails,action.payload);
           break;
         }  
+      
         default: {
           break;
         }

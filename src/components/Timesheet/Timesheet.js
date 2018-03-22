@@ -34,14 +34,14 @@ export class Timesheet extends Component {
 
         if (JSON.parse(sessionStorage.getItem("roles")) && !!sessionStorage.getItem("roles")) {
             //debugger
-
             _.map(JSON.parse(sessionStorage.getItem("roles")), function (o) {
                 userid = o.hv_user_id
             })
         }
+        //alert("ME "+ this.props.staffID)
         this.state = {
             date: new Date(),
-            staff_id: "1",//this.props.staffID==''?'1':this.props.staffID,
+            staff_id: this.props.staffID,//==''?'1':this.props.staffID,
             loggedIn: userid,
             errorDesc: '',
     
@@ -274,11 +274,14 @@ export class Timesheet extends Component {
                     startOfWeek = moment(nextProps.headerState.startDT).startOf('isoWeek')
                     endOfWeek = moment(nextProps.headerState.startDT).endOf('isoWeek')
                 }
+                 //alert("me "+this.props.headerState.staff_id)
+               // let staff_id=(this.props.headerState.staff_id==undefined)?this.state.staff_id:this.props.headerState.staff_id
 
+               let staff_id=this.props.staffID
                 this.props.getTimesheet({
                     type: ManageTimeTypes.FETCH_TIME_REQUEST,
                     payload: [{
-                        staff_id: this.state.staff_id, start_timesheet_date: this.convertDate(startOfWeek), end_timesheet_date: this.convertDate(endOfWeek),
+                        staff_id: staff_id, start_timesheet_date: this.convertDate(startOfWeek), end_timesheet_date: this.convertDate(endOfWeek),
                     },
                     { function_id: '67' }]//unqFunction[key].function_id}]
                 });
@@ -287,7 +290,8 @@ export class Timesheet extends Component {
         }
     }
     renderSavedTimesheet() {
-        //debugger
+        let staff_id=this.props.staffID
+        //let staff_id=(this.props.headerState.staff_id==undefined)?this.state.staff_id:this.props.headerState.staff_id       
         let startOfWeek, endOfWeek;
         let unqFunction = this.evaluatePermissions();
         let key = _.findKey(unqFunction, function (o) { return o.function_id == 67 });
@@ -309,7 +313,7 @@ export class Timesheet extends Component {
             this.props.getTimesheet({
                 type: ManageTimeTypes.FETCH_TIME_REQUEST,
                 payload: [{
-                    staff_id: this.state.staff_id, start_timesheet_date: this.convertDate(startOfWeek), end_timesheet_date: this.convertDate(endOfWeek),
+                    staff_id: staff_id, start_timesheet_date: this.convertDate(startOfWeek), end_timesheet_date: this.convertDate(endOfWeek),
                 },
                 { function_id: '67' }]//unqFunction[key].function_id}]
             });
@@ -414,7 +418,7 @@ export class Timesheet extends Component {
 
                                     return (<td className="grey1" key={p.id}>
 
-                                        <TimePicker  ref={el => inputElement = el}   
+                                        <TimePicker  ref={el => inputElement = el}    onFocus={()=> this.onTimeChange('', inputElement, k, p.clock)}
                                         use12Hours format="hh:mm A" value={savedTime} onChange={(time, timeString) => {
                                             //this.onTimeChange(timeString, time, k, p.clock) 
                                             inputElement.setState({ value: time })
