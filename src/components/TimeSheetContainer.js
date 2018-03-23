@@ -51,9 +51,10 @@ const styles = {
 class TimeSheetContainer extends Component {
     constructor(props) {
         super(props);
+        //alert(this.props.hv_staff_id);
 
         this.state = {
-            staff_id:'',
+            staff_id: (this.props.hv_staff_id == "" ? this.props.CommonState.hv_staff_id : this.props.hv_staff_id),
             notifycollapse: true,
             indicatorscollapse: true,
             showApprovals: false,
@@ -64,7 +65,7 @@ class TimeSheetContainer extends Component {
             endDT: null,
             mode: "W",
             name: "",
-            hv_staff_id: ""
+            hv_staff_id: (this.props.hv_staff_id == "" ? this.props.CommonState.hv_staff_id : this.props.hv_staff_id)
         };
         // this.onClickAction = this.onClickAction.bind(this);
         this.setDate = this.setDate.bind(this);
@@ -72,62 +73,95 @@ class TimeSheetContainer extends Component {
         this.parentStaffID = this.parentStaffID.bind(this);
         
         this.getStaffID();
+
+        /*
+        if(this.props.CommonState.hv_staff_id) {
+
+            alert("receive")
+            alert( this.props.CommonState.hv_staff_id )
+            alert(this.props.hv_staff_id)
+
+        if(this.props.hv_staff_id != this.props.CommonState.hv_staff_id &&  this.props.CommonState.hv_staff_id != "" && this.props.hv_staff_id == "") {
+            
+            this.setState({
+                hv_staff_id :  this.props.CommonState.hv_staff_id,
+                staff_id :  this.props.CommonState.hv_staff_id
+            })
+            //alert(this.props.CommonState.hv_staff_id)
+            alert(this.state.staff_id)
+        }
+        }
+        */
+
     }
+
     getStaffID=()=>{
+        //alert("in Getstaff")
         let userid;
-     if (JSON.parse(sessionStorage.getItem("roles")) && !!sessionStorage.getItem("roles")) {
+        if (JSON.parse(sessionStorage.getItem("roles")) && !!sessionStorage.getItem("roles")) {
             //debugger
             _.map(JSON.parse(sessionStorage.getItem("roles")), function (o) {
                 userid = o.hv_user_id
             })
         }
        // alert(userid)
-         this.props.setStaffID({
-            type: commonTypes.STAFFID,
+       //alert(this.state.staff_id)
+       if(this.props.hv_staff_id != "") {
+            this.props.setStaffID({
+                type: commonTypes.STAFFID,
+                payload: {
+                    hv_staff_id : this.props.hv_staff_id               
+                }
+            });
+            
+            this.setState({
+                staff_id : this.props.hv_staff_id,
+                hv_staff_id :  this.props.hv_staff_id
+            })
+        }
+
+        this.props.setUserID({
+            type: commonTypes.USERID,
             payload: {
-                hv_staff_id:userid //this.props.hv_staff_id               
+                hv_user_id: userid         
             }
         });
+
+        if(this.props.name != "" ) {
+        this.props.setName({
+            type: commonTypes.NAME,
+            payload: {
+                hv_name : this.props.name               
+            }
+        });
+    }
     }
 
     componentWillMount = () => {
         debugger;
-        //alert(this.props.hv_staff_id )
-        this.props.setName({
-            type: commonTypes.NAME,
-            payload: {
-                hv_name: this.props.name               
-            }
-        });
-
-        // this.props.setStaffID({
-        //     type: commonTypes.STAFFID,
-        //     payload: {
-        //         hv_staff_id: this.props.hv_staff_id               
-        //     }
-        // });
+        
     }
     
     componentWillReceiveProps(nextProps) {
-
-        if (nextProps) {
-           
-            //alert("next")
-        }
+        /*
+           if(nextProps.CommonState) {
+                
+                    if(this.props.hv_staff_id != nextProps.CommonState.hv_staff_id &&  nextProps.CommonState.hv_staff_id != "" ) {
+                    this.setState({
+                        staff_id : nextProps.CommonState.hv_staff_id
+                    })
+            }
+                //alert("receive")
+                //alert(nextProps.CommonState.hv_staff_id)
+            }
+           */
     }
 
     componentDidMount() {
         debugger;
-        //alert(this.props.commonState.hv_staff_id)
+        //alert(this.props.CommonState.hv_staff_id)
         //alert(this.props.name) 
-        if (this.props.name) {
-            //console.log("00000000000000")
-            //console.log(this.props)
-            this.setState({
-                name: this.props.name,
-                hv_staff_id: this.props.hv_staff_id
-            })
-        }
+           
     }
 
     setDate(startDT, endDT) {
@@ -148,17 +182,21 @@ class TimeSheetContainer extends Component {
         });
 
     }
-parentStaffID (staffID){
+
+    parentStaffID (staffID){
+        //alert("staff")
+        //alert(staffID)
        this.setState({
             staff_id: staffID
         });
-}
+
+        //staffID={ (this.props.hv_staff_id !="") ?  this.props.hv_staff_id : this.state.staff_id} />
+    }
 
 
     render() {
-        this.renderTimesheet=<Timesheet headerState={this.state}
-        // staffID={ (this.props.commonState.hv_staff_id == "" ? this.props.hv_staff_id : this.props.commonState.hv_staff_id)}
-        staffID={ (this.state.staff_id=="") ?  this.props.hv_staff_id : this.state.staff_id   } />
+        this.renderTimesheet=<Timesheet headerState={this.state}        
+        staffID={this.state.staff_id}  />
 
         return (
             <Container
@@ -169,7 +207,7 @@ parentStaffID (staffID){
                         <Row >
                             {" "}
                             <Col sm="12">
-                                <TimeSheetHeader staffID={ (this.props.hv_staff_id == "" ? "7" : this.props.hv_staff_id )} hv_name={(this.props.commonState.hv_name == "" ? this.props.name : this.props.commonState.hv_name )} callParentDates={this.setDate} callParentMode={this.setMode} 
+                                <TimeSheetHeader staffID={this.state.hv_staff_id} hv_name={(this.props.CommonState.hv_name == "" ? this.props.name : this.props.CommonState.hv_name )} callParentDates={this.setDate} callParentMode={this.setMode} 
                                 callParentStaffID={this.parentStaffID}
                                 />
                             </Col>
@@ -180,8 +218,7 @@ parentStaffID (staffID){
                         <Row >
                             {" "}
                             <Col sm="12">
-                                              {this.renderTimesheet}
-
+                            <Timesheet headerState={this.state} staffID={this.state.staff_id}  />
                             </Col>
                         </Row>
                     </div>
@@ -189,7 +226,7 @@ parentStaffID (staffID){
                         <Row >
                             {" "}
                             <Col sm="12">
-                                <WorkPlan staffID={ (this.state.staff_id=="") ?  this.props.hv_staff_id : this.state.staff_id   } startDT={this.state.startDT} endDT={this.state.endDT} mode={this.state.mode} />
+                                <WorkPlan staffID={this.state.staff_id}  startDT={this.state.startDT} endDT={this.state.endDT} mode={this.state.mode} />
                             </Col>
                         </Row>
                     </div>
@@ -201,7 +238,7 @@ parentStaffID (staffID){
 
 const mapStateToProps = state => {
     return {
-        commonState: state.CommonState
+        CommonState: state.CommonState
     };
 };
 

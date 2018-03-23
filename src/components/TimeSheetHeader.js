@@ -49,10 +49,11 @@ class TimeSheetHeader extends React.Component {
     }
 
     componentDidMount() {
-     this.props.getStaffDetails({
-      type: headertypes.GET_STAFF_DETAILS,
-      payload: [{hv_staff_id : (!this.props.staffID=='')?this.props.staffID:0},{ function_Id: '66' }]
-      });
+        //alert(this.props.staffID);
+        this.props.getStaffDetails({
+            type: headertypes.GET_STAFF_DETAILS,
+            payload: [{hv_staff_id : (!this.props.staffID=='')?this.props.staffID:0},{ function_Id: '66' }]
+        });
     }
     componentDidUpdate(prevProps, prevState) {
         debugger;
@@ -61,18 +62,37 @@ class TimeSheetHeader extends React.Component {
     }
     componentWillReceiveProps(nextProps) {
         debugger;
-        this.state.items = nextProps.headerState.items;
-        if(nextProps.headerState.items!==undefined)
-        {
-        var self = this;
-        let findID = _.find(nextProps.headerState.items,
-         function (o) {return (o.hv_staff_id==self.props.staffID)});
-                                        
-                                        // ['hv_staff_id', this.props.staffID])
-        if(findID!==undefined)
-        {
-        this.setState({ staffItem: findID  });
+        //this.state.items = nextProps.headerState.items;
+        /*
+        if(nextProps.CommonState) {
+            if(this.props.staffID != nextProps.CommonState.hv_staff_id &&  nextProps.CommonState.hv_staff_id != "" ) {
+                alert("receive")
+            alert(this.props.staffID)
+            alert(nextProps.CommonState.hv_staff_id)
+                //this.setState({ staffItem: nextProps.CommonState.hv_staff_id  });
+            this.props.getStaffDetails({
+                type: headertypes.GET_STAFF_DETAILS,
+                payload: [{hv_staff_id : nextProps.CommonState.hv_staff_id},{ function_Id: '66' }]
+            });
         }
+            //alert("receive")
+            //alert(nextProps.CommonState.hv_staff_id)
+        }
+        */
+        if(nextProps.headerState.items)
+        {
+            //alert(this.props.staffID)
+            var self = this;
+            let findID = _.find(nextProps.headerState.items,
+            function (o) {return (o.hv_staff_id==self.props.staffID)});
+                      
+            //alert(findID);
+            //console.log("IDDDDD")
+            //console.log(findID)
+            if(findID!==undefined)
+            {
+                this.setState({ staffItem: findID  });
+            }
         }
     }
 
@@ -160,6 +180,7 @@ class TimeSheetHeader extends React.Component {
     componentWillMount = () => {
         //debugger;  HH:mm A
     };
+
     onStaffListChange = (e) => {
         this.setState({ staffItem: e.value });
         this.setState({ selectedStaffID: e.value.hv_staff_id });
@@ -171,7 +192,7 @@ class TimeSheetHeader extends React.Component {
         // this.renderTimesheet=<Timesheet headerState={this.state}/>
                         //alert(this.props.headerState.items)
                         //<h3 className="d-inline align-middle">Timesheet</h3> <br />
-{this.state.staffItem}
+        //{this.state.staffItem}
         return (
             <div className="m-2 p-2">
                 <Row>
@@ -214,7 +235,8 @@ class TimeSheetHeader extends React.Component {
 }
 const mapStateToProps = state => {
     return {
-        headerState: state.headerState
+        headerState: state.headerState,
+        CommonState: state.CommonState
     };
 };
 

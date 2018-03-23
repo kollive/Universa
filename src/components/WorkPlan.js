@@ -149,14 +149,15 @@ export class WorkPlan extends Component {
         //alert(this.props.CommonState.hv_staff_id )
         //debugger;
 
-        if ((new Date(nextProps.startDT).setHours(0, 0, 0, 0) != new Date(this.props.startDT).setHours(0, 0, 0, 0)) || (new Date(nextProps.endDT).setHours(0, 0, 0, 0) != new Date(this.props.endDT).setHours(0, 0, 0, 0))) {
+        if ( (this.props.staffID != nextProps.staffID ) || (new Date(nextProps.startDT).setHours(0, 0, 0, 0) != new Date(this.props.startDT).setHours(0, 0, 0, 0)) || (new Date(nextProps.endDT).setHours(0, 0, 0, 0) != new Date(this.props.endDT).setHours(0, 0, 0, 0))) {
 
             //alert("in Receive")
             //this.setState({ refreshData: true });
             this.props.getWorkPlans({
                 type: workplanTypes.FETCH_TABLES_REQUEST,
                 payload: {
-                    staffID: (this.props.staffID == "" ? "7" : this.props.staffID),
+                    //staffID: (this.props.staffID == "" ? this.props.CommonState.hv_staff_id : this.props.staffID),
+                    staffID: nextProps.staffID,
                     startDT: this.formatDate(nextProps.startDT),
                     endDT: this.formatDate(nextProps.endDT)
                 }
@@ -204,7 +205,8 @@ export class WorkPlan extends Component {
             this.props.getWorkPlans({
                 type: workplanTypes.FETCH_TABLES_REQUEST,
                 payload: {
-                    staffID: (this.props.staffID == "" ? "7" : this.props.staffID),
+                    //staffID: (this.props.staffID == "" ? this.props.CommonState.hv_staff_id : this.props.staffID),
+                    staffID : this.props.staffID,
                     startDT: this.formatDate(this.props.startDT),
                     endDT: this.formatDate(this.props.endDT)
                 }
@@ -227,7 +229,8 @@ export class WorkPlan extends Component {
                 this.props.getWorkPlans({
                     type: workplanTypes.FETCH_TABLES_REQUEST,
                     payload: {
-                        staffID: (this.props.staffID == "" ? "7" : this.props.staffID),
+                        //staffID: (this.props.staffID == "" ? this.props.CommonState.hv_staff_id : this.props.staffID),
+                        staffID : this.props.staffID,
                         startDT: this.formatDate(this.props.startDT),
                         endDT: this.formatDate(this.props.endDT)
                     }

@@ -23,6 +23,7 @@ import registerServiceWorker from "./registerServiceWorker";
 import createSagaMiddleware from "redux-saga";
 import configureStore from "./store/configureStore";
 import ErrorBoundary from "./ErrorComponent"
+import { loadState, saveState } from './Utils/localStorage'
 /*
 import ToComponent from "./components/To";
 import ItemList from "./components/ItemList";
@@ -37,6 +38,7 @@ import {
   ModalHeader,
   ModalBody
 } from "reactstrap";
+import * as _ from "lodash";
 
 
 //import "react-bootstrap-table/dist/react-bootstrap-table.min.css";
@@ -64,7 +66,28 @@ const sagaMiddleware = createSagaMiddleware();
       </BrowserRouter>
       */
 
-const store = configureStore({}, sagaMiddleware, routerMiddleware(history));
+
+const persistedState = loadState();
+const store = configureStore(persistedState, sagaMiddleware, routerMiddleware(history));
+
+store.subscribe(_.throttle(() => {
+  
+  //console.log("Before Hydrate")
+  //console.log(store.getState().CommonState)
+  saveState({
+    CommonState : store.getState().CommonState}
+  )
+  //console.log("After Hydrate")
+  //console.log(store.getState().CommonState)
+  
+  //saveState(store.getState())
+}, 1000))
+
+/*
+store.subscribe(() => {
+  saveState(store.getState())
+})
+*/
 
 //const AppComp = () => (
 
@@ -79,7 +102,7 @@ export class AppComp extends Component {
       lastActive: null,
       elapsed: null,
       modal: false,
-      message : ""
+      message: ""
     }
 
     this.modalToggle = this.modalToggle.bind(this);
@@ -98,7 +121,7 @@ export class AppComp extends Component {
   }
 
   showTimeOut = (msg) => {
-    this.setState({ modal: true, message  : msg });
+    this.setState({ modal: true, message: msg });
   };
 
   closeTimeOut = () => {
@@ -111,14 +134,14 @@ export class AppComp extends Component {
         <Provider store={store}>
           <MuiThemeProvider>
             <div>
-            <App history={history} showTimeOut={this.showTimeOut}/>
-            <Modal size="md"
-              isOpen={this.state.modal}
-            >
-              <ModalBody>
-                <TimeOut closeTimeOut={this.closeTimeOut}  {...this.props} message={this.state.message}/>
-              </ModalBody>
-            </Modal>
+              <App history={history} showTimeOut={this.showTimeOut} />
+              <Modal size="md"
+                isOpen={this.state.modal}
+              >
+                <ModalBody>
+                  <TimeOut closeTimeOut={this.closeTimeOut}  {...this.props} message={this.state.message} />
+                </ModalBody>
+              </Modal>
             </div>
           </MuiThemeProvider>
         </Provider>
