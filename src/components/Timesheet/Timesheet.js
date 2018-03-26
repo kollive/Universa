@@ -183,7 +183,7 @@ export class Timesheet extends Component {
         this.props.insertTimesheet({
             type: ManageTimeTypes.INSERT_TIME_REQUEST,
             payload: [{
-                staff_id: this.state.staff_id,
+                staff_id: this.props.staffID,
                 timesheet_date: saveDate,
                 timesheet_time: JSON.stringify(timesheet_time),
                 createuserid: this.state.loggedIn,
