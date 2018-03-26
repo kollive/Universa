@@ -19,7 +19,9 @@ import { types as commonTypes } from "../reducers/commonreducer";
 import { actions as commonActions } from "../reducers/commonreducer";
 import Timesheet from './Timesheet/Timesheet'
 import * as _ from "lodash";
-
+//import {html2canvas, jsPDF} from 'app/ext';
+import html2canvas from "html2canvas"
+import * as jsPDF  from 'jspdf'
 
 import {
     Container,
@@ -71,12 +73,11 @@ class TimeSheetContainer extends Component {
         this.setDate = this.setDate.bind(this);
         this.setMode = this.setMode.bind(this);
         this.parentStaffID = this.parentStaffID.bind(this);
+        this.printDocument = this.printDocument.bind(this);
         
-        this.getStaffID();
-
+        this.getStaffID();               
         /*
         if(this.props.CommonState.hv_staff_id) {
-
             alert("receive")
             alert( this.props.CommonState.hv_staff_id )
             alert(this.props.hv_staff_id)
@@ -94,6 +95,97 @@ class TimeSheetContainer extends Component {
         */
 
     }
+
+    printDocument = () => {
+        debugger;
+        let input = document.getElementById('divToPrint');
+        //input.parentElement.style.width = '10000px';
+        var styleOrig = input.getAttribute("style");
+        //input.setAttribute("style", "width: 1400px; height: 480px;");
+        //input.setAttribute("style", "font:bold 48px helvetica");
+//var div =  document.getElementById('divToPrint');
+//var rect = input.getBoundingClientRect();
+
+//var canvas = document.createElement("canvas");
+//canvas.width = rect.width;
+//canvas.height = rect.height;
+
+//var ctx = canvas.getContext("2d");
+//ctx.translate(-rect.left,-rect.top);
+//{scale:4}
+
+html2canvas(input).
+    then((canvas) => {
+        debugger;
+
+        var ctx = canvas.getContext('2d');
+        //ctx.scale(-1, 1);
+        //ctx.font = "48px Palatino";
+        //ctx.scale(10, 3);
+        //ctx.font = '32px Palatino';
+
+        /*
+        if (window.devicePixelRatio) {
+
+            var hidefCanvasWidth =canvas.getAttribute("width");
+            var hidefCanvasHeight = canvas.getAttribute("height");
+            var hidefCanvasCssWidth = hidefCanvasWidth;
+            var hidefCanvasCssHeight = hidefCanvasHeight;
+        
+            //canvas.setAttribute("width" , hidefCanvasWidth * window.devicePixelRatio);
+            //canvas.setAttribute("height", hidefCanvasHeight * window.devicePixelRatio);
+            //input.css('width', hidefCanvasCssWidth);
+            //input.css('height', hidefCanvasCssHeight);
+            ctx.scale(window.devicePixelRatio, window.devicePixelRatio);               
+          }
+          */
+
+        //ctx.webkitImageSmoothingEnabled = false;
+        //ctx.mozImageSmoothingEnabled = false;
+        //ctx.imageSmoothingEnabled = false;
+        //var myImage = canvas.toDataURL("image/jpeg,1.0");  
+        //canvas.width = rect.width;
+        //canvas.height = rect.height;
+        //canvas.scale=2;
+        var imgData = canvas.toDataURL("image/png",1);
+        //const pdf = new jsPDF('p', 'pt', 'a4');
+        const pdf = new jsPDF();
+        
+
+//pdf.setFont("helvetica");
+//pdf.setFontType("bold");
+//pdf.setFontSize(24);
+        //pdf.canvas.height = 72 * 11;
+        //pdf.canvas.width = 72 * 8.5;
+
+        //pdf.fromHTML(input);
+        //pdf.addImage(imgData,'JPEG',0, 0);
+        //pdf.addImage(imgData,'JPEG',0, 0, 200, 60);
+        pdf.addImage(imgData,'JPEG',0, 0, 212, 65);
+        
+        pdf.save("download.pdf");
+        input.setAttribute("style", styleOrig);
+        //var pHtml = "<img src="+image+" />";
+        //$("#parent").append(pHtml);
+    });
+    }
+
+/*
+        html2canvas(input)
+          .then((canvas) => {
+            
+            const imgData = canvas.toDataURL('image/png',1.0);
+            const pdf = new jsPDF();
+           
+            //pdf.addImage(imgData, 0, 0, imgWidth, imgHeight);
+
+            pdf.addImage(imgData,'JPEG',0, 0);
+            // pdf.output('dataurlnewwindow');
+            pdf.save("download.pdf");
+          })
+        ;
+      }
+      */
 
     getStaffID=()=>{
         //alert("in Getstaff")
@@ -191,6 +283,16 @@ class TimeSheetContainer extends Component {
         });
 
         //staffID={ (this.props.hv_staff_id !="") ?  this.props.hv_staff_id : this.state.staff_id} />
+        /*
+       className="mt4" 
+       style = {{
+            backgroundColor: '#f5f5f5',
+            width: '210mm',
+            minHeight: '297mm',
+            marginLeft: 'auto',
+            marginRight: 'auto'
+        }}
+        */
     }
 
 
@@ -199,6 +301,11 @@ class TimeSheetContainer extends Component {
         staffID={this.state.staff_id}  />
 
         return (
+            <div>
+      <div className="mb5">
+        <button onClick={this.printDocument}>Print</button>
+      </div>
+      <div id="divToPrint" style={{width:"100%", display:"inline-block"}}>
             <Container
                 fluid
                 style={{ margin: "10px" }}>
@@ -232,6 +339,8 @@ class TimeSheetContainer extends Component {
                     </div>
                 </div>
             </Container>
+            </div>
+    </div>
         );
     }
 }
