@@ -507,8 +507,10 @@ export class Timesheet extends Component {
                 var ms = moment(EndTime, "YYYY-MM-DD hh:mm A").diff(moment(StartTime, "YYYY-MM-DD hh:mm A"));
                 var msl = moment(LunchEnd, "YYYY-MM-DD hh:mm A").diff(moment(LunchStart, "YYYY-MM-DD hh:mm A"));
                 var d = moment.duration(ms).subtract(moment.duration(msl), 'duration')
-                // alert("EndTime "+ EndTime  + ' ' +moment.duration(ms).hours()+ ":"+ d.minutes())   
-                return (d.hours() + ":" +d.minutes())
+                //alert("EndTime "+ EndTime  + ' ' +moment.duration(ms).format({trim:false})+ ":"+ d.minutes())   
+               //alert(('0'  + d.hours()).slice(-2)+':'+('0' +  d.minutes()).slice(-2))
+               //return (d.hours() + ":" +  d.minutes())
+                return ('0'  + d.hours()).slice(-2)+':'+('0' +  d.minutes()).slice(-2)
             }
             else return ''
         }
