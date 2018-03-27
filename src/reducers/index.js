@@ -27,6 +27,8 @@ import StaffListState from './Staff/stafflistreducer'
 import TimesheetState from './Timesheet/timesheetreducer';
 import WorkPlanState from './workplanreducer';
 import CommonState from './commonreducer';
+import MaintainChangeOrderState from './ChangeOrders/changeOrderreducer';
+import ChangeOrderListState from './ChangeOrders/colistreducer';
 
 export default combineReducers({
    authState,
@@ -56,5 +58,7 @@ export default combineReducers({
    ManageStaffState,
    TimesheetState,
    WorkPlanState,
-   CommonState
+   CommonState,
+   MaintainChangeOrderState,
+   ChangeOrderListState
 });

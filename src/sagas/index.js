@@ -29,6 +29,8 @@ import {types as StaffListTypes} from "../reducers/Staff/stafflistreducer";
 import  {types as TimehseetTypes} from '../reducers/Timesheet/timesheetreducer';
 import {types as WorkPlanTypes} from "../reducers/workplanreducer";
 import {types as CommonTypes} from "../reducers/commonreducer";
+import  {types as ChangeOrderTypes} from '../reducers/ChangeOrders/changeOrderreducer';
+import  {types as COListTypes} from '../reducers/ChangeOrders/colistreducer';
 
 
 
@@ -58,7 +60,8 @@ import * as ManageStaffSaga from './Staff/managestaffsaga.js';
 import * as StaffListSaga from './Staff/stafflistsaga.js';
 
 import * as TimesheetSaga from './Timesheet/timesheetsaga';
-
+import * as ChangeOrderSaga from './ChangeOrders/changeOrdersaga.js';
+import * as COListSaga from './ChangeOrders/colistsaga.js';
 import * as WorkPlanSaga from './workplansaga.js';
 import * as CommonSaga from './commonsaga.js';
 
@@ -94,7 +97,8 @@ export default function* rootSaga () {
         takeLatest([ManageStaffTypes.INSERT_REQUEST,ManageStaffTypes.FETCH_STAFF_REQUEST,ManageStaffTypes.FETCH_STAFF_RESOURCE_DETAILS,ManageStaffTypes.UPDATE_STAFF_REQUEST], ManageStaffSaga.handleRequest),
         takeLatest([TimehseetTypes.INSERT_TIME_REQUEST,TimehseetTypes.FETCH_TIME_REQUEST,TimehseetTypes.UPDATE_TIME_REQUEST,ManageStaffTypes.UPDATE_STAFF_REQUEST], TimesheetSaga.handleRequest),
         takeLatest([WorkPlanTypes.FETCH_TABLE_REQUEST,WorkPlanTypes.EXCEL_REQUEST,WorkPlanTypes.CANCEL_REQUEST,WorkPlanTypes.INSERTHOUR_REQUEST,WorkPlanTypes.INSERT_REQUEST,WorkPlanTypes.DELETE_REQUEST,WorkPlanTypes.UPDATE_REQUEST], WorkPlanSaga.handleRequest),
-
+        takeLatest([ChangeOrderTypes.INSERT_CHANGEORDER_REQUEST,ChangeOrderTypes.FETCH_CHANGEORDER_REQUEST, ChangeOrderTypes.UPDATE_CHANGEORDER_REQUEST ,ChangeOrderTypes.GET_SCREENDATA_REQUEST],ChangeOrderSaga.handleRequest),
+        takeLatest([COListTypes.FETCH_LIST_REQUEST,COListTypes.DELETE_LIST_REQUEST], COListSaga.handleRequest),
         takeLatest([CommonTypes.SETNAME,CommonTypes.SETSTAFFID,CommonTypes.SETUSERID], CommonSaga.handleRequest),
         ]);
 

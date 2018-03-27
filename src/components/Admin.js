@@ -78,6 +78,7 @@ import {
 
 import UsersList from "./Users/usersList";
 import StaffList from "./Staff/StaffList";
+import ChangeOrderList from "./ChangeOrders/ChangeOrderList";
 
 
 
@@ -138,6 +139,7 @@ console.log(props)
       smColForm: "10",
       showFieldMenu: true,
       showmaintainMenu: true,
+      showworkorderMenu : true,
       tableTag: "Academy or State Specific Fields",
       compVal : "R"
       //imgSrc: "cgyca_staffandbdgt.PNG"
@@ -421,7 +423,52 @@ debugger
 
                   }}
                 />
-                
+              </Collapse>
+            </List>
+
+
+            <List style={{ backgroundColor: "#ecf0f6" }}>
+              <i
+                className="fa fa-caret-down"
+                onClick={() => {
+                  this.setState({
+      showworkorderMenu: !this.state.showworkorderMenu
+                  });
+                }}
+              />
+              <span
+                style={{
+                  fontSize: "15px",
+                  fontFamily: "Arial",
+                  fontStyle: "bold"
+                }}
+              >
+                {" "}
+               Work Orders{" "}
+              </span>
+              <Divider />
+              <Collapse isOpen={this.state.showworkorderMenu}>
+                {/* <ListItem
+                  style={listStyle}
+                  primaryText="Work Orders"
+                  onClick={() => {
+                    debugger;
+                    this.changeImg(4);
+                  }}
+                /> */}
+
+                <ListItem
+                  style={listStyle}
+                  primaryText ="Maintain Change Orders"
+                  onClick={() => {
+                    debugger;
+                    this.setState({
+                      inAttrib: false,
+                      compVal : "C",
+                    });
+
+                  }}
+                />
               </Collapse>
             </List>
             {/* </Paper>    */}
@@ -490,6 +537,12 @@ debugger
                           {...this.props}
                         />
                       );
+                      case "C":
+                     return (
+                       <ChangeOrderList
+                         {...this.props}
+                       />
+                     );
                     default:
                       return (
                         <img
