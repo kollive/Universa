@@ -42,7 +42,7 @@ import {
         token: sessionStorage.getItem("token"),
         funcId:selectedCO.function_id,
         parms: {
-           
+
         }
       })
     })
@@ -101,8 +101,11 @@ debugger
   }
   function deleteCOFunction(selectedCO)
  {
-     debugger
-   return fetch("http://hvs.selfip.net:4003/execSP/", {
+     
+     const RestAPIURL = API_ROOT.backendAPIGWsvc;
+     const requestURL = `${RestAPIURL}ExecSP/`;
+     return fetch(requestURL, {
+  // return fetch("http://hvs.selfip.net:4003/execSP/", {
      method: "POST",
      headers: {
        Accept: "application/json",
@@ -124,7 +127,7 @@ debugger
    try {
 debugger
      let resultObj = yield call(deleteCOFunction,selectedCO.payload);
-     
+
      if (isJSON(resultObj)) {
       resultObj = JSON.parse(resultObj);
       //debugger;
@@ -139,11 +142,11 @@ debugger
       if(resultObj.roles.length != undefined)
        sessionStorage.setItem("roles", JSON.stringify(JSON.parse(resultObj).roles));
        let state=yield select()
-       
+
        let items=[];
        items[0]=state.ChangeOrderListState.items[0].filter(del=>del.change_order_id!==selectedCO.payload[0].row.change_order_id)
        items[1]=state.ChangeOrderListState.items[1]
-      
+
        yield put({
          type: COTypes.ITEMS,
          items:items
