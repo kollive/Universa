@@ -139,10 +139,11 @@ debugger
       if(resultObj.roles.length != undefined)
        sessionStorage.setItem("roles", JSON.stringify(JSON.parse(resultObj).roles));
        let state=yield select()
-       debugger
+       
        let items=[];
-       items[0]=state.COListState.items[0].filter(del=>del.change_order_id!==selectedCO.payload[0].row.change_order_id)
-       items[1]=state.COListState.items[1]
+       items[0]=state.ChangeOrderListState.items[0].filter(del=>del.change_order_id!==selectedCO.payload[0].row.change_order_id)
+       items[1]=state.ChangeOrderListState.items[1]
+      
        yield put({
          type: COTypes.ITEMS,
          items:items
