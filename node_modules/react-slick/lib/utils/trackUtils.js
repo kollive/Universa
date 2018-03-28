@@ -1,53 +1,36 @@
 'use strict';
 
 exports.__esModule = true;
-exports.getPreClones = getPreClones;
-exports.getPostClones = getPostClones;
-exports.getTotalSlides = getTotalSlides;
 exports.siblingDirection = siblingDirection;
 exports.slidesOnRight = slidesOnRight;
 exports.slidesOnLeft = slidesOnLeft;
-function getPreClones(_ref) {
-  var slideCount = _ref.slideCount,
-      variableWidth = _ref.variableWidth,
+var getPreClones = exports.getPreClones = function getPreClones(spec) {
+  if (spec.unslick || !spec.infinite) {
+    return 0;
+  }
+  if (spec.variableWidth) {
+    return spec.slideCount;
+  }
+  return spec.slidesToShow + (spec.centerMode ? 1 : 0);
+};
+
+var getPostClones = exports.getPostClones = function getPostClones(spec) {
+  if (spec.unslick || !spec.infinite) {
+    return 0;
+  }
+  return spec.slideCount;
+};
+
+var getTotalSlides = exports.getTotalSlides = function getTotalSlides(spec) {
+  return spec.slideCount === 1 ? 1 : getPreClones(spec) + spec.slideCount + getPostClones(spec);
+};
+
+function siblingDirection(_ref) {
+  var currentSlide = _ref.currentSlide,
+      targetSlide = _ref.targetSlide,
       slidesToShow = _ref.slidesToShow,
       centerMode = _ref.centerMode,
-      unslick = _ref.unslick;
-
-  if (unslick) return 0;
-  if (variableWidth) {
-    return slideCount;
-  }
-  return slidesToShow + (centerMode ? 1 : 0);
-}
-
-function getPostClones(_ref2) {
-  var slideCount = _ref2.slideCount,
-      unslick = _ref2.unslick;
-
-  if (unslick) return 0;
-  return slideCount;
-}
-
-function getTotalSlides(_ref3) {
-  var variableWidth = _ref3.variableWidth,
-      slideCount = _ref3.slideCount,
-      slidesToShow = _ref3.slidesToShow,
-      centerMode = _ref3.centerMode,
-      unslick = _ref3.unslick;
-
-  if (slideCount === 1) {
-    return 1;
-  }
-  return getPreClones({ slideCount: slideCount, variableWidth: variableWidth, slidesToShow: slidesToShow, centerMode: centerMode, unslick: unslick }) + slideCount + getPostClones({ slideCount: slideCount, unslick: unslick });
-}
-
-function siblingDirection(_ref4) {
-  var currentSlide = _ref4.currentSlide,
-      targetSlide = _ref4.targetSlide,
-      slidesToShow = _ref4.slidesToShow,
-      centerMode = _ref4.centerMode,
-      rtl = _ref4.rtl;
+      rtl = _ref.rtl;
 
   if (targetSlide > currentSlide) {
     if (targetSlide > currentSlide + slidesOnRight(slidesToShow, centerMode, rtl)) {

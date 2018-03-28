@@ -469,6 +469,18 @@ debugger
 
                   }}
                 />
+                <ListItem
+                  style={listStyle}
+                  primaryText ="Assign Tasks"
+                  onClick={() => {
+                    debugger;
+                    this.setState({
+                      inAttrib: false,
+                      compVal : "T",
+                    });
+
+                  }}
+                />
               </Collapse>
             </List>
             {/* </Paper>    */}
@@ -582,3 +594,4 @@ const mapStateToProps = state => {
 const mapDispatchToProps = {};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Admin);
+
