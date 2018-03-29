@@ -24,10 +24,10 @@ import "../../App.css";
 import { Modal, ModalHeader, ModalBody, ModalFooter, Alert } from 'reactstrap';
 import * as _ from "lodash";
 import {ProgressSpinner} from 'primereact/components/progressspinner/ProgressSpinner';
- 
+
 export class ChangeOrderList extends Component {
   static propTypes = {
-    
+
   };
 
 
@@ -57,7 +57,7 @@ export class ChangeOrderList extends Component {
       hasAccessToView:'',
       hasAccessToDataGrid:'block' ,
       isView: ''
-      
+
     }
   }
 
@@ -93,33 +93,33 @@ export class ChangeOrderList extends Component {
     return unqUserFunctions;
   }
 
- 
+
   renderList() {
       debugger
-    let unqFunction=this.evaluatePermissions(); 
+    let unqFunction=this.evaluatePermissions();
     let key= _.findKey(unqFunction, function(o){ return o.function_id == 72});
     this.setState({ hasAccessToView: <Alert color="danger">User does not have permission !</Alert>});
-    this.setState({ hasAccessToDataGrid: 'none'});  
+    this.setState({ hasAccessToDataGrid: 'none'});
     if(key!==undefined)
     {
     this.setState({ hasAccessToView: '' });
-    this.setState({ hasAccessToDataGrid: 'block'});  
+    this.setState({ hasAccessToDataGrid: 'block'});
     debugger
       this.props.getCOList({
           type: COTypes.FETCH_LIST_REQUEST,
           payload: { function_id:unqFunction[key].function_id}
         });
       }
-    
+
     }
-  
+
 
   componentDidMount() {
     debugger
     this.renderList()
   }
 
-  componentDidUpdate(prevProps, prevState) {    
+  componentDidUpdate(prevProps, prevState) {
   debugger
     if (this.props.ChangeOrderListState.message.msg == 'deleted') {
       alert('User deleted successfully');
@@ -148,7 +148,7 @@ export class ChangeOrderList extends Component {
       //console.log('count VIEWVIEWVIEWVIEW ' + el.function_name.indexOf('VIEW'))
       if (el.function_name.indexOf('VIEW') == -1) {
           hasAccessToView= <Alert color="danger">User does not have permission !</Alert>
-         hasAccessToDataGrid='none'  
+         hasAccessToDataGrid='none'
       }
       else {
         hasAccessToView = ''
@@ -267,10 +267,11 @@ export class ChangeOrderList extends Component {
         filters['contract_no'] = { value: e.target.value };
         break;
       case 'createdby':
+      debugger
         filters['createdby'] = { value: e.target.value };
         break;
-     
-      
+
+
     }
     this.setState({ filters: filters });
   }
@@ -313,7 +314,7 @@ export class ChangeOrderList extends Component {
       isView:''
     });
 
-    
+
   }
   deleteRow(row) {
 
@@ -339,7 +340,7 @@ export class ChangeOrderList extends Component {
       isNewUser: false,
       isView:''
     });
-   
+
 
   }
 
@@ -354,11 +355,11 @@ export class ChangeOrderList extends Component {
   }
   render() {
     console.log('props'+ this.props)
-    let ABFilter = <input style={{ display: this.state.displayFilter }} type="text" id="change_order_abstract" className="" value={this.state.filters.change_order_id ? this.state.filters.change_order_id.value : ''} onChange={this.onfilterChange} />
+    let ABFilter = <input style={{ display: this.state.displayFilter }} type="text" id="change_order_abstract" className="" value={this.state.filters.change_order_abstract ? this.state.filters.change_order_abstract.value : ''} onChange={this.onfilterChange} />
     let CNFilter = <input style={{ display: this.state.displayFilter }} type="text" id="client_name" className="" value={this.state.filters.client_name ? this.state.filters.client_name.value : ''} onChange={this.onfilterChange} />
     let COFilter = <input style={{ display: this.state.displayFilter }} type="text" id="contract_no" className="" value={this.state.filters.contract_no ? this.state.filters.contract_no.value : ''} onChange={this.onfilterChange} />
     let CBYFilter = <input style={{ display: this.state.displayFilter }} type="text" id="createdby" className="" value={this.state.filters.createdby ? this.state.filters.createdby.value : ''} onChange={this.onfilterChange} />
-  
+
    var header = <Row style={{ "backgroundColor": "white" }}>
       <Col sm="10">
         <div className="float-left">
@@ -410,11 +411,11 @@ export class ChangeOrderList extends Component {
     let maintainCO = null;
     if (this.state.displayDialog) {
 
-   
+
       maintainCO = <Dialog visible={this.state.displayDialog} header={this.state.dialogTitle} modal={true} appendTo={document.body}
         onHide={this.onHideDialog} width='950px' height='500px' positionTop="40" style={{ overflow: 'auto' }} overflow='auto' >
         <ChangeOrder {...this.props} COObject={this.state}  onDialogClose={this.onHideDialog}/></Dialog>
-        
+
     }
     else {
       {
@@ -428,22 +429,22 @@ export class ChangeOrderList extends Component {
     return (
       <div>
         {this.state.hasAccessToView}
-        
+
         <DataTable id="dataTable" value={dtSource} paginator={true} rows={10} rowsPerPageOptions={[5, 10, 20]} style={{display:this.state.hasAccessToDataGrid}}
           ref={(el) => { this.dt = el; } } header={header} onFilter={this.onFilter} filters={this.state.filters} tableClassName="datatable" >
           <Column field="change_order_id" header={filter} body={this.viewTemplate} style={{ textAlign: 'center', width: '3%' }} sortable={false} filter={false} />
-        
+
           <Column field="change_order_abstract" header="Order Name" sortable={true} style={{ textAlign: 'center', width: '6%' }} sortable={true} filter={true} filterElement={ABFilter} filterMatchMode="contains" />
           <Column field="client_name" header="Client Name" sortable={true} style={{ textAlign: 'center', width: '6%' }} sortable={true} filter={true} filterElement={CNFilter} filterMatchMode="contains" />
           <Column field="contract_no" header="Contract #" sortable={true} style={{ textAlign: 'center', width: '6%' }} sortable={true} filter={true} filterElement={COFilter} filterMatchMode="contains" />
           <Column field="work_order_id" header="Work Order#" sortable={true} style={{ textAlign: 'center', width: '6%' }} sortable={true} />
           {/* <Column field="createdate" header="Created On" sortable={true} style={{ textAlign: 'center', width: '6%' }} sortable={true} /> */}
-          <Column field="createdby" header="Created By" sortable={true} style={{ textAlign: 'center', width: '6%' }} sortable={true} filter={true} filterElement={CBYFilter} filterMatchMode="contains" />        
-                  
+          <Column field="createdby" header="Created By" sortable={true} style={{ textAlign: 'center', width: '6%' }} sortable={true} filter={true} filterElement={CBYFilter} filterMatchMode="contains" />
+
           <Column body={this.actionTemplate} header={customHeaderAction} style={{ textAlign: 'center', width: '3%' }} />
         </DataTable>
- 
-        
+
+
         {maintainCO}
        </div>
 
@@ -457,7 +458,7 @@ function mapStateToProps(state) {
 }
 
 const mapDispatchToProps = dispatch => ({
- 
+
     ...bindActionCreators(
   {
         ...COActions

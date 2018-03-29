@@ -42,7 +42,7 @@ import {
         token: sessionStorage.getItem("token"),
         funcId:selectedCO.function_id,
         parms: {
-           
+
         }
       })
     })
@@ -122,9 +122,8 @@ debugger
 
  function* deleteChangeOrder(selectedCO) {
    try {
-debugger
      let resultObj = yield call(deleteCOFunction,selectedCO.payload);
-     
+
      if (isJSON(resultObj)) {
       resultObj = JSON.parse(resultObj);
       //debugger;
@@ -165,7 +164,6 @@ debugger
 
  }
   export function* handleRequest(action) {
-    debugger;
     console.log("Change Order List Saga request", action);
     try {
       switch (action.type) {
@@ -174,7 +172,6 @@ debugger
           break;
         }
         case COTypes.DELETE_LIST_REQUEST: {
-          debugger;
           const fetchTask = yield fork(deleteChangeOrder,action.payload);
           break;
         }
