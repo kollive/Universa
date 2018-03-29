@@ -17,6 +17,8 @@ var _helpers = require('./mixins/helpers');
 
 var _helpers2 = _interopRequireDefault(_helpers);
 
+var _innerSliderUtils = require('./utils/innerSliderUtils');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -99,7 +101,7 @@ var NextArrow = exports.NextArrow = function (_React$Component2) {
     var nextClasses = { 'slick-arrow': true, 'slick-next': true };
     var nextHandler = this.clickHandler.bind(this, { message: 'next' });
 
-    if (!_helpers2.default.canGoNext(this.props)) {
+    if (!(0, _innerSliderUtils.canGoNext)(this.props)) {
       nextClasses['slick-disabled'] = true;
       nextHandler = null;
     }
