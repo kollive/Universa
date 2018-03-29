@@ -27,6 +27,7 @@ import StaffListState from './Staff/stafflistreducer'
 import TimesheetState from './Timesheet/timesheetreducer';
 import WorkPlanState from './workplanreducer';
 import CommonState from './commonreducer';
+import TSRptState from './tsreportreducer';
 
 export default combineReducers({
    authState,
@@ -56,5 +57,6 @@ export default combineReducers({
    ManageStaffState,
    TimesheetState,
    WorkPlanState,
-   CommonState
+   CommonState,
+   TSRptState
 });

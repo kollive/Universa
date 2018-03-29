@@ -36,6 +36,7 @@ import UsersList from "./components/Users/usersList";
 import Roles from "./components/Roles";
 import Calendar from "./components/Calendar";
 import Timesheet from "./components/Timesheet/Timesheet";
+import TSReports from "./components/TSReports";
 
 import IdleTimer from 'react-idle-timer';
 import {
@@ -209,7 +210,7 @@ export class App extends Component {
                     <Route path="/admin" component={Admin} />
                     <Route path="/tsheader" component={TimeSheetHeader} />
                     <Route path="/ts" component={TimeSheetContainer} />
-                    
+                    <Route path="/tsrpts" component={TSReports} />
                     <Route path="/calendar" component={Calendar} />
                     <Route
                       path="/cadetdetails"

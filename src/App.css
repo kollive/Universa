@@ -25,6 +25,10 @@ body{
   font-size: large;
 }
 
+.err {
+    color: red;
+}
+
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
@@ -55,7 +59,8 @@ body{
     .box.box-primary {
         border-top-color: #3c8dbc;
     }
-
+   
+    
     .box.box-info {
         /*border-top-color: #00c0ef;*/
     }
