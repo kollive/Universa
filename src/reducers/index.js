@@ -28,6 +28,8 @@ import TimesheetState from './Timesheet/timesheetreducer';
 import WorkPlanState from './workplanreducer';
 import CommonState from './commonreducer';
 import TSRptState from './tsreportreducer';
+import MaintainChangeOrderState from './ChangeOrders/changeOrderreducer';
+import ChangeOrderListState from './ChangeOrders/colistreducer';
 
 export default combineReducers({
    authState,
@@ -58,5 +60,7 @@ export default combineReducers({
    TimesheetState,
    WorkPlanState,
    CommonState,
-   TSRptState
+   TSRptState,
+   MaintainChangeOrderState,
+   ChangeOrderListState
 });
