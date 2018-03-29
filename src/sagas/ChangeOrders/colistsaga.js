@@ -101,8 +101,11 @@ debugger
   }
   function deleteCOFunction(selectedCO)
  {
-     debugger
-   return fetch("http://hvs.selfip.net:4003/execSP/", {
+     
+     const RestAPIURL = API_ROOT.backendAPIGWsvc;
+     const requestURL = `${RestAPIURL}ExecSP/`;
+     return fetch(requestURL, {
+  // return fetch("http://hvs.selfip.net:4003/execSP/", {
      method: "POST",
      headers: {
        Accept: "application/json",
@@ -138,7 +141,7 @@ debugger
       if(resultObj.roles.length != undefined)
        sessionStorage.setItem("roles", JSON.stringify(JSON.parse(resultObj).roles));
        let state=yield select()
-       debugger
+
        let items=[];
        items[0]=state.ChangeOrderListState.items[0].filter(del=>del.change_order_id!==selectedCO.payload[0].row.change_order_id)
        items[1]=state.ChangeOrderListState.items[1]
