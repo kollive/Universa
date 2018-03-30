@@ -58,7 +58,11 @@ const styles = {
 
 };
 
-
+const addDays = (dt, days) => {
+    let d = new Date(dt);
+    d.setDate(d.getDate() + days);
+    return d;
+}
 const hhmmToSeconds = (str) => {
     let arr = str.split(':').map(Number);
     return (arr[0] * 3600) + (arr[1] * 60);
@@ -75,6 +79,7 @@ const secondsToHHMM = (seconds) => {
 
 const formatDate = (dt) => {
     let d = new Date(dt);
+    d.setDate(d.getDate() + 1);
     return d.getFullYear() + "-" + ('0' + (d.getMonth() + 1)).slice(-2) + "-" + ('0' + d.getDate()).slice(-2); //d.getHours() d.getMinutes()
 }
 
@@ -198,7 +203,6 @@ class TSReports extends Component {
         let input = document.getElementById('divTimeSheet');
         //input.parentElement.style.width = '10000px';
         var styleOrig = input.getAttribute("style");
-
 
         html2canvas(input).
             then((canvas) => {
@@ -338,7 +342,7 @@ class TSReports extends Component {
             <div style={{ width: "100%", display: "inline-block" ,border: "none"}}>
                 <Table pagination={false} rowKey={record => record.rowNum} dataSource={Items} columns={columns} size="small"
                     rowClassName={(record, index) => record.totalHours == null ? 'err' : 'm-1 p-1'}
-                    title={() => 'Week (' + WeekStart + ')'}
+                    title={() => <span className="font-weight-bold">Week ({formatDate(WeekStart)} to {formatDate(addDays(WeekStart,7))} )</span>}
                     footer={() => <div className="float-right">Total: {secondsToHHMM(hhmmToSeconds(sumHours + ":" + sumMins))}</div>}
                 ></Table>
             </div>

@@ -21,6 +21,11 @@ body{
   margin: 20px;
 }
 
+thead[class*="ant-table-thead"] th{
+    background-color: grey !important;
+    color: white  !important;
+  }
+
 .App-intro {
   font-size: large;
 }
