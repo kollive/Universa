@@ -261,7 +261,7 @@ let showlist=false
               value="5"
               icon={<FontIcon className="fa fa-line-chart" style={{ color: "darkgrey" }} />}
             >
-              <Reports />
+              <Reports hv_staff_id={this.props.hv_staff_id} {...this.props} />
             </Tab>{" "}
             <Tab
               style={tabStyles.default_tab}

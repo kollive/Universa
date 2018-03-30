@@ -98,7 +98,7 @@ export default class Reports extends Component {
 
           <TabContent activeTab={this.state.activeTab}>
             <TabPane tabId="1">
-                <TSReports />
+                <TSReports  hv_staff_id={this.props.hv_staff_id} />
             </TabPane>
             <TabPane tabId="2">
             </TabPane>

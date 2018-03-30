@@ -20,7 +20,7 @@ import * as jsPDF from 'jspdf'
 import "../App.css";
 import { DatePicker, TimePicker } from 'antd';
 import {
-    Form, Select, InputNumber, Switch, Radio, Table,
+    Form, Select, InputNumber, Switch, Radio, Table, Spin,
     Slider, Button, Upload, Icon, Rate, Menu, Dropdown, message, Popconfirm
 } from 'antd';
 import moment from 'moment';
@@ -182,6 +182,8 @@ class TSReports extends Component {
             mode: "W",
             name: "",
             items: [],
+            month: "March",
+            loading: false,
             hv_staff_id: (this.props.hv_staff_id == "" ? this.props.CommonState.hv_staff_id : this.props.hv_staff_id)
         };
         // this.onClickAction = this.onClickAction.bind(this);
@@ -189,11 +191,55 @@ class TSReports extends Component {
         this.setMode = this.setMode.bind(this);
         this.parentStaffID = this.parentStaffID.bind(this);
         this.printDocument = this.printDocument.bind(this);
-        //this.formatDate = this.formatDate.bind(this);
-        //this.hhmmToSeconds = this.hhmmToSeconds.bind(this);
+        this.onMenuClick = this.onMenuClick.bind(this);
+        this.getMenu = this.getMenu.bind(this);
         //this.secondsToHHMM = this.secondsToHHMM.bind(this);
 
         this.getStaffID();
+    }
+
+
+    onMenuClick = (itm, row) => {
+        //debugger;
+        //alert(row.task_id)
+        //message.info(`Click on item ${itm.key}`);
+        //if (itm.key == 0) {
+        //    this.editTask(row);
+        //}
+        this.setState({month: itm.key});
+        this.setState({loading:true});
+
+        this.props.getMonthlyTS({
+            type: tsreportsTypes.FETCH_TABLES_REQUEST,
+            payload: {
+                //staffID: (this.props.staffID == "" ? this.props.CommonState.hv_staff_id : this.props.staffID),
+                staffID: (this.props.hv_staff_id == "" ? this.props.CommonState.hv_staff_id : this.props.hv_staff_id),
+                month: itm.key
+            }
+        });
+
+    };
+
+    getMenu = () => {
+        //alert(row.task_id)
+        const menu = (
+            <Menu style={{ width: 200 }} onClick={(key) => this.onMenuClick(key)}>
+                <Menu.Item key="January">January</Menu.Item>
+                <Menu.Item key="February">February</Menu.Item>
+                <Menu.Item key="March">March</Menu.Item>
+                <Menu.Item key="April">April</Menu.Item>
+                <Menu.Item key="May">May</Menu.Item>
+                <Menu.Item key="June">June</Menu.Item>
+                <Menu.Item key="July">July</Menu.Item>
+                <Menu.Item key="August">August</Menu.Item>
+                <Menu.Item key="September">September</Menu.Item>
+                <Menu.Item key="October">October</Menu.Item>
+                <Menu.Item key="November">November</Menu.Item>
+                <Menu.Item key="December">December</Menu.Item>
+            </Menu>
+        );
+
+        return menu;
     }
 
 
@@ -236,19 +282,37 @@ class TSReports extends Component {
 
     componentWillReceiveProps(nextProps) {
         debugger;
+        //alert(nextProps.hv_staff_id)
+        //alert(this.props.hv_staff_id)
+        if (this.props.hv_staff_id != nextProps.hv_staff_id) {
+            //this.setState({spinning:true});
+
+            this.props.getMonthlyTS({
+                type: tsreportsTypes.FETCH_TABLES_REQUEST,
+                payload: {
+                    staffID: (nextProps.hv_staff_id == "" ? "10" : nextProps.hv_staff_id),
+                    //staffID: "10",
+                    month: "march"
+                }
+            });           
+        } else {
+            this.setState({loading:false});            
+        }
+
         if (nextProps.TSRptState) {
             this.setState({ items: nextProps.TSRptState.items[0] });
         }
-
     }
 
     componentDidMount() {
         debugger;
+        this.setState({loading:true});
         this.props.getMonthlyTS({
             type: tsreportsTypes.FETCH_TABLES_REQUEST,
             payload: {
-                //staffID: (this.props.staffID == "" ? this.props.CommonState.hv_staff_id : this.props.staffID),
-                staffID: "10",
+                staffID: (this.props.hv_staff_id == "" ? "10" : this.props.hv_staff_id),
+                //staffID: "10",
+                month: "march"
             }
         });
 
@@ -282,7 +346,6 @@ class TSReports extends Component {
     }
 
     renderWeek = (WeekStart) => {
-
 
         let sumHours = 0;
         let sumMins = 0;
@@ -331,7 +394,7 @@ class TSReports extends Component {
             }
             //alert(hours)
             //return secondsToHHMM(hhmmToSeconds(hrs + ":" + mins));
-
+            //loading={<Spin spinning={this.state.loading} />}
             return (d1 == d2)
         });
 
@@ -339,10 +402,10 @@ class TSReports extends Component {
         debugger;
         return (
 
-            <div style={{ width: "100%", display: "inline-block" ,border: "none"}}>
-                <Table pagination={false} rowKey={record => record.rowNum} dataSource={Items} columns={columns} size="small"
+            <div style={{ width: "100%", display: "inline-block", border: "none" }}>
+                <Table pagination={false} rowKey={record => record.rowNum} dataSource={Items} columns={columns} size="small" 
                     rowClassName={(record, index) => record.totalHours == null ? 'err' : 'm-1 p-1'}
-                    title={() => <span className="font-weight-bold">Week ({formatDate(WeekStart)} to {formatDate(addDays(WeekStart,7))} )</span>}
+                    title={() => <span className="font-weight-bold">Week ({formatDate(WeekStart)} to {formatDate(addDays(WeekStart, 7))} )</span>}
                     footer={() => <div className="float-right">Total: {secondsToHHMM(hhmmToSeconds(sumHours + ":" + sumMins))}</div>}
                 ></Table>
             </div>
@@ -355,8 +418,13 @@ class TSReports extends Component {
 
         return (
             <div>
-                <div className="mb5">
-                    <button onClick={this.printDocument}>Print</button>
+                <Container fluid>
+                <div style={{ marginTop: 8, marginLeft:10 }}>
+                    <span style={{ marginRight: 16,fontWeight: "bold" }}>Please select month:</span>           
+                    <Dropdown overlay={this.getMenu()} trigger={['click']}>
+                        <span>{this.state.month}  <Icon type="down" /></span>
+                    </Dropdown>
+                    <Button onClick={this.printDocument} className="float-right">Print</Button> 
                 </div>
                 <div id="divTimeSheet" style={{ width: "100%", display: "inline-block" }}>
                     <div
@@ -396,6 +464,7 @@ class TSReports extends Component {
                         </RTable>
                     </div>
                 </div>
+                </Container>
             </div>
         );
     }
