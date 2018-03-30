@@ -195,7 +195,7 @@ class TSReports extends Component {
 
     printDocument = () => {
         debugger;
-        let input = document.getElementById('divToPrint');
+        let input = document.getElementById('divTimeSheet');
         //input.parentElement.style.width = '10000px';
         var styleOrig = input.getAttribute("style");
 
@@ -211,7 +211,7 @@ class TSReports extends Component {
                 const pdf = new jsPDF();
 
 
-                pdf.addImage(imgData, 'JPEG', 0, 0, 212, 65);
+                pdf.addImage(imgData, 'JPEG', 0, 0, 212, 300);
 
                 pdf.save("download.pdf");
                 input.setAttribute("style", styleOrig);
@@ -354,7 +354,7 @@ class TSReports extends Component {
                 <div className="mb5">
                     <button onClick={this.printDocument}>Print</button>
                 </div>
-                <div id="divToPrint" style={{ width: "100%", display: "inline-block" }}>
+                <div id="divTimeSheet" style={{ width: "100%", display: "inline-block" }}>
                     <div
                         id="divPerm"
                         className="rounded"
