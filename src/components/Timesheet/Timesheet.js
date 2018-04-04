@@ -146,6 +146,28 @@ export class Timesheet extends Component {
                 alert('Please enter valid ' + row + ' for date ' + saveDate);  
                 return false;
             }
+
+            if (lunch_start < beginningTime) {
+                let removedArray = []
+                removedArray = _.remove(this.state.entry, function (n) {
+                    return n.timesheet_date != findTime.timesheet_date;
+                });
+
+                let updatedArray = []
+                if(row=='Lunch In')
+                updatedArray = Object.assign({}, findTime, {
+                    lunch_start: null,
+                });
+                else
+                   updatedArray = Object.assign({}, findTime, {
+                    start_time: null,
+                });
+                removedArray.push(updatedArray);
+                this.setState({ entry: removedArray })
+                alert('Please enter valid ' + row + ' for date ' + saveDate);  
+                return false;
+
+            }            
         
         }
         let timesheet_time = {}
