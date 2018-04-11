@@ -10,8 +10,8 @@ import export_excel from "../images/export_excel.PNG";
 import chart from "../images/chart.PNG";
 
 import { bindActionCreators } from "redux";
-import { types as tsreportsTypes } from "../reducers/tsreportreducer";
-import { actions as tsreportsActions } from "../reducers/tsreportreducer";
+import { types as tsplanTypes } from "../reducers/tsplanreducer";
+import { actions as tsplanActions } from "../reducers/tsplanreducer";
 //import Timesheet from './Timesheet/Timesheet'
 import * as _ from "lodash";
 //import {html2canvas, jsPDF} from 'app/ext';
@@ -85,86 +85,116 @@ const formatDate = (dt) => {
 
 //dayName                        monthDay                                                      taskDt 
 const columns = [{
-    title: 'Name',
-    dataIndex: 'dayName',
+    title: 'Task ID',
+    dataIndex: 'task_id',
     key: 'dayName',
-    width: '10%'
+    width: '5%'
 }, {
-    title: 'Day',
-    dataIndex: 'monthDay',
-    key: 'monthDay',
-    width: '10%'
-},
-/*
-, {
-    title: 'Date',
-    dataIndex: 'taskDt',
-    key: 'taskDt',
-    width: '10%',
-    render: dt => `${moment(new Date(dt)).format("YYYY-MM-DD")}`,
-    //render: name => `${name.first} ${name.last}`,
-    //start_time       lunch_start      lunch_end        end_time
-},
-*/
-{
-    title: 'Clock In',
-    dataIndex: 'start_time',
-    key: 'start_time',
-    width: '10%',
-    render: tm => `${moment.utc(tm).format("HH:mm A")}`,
+    title: 'Task Title',
+    dataIndex: 'task_description',
+    key: 'task_description',
+    width: '15%'
 },
 {
-    title: 'Lunch In',
-    dataIndex: 'lunch_start',
-    key: 'lunch_start',
+    title: 'Mon',
+    dataIndex: 'monHrs',
+    key: 'monHrs',
     width: '10%',
-    render: tm => `${moment.utc(tm).format("HH:mm A")}`,
+    render: (text, record, index) => {
+        /*
+       const obj = {
+           children: text,
+           props : {}
+       }      
+       if(index === 1){
+           obj.props.colSpan = 0;
+       }
+        return obj;
+       */
+      return secondsToHHMM(text);
+    },
 },
 {
-    title: 'Lunch Out',
-    dataIndex: 'lunch_end',
-    key: 'lunch_end',
+    title: 'Tue',
+    dataIndex: 'tueHrs',
+    key: 'tueHrs',
     width: '10%',
-    render: tm => `${moment.utc(tm).format("HH:mm A")}`,
+    render: (text, record, index) => {
+        return secondsToHHMM(text);
+        /*
+        let dt = new Date(record.task_date);
+        if (dt.getDay() == 2) {
+            return record.num_hours
+        } else {
+            return "00.00"
+        }
+        */
+    },
 },
 {
-    title: 'Clock Out',
-    dataIndex: 'end_time',
-    key: 'end_time',
+    title: 'Wed',
+    dataIndex: 'wedHrs',
+    key: 'wedHrs',
     width: '10%',
-    render: tm => `${moment.utc(tm).format("HH:mm A")}`,
+    render: (text, record, index) => {
+        return secondsToHHMM(text);
+    },
+},
+{
+    title: 'Thu',
+    dataIndex: 'thuHrs',
+    key: 'thuHrs',
+    width: '10%',
+    render: (text, record, index) => {
+        return secondsToHHMM(text);
+    },
+},
+{
+    title: 'Fri',
+    dataIndex: 'friHrs',
+    key: 'friHrs',
+    width: '10%',
+    render: (text, record, index) => {
+        return secondsToHHMM(text);
+    },
+},
+{
+    title: 'Sat',
+    dataIndex: 'satHrs',
+    key: 'satHrs',
+    width: '10%',
+    render: (text, record, index) => {
+        return secondsToHHMM(text);
+    },
+},
+{
+    title: 'Sun',
+    dataIndex: 'sunHrs',
+    key: 'sunHrs',
+    width: '10%',
+    render: (text, record, index) => {
+        return secondsToHHMM(text);
+    },
 },
 {
     title: 'Total',
-    dataIndex: 'total',
-    key: 'total',
+    dataIndex: 'totHrs',
+    key: 'totHrs',
     width: '10%',
-    render: (text, record) => {
-
-        if (record.totalHours == null || record.lunchHours == null) {
-            return "00:00"
-        }
-        let time = record.totalHours.split(":");
-
-        let totHrs = _.parseInt(time[0]);
-        let totMins = _.parseInt(time[1]);
-
-        time = record.lunchHours.split(":");
-
-        let lunHrs = _.parseInt(time[0]);
-        let lunMins = _.parseInt(time[1]);
-
-        let hrs = totHrs - lunHrs;
-        let mins = totMins - lunMins;
-
-        //alert(hours)
-        return secondsToHHMM(hhmmToSeconds(hrs + ":" + mins));
+    render: (text, record, index) => {
+        return secondsToHHMM(text);
     },
 },
 ];
 
+const sumWeeklyHours = (WeekData) => {
+    const sumHrs = WeekData.reduce((sum, week) => {
+        return sum + week.totHrs
+    },0)
+    return sumHrs;
+}
 
-class TSReports extends Component {
+class TSPlan extends Component {
     constructor(props) {
         super(props);
         //alert(this.props.hv_staff_id);
@@ -206,11 +236,11 @@ class TSReports extends Component {
         //if (itm.key == 0) {
         //    this.editTask(row);
         //}
-        this.setState({month: itm.key});
-        this.setState({loading:true});
+        this.setState({ month: itm.key });
+        this.setState({ loading: true });
 
         this.props.getMonthlyTS({
-            type: tsreportsTypes.FETCH_TABLES_REQUEST,
+            type: tsplanTypes.FETCH_TABLES_REQUEST,
             payload: {
                 //staffID: (this.props.staffID == "" ? this.props.CommonState.hv_staff_id : this.props.staffID),
                 staffID: (this.props.hv_staff_id == "" ? this.props.CommonState.hv_staff_id : this.props.hv_staff_id),
@@ -288,27 +318,27 @@ class TSReports extends Component {
             //this.setState({spinning:true});
 
             this.props.getMonthlyTS({
-                type: tsreportsTypes.FETCH_TABLES_REQUEST,
+                type: tsplanTypes.FETCH_TABLES_REQUEST,
                 payload: {
                     staffID: (nextProps.hv_staff_id == "" ? "10" : nextProps.hv_staff_id),
                     //staffID: "10",
                     month: "march"
                 }
-            });           
+            });
         } else {
-            this.setState({loading:false});            
+            this.setState({ loading: false });
         }
 
-        if (nextProps.TSRptState) {
-            this.setState({ items: nextProps.TSRptState.items[0] });
+        if (nextProps.TSPlanState) {
+            this.setState({ items: nextProps.TSPlanState.items[0] });
         }
     }
 
     componentDidMount() {
         debugger;
-        this.setState({loading:true});
+        this.setState({ loading: true });
         this.props.getMonthlyTS({
-            type: tsreportsTypes.FETCH_TABLES_REQUEST,
+            type: tsplanTypes.FETCH_TABLES_REQUEST,
             payload: {
                 staffID: (this.props.hv_staff_id == "" ? "10" : this.props.hv_staff_id),
                 //staffID: "10",
@@ -361,7 +391,13 @@ class TSReports extends Component {
             d.setDate(d.getDate() + 1);
             let d2 = d.getFullYear() + "-" + ('0' + (d.getMonth() + 1)).slice(-2) + "-" + ('0' + d.getDate()).slice(-2); //d.getHours() 
 
-
+            let seconds = hhmmToSeconds(itm.num_hours)
+            /*
+            let td = new Date(itm.task_date);
+            td.setDate(td.getDate() + 1);
+            let ts = td.getFullYear() + "-" + ('0' + (td.getMonth() + 1)).slice(-2) + "-" + ('0' + (td.getDate())).slice(-2); //d.getHours() 
+            */
+            /*
             if (d1 == d2) {
                 let totalHours = itm.totalHours;
                 let lunchHours = itm.lunchHours;
@@ -392,21 +428,103 @@ class TSReports extends Component {
                     sumMins += mins;
                 }
             }
-            //alert(hours)
+            */
+            //alert(ts)
             //return secondsToHHMM(hhmmToSeconds(hrs + ":" + mins));
             //loading={<Spin spinning={this.state.loading} />}
-            return (d1 == d2)
+            return (d1 == d2 && (seconds > 0))
         });
 
+        const taskId = _.uniqBy(Items, "task_id");
+        let planData = [];
+        console.log(WeekStart)
+        console.log("taskID")
+        console.log(taskId)
+
+        taskId.map((task,idx) => {
+            const planItems = _.filter(Items, (itm) => {
+                return Number(task.task_id) == Number(itm.task_id)
+            })
+
+            console.log("PlanItems")
+            console.log(planItems)
+
+            let planObj = {}
+            planObj.rowNum = idx;
+            planObj.task_id = task.task_id;
+            planObj.task_description = planItems[0].task_description;
+
+            console.log("")
+            const monHrs = planItems.reduce((total, itm) => {
+                debugger;
+                let dt = new Date(itm.task_date);
+                dt.setDate(dt.getDate() + 1);
+                return (dt.getDay() != 1) ? total : total + hhmmToSeconds(itm.num_hours);               
+            },0)
+
+            planObj.monHrs = monHrs;
+            //alert("monHrs")
+            //alert(monHrs);
+            //alert(planObj.monHrs);
+
+            planObj.tueHrs = planItems.reduce((total, itm) => {
+                let dt = new Date(itm.task_date);
+                dt.setDate(dt.getDate() + 1);
+                return (dt.getDay() != 2) ? total : total + hhmmToSeconds(itm.num_hours);               
+            },0)
+
+            planObj.wedHrs = planItems.reduce((total, itm) => {
+                let dt = new Date(itm.task_date);
+                dt.setDate(dt.getDate() + 1);
+                return (dt.getDay() != 3) ? total : total + hhmmToSeconds(itm.num_hours);               
+            },0)
+
+            planObj.thuHrs = planItems.reduce((total, itm) => {
+                let dt = new Date(itm.task_date);
+                dt.setDate(dt.getDate() + 1);
+                return (dt.getDay() != 4) ? total : total + hhmmToSeconds(itm.num_hours);               
+            },0)
+
+            planObj.friHrs = planItems.reduce((total, itm) => {
+                let dt = new Date(itm.task_date);
+                dt.setDate(dt.getDate() + 1);
+                return (dt.getDay() != 5) ? total : total + hhmmToSeconds(itm.num_hours);               
+            },0)
+
+            planObj.satHrs = planItems.reduce((total, itm) => {
+                let dt = new Date(itm.task_date);
+                dt.setDate(dt.getDate() + 1);
+                return (dt.getDay() != 6) ? total : total + hhmmToSeconds(itm.num_hours);               
+            },0)
+
+            planObj.sunHrs = planItems.reduce((total, itm) => {
+                let dt = new Date(itm.task_date);
+                dt.setDate(dt.getDate() + 1);
+                return (dt.getDay() != 0) ? total : total + hhmmToSeconds(itm.num_hours);               
+            },0)
+
+           planObj.totHrs = Number(planObj.monHrs) +
+           Number(planObj.tueHrs) +
+           Number(planObj.wedHrs) +
+           Number(planObj.thuHrs) +
+           Number(planObj.friHrs) +
+           Number(planObj.satHrs) +
+           Number(planObj.sunHrs);
+           
+           //console.log("PlanObj")
+           //console.log(planObj)
+           planData.push(planObj)
+        });
 
         debugger;
         return (
 
             <div style={{ width: "100%", display: "inline-block", border: "none" }}>
-                <Table pagination={false} rowKey={record => record.rowNum} dataSource={Items} columns={columns} size="small" 
-                    rowClassName={(record, index) => record.totalHours == null ? 'err' : 'm-1 p-1'}
+                <Table pagination={false} rowKey={record => record.rowNum} dataSource={planData} columns={columns} size="small"
+                    rowClassName={"m-1 p-1"}
+                    //rowClassName={(record, index) => record.totalHours == null ? 'err' : 'm-1 p-1'}
                     title={() => <span className="font-weight-bold">Week ({formatDate(WeekStart)} to {formatDate(addDays(WeekStart, 6))} )</span>}
-                    footer={() => <div className="float-right">Total: {secondsToHHMM(hhmmToSeconds(sumHours + ":" + sumMins))}</div>}
+                    footer={() => <div className="float-right">Weekly Total: {secondsToHHMM(sumWeeklyHours(planData))}</div>}
                 ></Table>
             </div>
         );
@@ -419,51 +537,51 @@ class TSReports extends Component {
         return (
             <div>
                 <Container fluid>
-                <div style={{ marginTop: 8, marginLeft:10 }}>
-                    <span style={{ marginRight: 16,fontWeight: "bold" }}>Please select month:</span>           
-                    <Dropdown overlay={this.getMenu()} trigger={['click']}>
-                        <span>{this.state.month}  <Icon type="down" /></span>
-                    </Dropdown>
-                    <Button onClick={this.printDocument} className="float-right">Print</Button> 
-                </div>
-                <div id="divTimeSheet" style={{ width: "100%", display: "inline-block" }}>
-                    <div
-                        id="divPerm"
-                        className="rounded"
-                        style={{
-                            //position: "absolute",
-                            backgroundColor: "white",
-                            display: "inline-block",
-                            zIndex: "100",
-                            lineHeight: "0.85",
-                            width: "97%",
-                            //maxHeight: "500px",
-                            //minHeight: "500px",
-                            height: "auto",
-                            overflowX: "hidden",
-                            overflowY: "scroll",
-                            //border: "1px solid grey"
-                            //marginTop: "-240px"
-                            //marginTop:(this.state.pageOfItems.length == 0 ? "-60px" :
-                            //(this.state.pageOfItems.length >= 7)? "-240px" : (-1 * this.state.pageOfItems.length * 40) + "px")
-                            //onClick={() => this.showDetails(row)}
-                        }}
-                    >
-                        <RTable size="md">
-                            <tbody>
-                                {_.uniqBy(this.state.items, "WeekStart").map(
-                                    (row, index) => (
-                                        <tr key={index}>
-                                            <td size="12">
-                                                {this.renderWeek(row.WeekStart)}
-                                            </td>
-                                        </tr>
-                                    )
-                                )}
-                            </tbody>
-                        </RTable>
+                    <div style={{ marginTop: 8, marginLeft: 10 }}>
+                        <span style={{ marginRight: 16, fontWeight: "bold" }}>Please select month:</span>
+                        <Dropdown overlay={this.getMenu()} trigger={['click']}>
+                            <span>{this.state.month}  <Icon type="down" /></span>
+                        </Dropdown>
+                        <Button onClick={this.printDocument} className="float-right">Print</Button>
                     </div>
-                </div>
+                    <div id="divTimeSheet" style={{ width: "100%", display: "inline-block" }}>
+                        <div
+                            id="divPerm"
+                            className="rounded"
+                            style={{
+                                //position: "absolute",
+                                backgroundColor: "white",
+                                display: "inline-block",
+                                zIndex: "100",
+                                lineHeight: "0.85",
+                                width: "97%",
+                                //maxHeight: "500px",
+                                //minHeight: "500px",
+                                height: "auto",
+                                overflowX: "hidden",
+                                overflowY: "scroll",
+                                //border: "1px solid grey"
+                                //marginTop: "-240px"
+                                //marginTop:(this.state.pageOfItems.length == 0 ? "-60px" :
+                                //(this.state.pageOfItems.length >= 7)? "-240px" : (-1 * this.state.pageOfItems.length * 40) + "px")
+                                //onClick={() => this.showDetails(row)}
+                            }}
+                        >
+                            <RTable size="md">
+                                <tbody>
+                                    {_.uniqBy(this.state.items, "WeekStart").map(
+                                        (row, index) => (
+                                            <tr key={index}>
+                                                <td size="12">
+                                                    {this.renderWeek(row.WeekStart)}
+                                                </td>
+                                            </tr>
+                                        )
+                                    )}
+                                </tbody>
+                            </RTable>
+                        </div>
+                    </div>
                 </Container>
             </div>
         );
@@ -472,7 +590,7 @@ class TSReports extends Component {
 
 const mapStateToProps = state => {
     return {
-        TSRptState: state.TSRptState,
+        TSPlanState: state.TSPlanState,
         CommonState: state.CommonState
     };
 };
@@ -480,7 +598,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
     ...bindActionCreators(
         {
-            ...tsreportsActions
+            ...tsplanActions
         },
         dispatch
     )
@@ -488,4 +606,4 @@ const mapDispatchToProps = dispatch => ({
 
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(TSReports);
+export default connect(mapStateToProps, mapDispatchToProps)(TSPlan);

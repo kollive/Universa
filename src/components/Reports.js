@@ -27,6 +27,7 @@ import {
 } from "reactstrap";
 import Divider from 'material-ui/Divider';
 import TSReports from "./TSReports";
+import TSPlan from "./TSPlan";
 
 import classnames from "classnames";
 const tabStyles = {
@@ -98,9 +99,10 @@ export default class Reports extends Component {
 
           <TabContent activeTab={this.state.activeTab}>
             <TabPane tabId="1">
-                <TSReports  hv_staff_id={this.props.hv_staff_id} />
+              <TSReports hv_staff_id={this.props.hv_staff_id} />
             </TabPane>
             <TabPane tabId="2">
+              <TSPlan hv_staff_id={this.props.hv_staff_id} />
             </TabPane>
           </TabContent>
 

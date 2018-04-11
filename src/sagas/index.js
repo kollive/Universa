@@ -30,6 +30,7 @@ import  {types as TimehseetTypes} from '../reducers/Timesheet/timesheetreducer';
 import {types as WorkPlanTypes} from "../reducers/workplanreducer";
 import {types as CommonTypes} from "../reducers/commonreducer";
 import {types as TSRptTypes} from "../reducers/tsreportreducer";
+import {types as TSPlanTypes} from "../reducers/tsplanreducer";
 import  {types as ChangeOrderTypes} from '../reducers/ChangeOrders/changeOrderreducer';
 import  {types as COListTypes} from '../reducers/ChangeOrders/colistreducer';
 
@@ -66,6 +67,7 @@ import * as COListSaga from './ChangeOrders/colistsaga.js';
 import * as WorkPlanSaga from './workplansaga.js';
 import * as CommonSaga from './commonsaga.js';
 import * as TSRptSaga from './tsreportsaga.js';
+import * as TSPlanSaga from './tsplansaga.js';
 
 
 export default function* rootSaga () {
@@ -100,7 +102,7 @@ export default function* rootSaga () {
         takeLatest([TimehseetTypes.INSERT_TIME_REQUEST,TimehseetTypes.FETCH_TIME_REQUEST,TimehseetTypes.UPDATE_TIME_REQUEST,ManageStaffTypes.UPDATE_STAFF_REQUEST], TimesheetSaga.handleRequest),
         takeLatest([WorkPlanTypes.FETCH_TABLE_REQUEST,WorkPlanTypes.EXCEL_REQUEST,WorkPlanTypes.CANCEL_REQUEST,WorkPlanTypes.INSERTHOUR_REQUEST,WorkPlanTypes.INSERT_REQUEST,WorkPlanTypes.DELETE_REQUEST,WorkPlanTypes.UPDATE_REQUEST], WorkPlanSaga.handleRequest),
         takeLatest([TSRptTypes.FETCH_TABLE_REQUEST], TSRptSaga.handleRequest),
-
+        takeLatest([TSPlanTypes.FETCH_TABLE_REQUEST], TSPlanSaga.handleRequest),
         takeLatest([ChangeOrderTypes.INSERT_CHANGEORDER_REQUEST,ChangeOrderTypes.FETCH_CHANGEORDER_REQUEST, ChangeOrderTypes.UPDATE_CHANGEORDER_REQUEST ,ChangeOrderTypes.GET_SCREENDATA_REQUEST],ChangeOrderSaga.handleRequest),
         takeLatest([COListTypes.FETCH_LIST_REQUEST,COListTypes.DELETE_LIST_REQUEST], COListSaga.handleRequest),
         takeLatest([CommonTypes.SETNAME,CommonTypes.SETSTAFFID,CommonTypes.SETUSERID], CommonSaga.handleRequest),
