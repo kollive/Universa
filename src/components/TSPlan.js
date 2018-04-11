@@ -276,7 +276,7 @@ class TSPlan extends Component {
 
     printDocument = () => {
         debugger;
-        let input = document.getElementById('divTimeSheet');
+        let input = document.getElementById('divWPlan');
         //input.parentElement.style.width = '10000px';
         var styleOrig = input.getAttribute("style");
 
@@ -285,17 +285,13 @@ class TSPlan extends Component {
                 debugger;
 
                 var ctx = canvas.getContext('2d');
-
                 var imgData = canvas.toDataURL("image/png", 1);
                 //const pdf = new jsPDF('p', 'pt', 'a4');
                 const pdf = new jsPDF();
-
-
-                pdf.addImage(imgData, 'JPEG', 0, 0, 212, 300);
+                pdf.addImage(imgData, 'JPEG', 0, 0, 218, 300);
 
                 pdf.save("download.pdf");
                 input.setAttribute("style", styleOrig);
-
             });
     }
 
@@ -544,7 +540,7 @@ class TSPlan extends Component {
                         </Dropdown>
                         <Button onClick={this.printDocument} className="float-right">Print</Button>
                     </div>
-                    <div id="divTimeSheet" style={{ width: "100%", display: "inline-block" }}>
+                    <div id="divWPlan" style={{ width: "100%", display: "inline-block" }}>
                         <div
                             id="divPerm"
                             className="rounded"

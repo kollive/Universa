@@ -76,6 +76,18 @@ const secondsToHHMM = (seconds) => {
     return [hours, minutes].map(function (i) { return i.toString().length === 2 ? i : '0' + i; }).join(':');
 }
 
+const rowColor = (record) => {
+    let d = new Date(record.taskDt);
+    d.setDate(d.getDate() + 1);
+
+    if(d.getDay() != 6 && d.getDay() != 0) {
+        return record.totalHours == null ? 'err' : 'm-1 p-1'
+    } else {
+        //return record.totalHours == null ? 'err' : 'm-1 p-1'
+        return "m-1 p-1"
+    }
+}
+
 
 const formatDate = (dt) => {
     let d = new Date(dt);
@@ -404,7 +416,7 @@ class TSReports extends Component {
 
             <div style={{ width: "100%", display: "inline-block", border: "none" }}>
                 <Table pagination={false} rowKey={record => record.rowNum} dataSource={Items} columns={columns} size="small" 
-                    rowClassName={(record, index) => record.totalHours == null ? 'err' : 'm-1 p-1'}
+                    rowClassName={(record,index) => rowColor(record)}
                     title={() => <span className="font-weight-bold">Week ({formatDate(WeekStart)} to {formatDate(addDays(WeekStart, 6))} )</span>}
                     footer={() => <div className="float-right">Total: {secondsToHHMM(hhmmToSeconds(sumHours + ":" + sumMins))}</div>}
                 ></Table>
