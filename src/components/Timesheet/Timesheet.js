@@ -40,13 +40,13 @@ export class Timesheet extends Component {
             })
         }
 
-       
+
         this.state = {
             date: new Date(),
             staff_id: this.props.staffID,
             loggedIn: userid,
             errorDesc: '',
-    
+
             entry: {
                 start_time: null,
                 lunch_start: null,
@@ -57,22 +57,22 @@ export class Timesheet extends Component {
                 timesheet_date: null,
                 createuserid: null,
                 timepickerOpen: null,
-                
+
 
             }
         }
 
 
     }
-   
+
     //ca137226189
     onTimeChange = (event, time, date, row) => {
-        debugger
+    debugger
         let startOfWeek, endOfWeek;
         let saveTime = this.convertTimeHH(time.state.value, 'YYYY-MM-DD HH:mm')//time.state.value //this.convertTime(time)
         let saveDate = this.convertDate(date.toDateString())
         let saveDateString = this.convertDateString(date.toDateString())
-       
+
         let findTime = _.find(this.state.entry, ['timesheet_date', saveDateString])
         if (findTime !== undefined)
         // if(findTime.length>0)
@@ -108,7 +108,7 @@ export class Timesheet extends Component {
                     return n.timesheet_date != findTime.timesheet_date;
                 });
                 let updatedArray = []
-                if(row=='Clock Out')                
+                if(row=='Clock Out')
                 updatedArray = Object.assign({}, findTime, {
                     end_time: null,
                 });
@@ -118,10 +118,10 @@ export class Timesheet extends Component {
                 });
                 removedArray.push(updatedArray);
                 this.setState({ entry: removedArray })
-                alert('Please enter valid ' + row + ' for date ' + saveDate);  
+                alert('Please enter valid ' + row + ' for date ' + saveDate);
                 return false;
             }
-        
+
 
             var lunch_start = this.convertDateWithTime(findTime.lunch_start)//moment(findTime.start_time, 'h:mm a')//moment(findTime.end_time, 'h:mma');
             var lunch_end = this.convertDateWithTime(findTime.lunch_end)//this.convertTime(findTime.end_time)//moment(findTime.end_time, 'h:mm a')//moment(findTime.start_time, 'h:mma');
@@ -143,7 +143,7 @@ export class Timesheet extends Component {
                 });
                 removedArray.push(updatedArray);
                 this.setState({ entry: removedArray })
-                alert('Please enter valid ' + row + ' for date ' + saveDate);  
+                alert('Please enter valid ' + row + ' for date ' + saveDate);
                 return false;
             }
 
@@ -164,14 +164,17 @@ export class Timesheet extends Component {
                 });
                 removedArray.push(updatedArray);
                 this.setState({ entry: removedArray })
-                alert('Please enter valid ' + row + ' for date ' + saveDate);  
+                alert('Please enter valid ' + row + ' for date ' + saveDate);
                 return false;
 
-            }            
-        
+            }
+
         }
         let timesheet_time = {}
-        
+        if(saveTime=='Invalid date')
+        {
+   saveTime=null;
+        }
         switch (row) {
             case 'Clock In':
                 {
@@ -209,9 +212,9 @@ export class Timesheet extends Component {
                 timesheet_date: saveDate,
                 timesheet_time: JSON.stringify(timesheet_time),
                 createuserid: this.state.loggedIn,
-                start_timesheet_date: this.convertDate(startOfWeek), 
+                start_timesheet_date: this.convertDate(startOfWeek),
                 end_timesheet_date: this.convertDate(endOfWeek),
-                
+
             },
             {
                 function_Id: 65
@@ -220,6 +223,8 @@ export class Timesheet extends Component {
         });
         //this.renderSavedTimesheet();
         return true;
+
+
 
     }
     convertDate = (dateString) => {
@@ -234,7 +239,7 @@ export class Timesheet extends Component {
     }
     convertTime = (timeString => moment(timeString, ["hh:mm A"]).format("hh:mm"));
     convertTimeHH = (timeString => moment(timeString, ["HH:mm A"]).format("HH:mm"));
-    
+
     convertDateWithTime = (timeString => moment(timeString, 'YYYY-MM-DD HH:mm A'));
 
     onTimeDismiss(row, saveDate) {
@@ -394,7 +399,7 @@ export class Timesheet extends Component {
                     //savedTimesheet = this.props.TimesheetState.items
                 }
             }
-            
+
             list = myClock.map(p => {
                 return (
                     <tr style={{ height: "20px" }} key={p.clock}>
@@ -441,9 +446,9 @@ export class Timesheet extends Component {
 
                                     return (<td className="grey1" key={p.id}>
 
-                                        <TimePicker  ref={el => inputElement = el}   
+                                        <TimePicker  ref={el => inputElement = el}
                                         use12Hours format="hh:mm A" value={savedTime} onChange={(time, timeString) => {
-                                            //this.onTimeChange(timeString, time, k, p.clock) 
+                                            //this.onTimeChange(timeString, time, k, p.clock)
                                             inputElement.setState({ value: time })
                                         } }
                                             addon={() => (
@@ -456,7 +461,7 @@ export class Timesheet extends Component {
                                             this.onTimeChange('', inputElement, k, p.clock)
 
                                                    // }
-                                                   
+
 
                                                 } }    >
                                                     OK
@@ -529,7 +534,7 @@ export class Timesheet extends Component {
                 var ms = moment(EndTime, "YYYY-MM-DD hh:mm A").diff(moment(StartTime, "YYYY-MM-DD hh:mm A"));
                 var msl = moment(LunchEnd, "YYYY-MM-DD hh:mm A").diff(moment(LunchStart, "YYYY-MM-DD hh:mm A"));
                 var d = moment.duration(ms).subtract(moment.duration(msl), 'duration')
-                //alert("EndTime "+ EndTime  + ' ' +moment.duration(ms).format({trim:false})+ ":"+ d.minutes())   
+                //alert("EndTime "+ EndTime  + ' ' +moment.duration(ms).format({trim:false})+ ":"+ d.minutes())
                //alert(('0'  + d.hours()).slice(-2)+':'+('0' +  d.minutes()).slice(-2))
                //return (d.hours() + ":" +  d.minutes())
                 return ('0'  + d.hours()).slice(-2)+':'+('0' +  d.minutes()).slice(-2)
@@ -548,7 +553,7 @@ export class Timesheet extends Component {
                     }}>
                     <Row>
                         <Col sm="12" style={{ width: "100%", }}>
- 
+
 
                             <Table bordered id='#Table' striped hover size="sm" className="border-bottom-0"
                                 style={{
