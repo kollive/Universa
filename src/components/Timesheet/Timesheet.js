@@ -451,18 +451,11 @@ export class Timesheet extends Component {
                                             //this.onTimeChange(timeString, time, k, p.clock)
                                             inputElement.setState({ value: time })
                                         } }
+                                        onOpenChange={status => !status  ? this.onTimeChange('', inputElement, k, p.clock)  : inputElement.focus()}
                                             addon={() => (
                                                 <Button size="small" type="primary" onClick={() => {
-                                                    //if(
-                                                        //)
-                                                 //   {
-                                                      //  debugger
-                                              inputElement.timePickerRef.setState({open:false})
+                                                inputElement.timePickerRef.setState({open:false})
                                             this.onTimeChange('', inputElement, k, p.clock)
-
-                                                   // }
-
-
                                                 } }    >
                                                     OK
           </Button>
