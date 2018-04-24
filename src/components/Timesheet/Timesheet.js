@@ -417,6 +417,12 @@ export class Timesheet extends Component {
                                         });
 
                                     let savedTime = '';
+                                    if(p.clock=='Lunch In')
+                                    savedTime=moment( moment({hour:11, minute:0 }) , 'YYYY-MM-DD hh:mm A')
+                                    if(p.clock=='Lunch Out')
+                                    savedTime=moment(moment({hour:11, minute:30 })   , 'YYYY-MM-DD hh:mm A')
+
+
                                     if (time !== undefined) {
                                         //   alert(time.start_time)
                                         switch (p.clock) {
@@ -425,10 +431,10 @@ export class Timesheet extends Component {
                                                 // moment(time.start_time).format('MM/DD/YYYY hh:mm A').toDate() : ''
                                                 break;
                                             case 'Lunch In':
-                                                savedTime = (time.lunch_start !== null) ? moment(time.lunch_start, 'YYYY-MM-DD hh:mm A') : ''
+                                                savedTime = (time.lunch_start !== null) ? moment(time.lunch_start, 'YYYY-MM-DD hh:mm A') : moment( moment({hour:11, minute:0 }) , 'YYYY-MM-DD hh:mm A')
                                                 break;
                                             case 'Lunch Out':
-                                                savedTime = (time.lunch_end !== null) ? moment(time.lunch_end, 'YYYY-MM-DD hh:mm A') : ''
+                                                savedTime = (time.lunch_end !== null) ? moment(time.lunch_end, 'YYYY-MM-DD hh:mm A') : moment(moment({hour:11, minute:30 })   , 'YYYY-MM-DD hh:mm A')
                                                 break;
                                             case 'Clock Out':
                                                 savedTime = (time.end_time !== null) ? moment(time.end_time, 'YYYY-MM-DD hh:mm A') : ''//new Date("2015-03-04T00:00");
