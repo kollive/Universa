@@ -57,9 +57,9 @@ class CadetHeader extends React.Component {
     return (
       <div>
         <Row>
-          <Col sm="11">
-            <div>
-              <img src={cadetlogo} className="App-logo"  alt="logo" />
+          <Col>
+            <div style={{"border": "0px solid blue"}}>
+              <img src={cadetlogo} height="60px" className="App-logo"  alt="logo" />
               {/*}<img
                 src={cadettitle}
                 height="60"
@@ -71,8 +71,20 @@ class CadetHeader extends React.Component {
               {/*<h3 className="d-inline align-middle">Welcome to React</h3>*/}
             </div>
           </Col>
+
+          <Col style={{"border":"0px solid red"}} >
+            <div height="100%"
+              className="float-right  px-2"
+              style={{ "display":"flex", "height":"100%", fontWeight: "bold", color: "#4d6788","border":"0px solid blue" }}
+            >
+            <span style={{"align-self":"flex-end"}}>  Welcome, {this.props.name || "User"} {" "}
+              <i className="fa fa-sign-out fa-lg fa-fw" style={{cursor:"pointer"}} onClick={()=> this.props.history.push("/login")}></i>
+              </span>
+            </div>
+          </Col>
+
         </Row>
-        <Row>
+        {/*}<Row>
           <Col>
             <div className="float-left header-label px-4">
               {this.state.locationinfo}
@@ -89,6 +101,7 @@ class CadetHeader extends React.Component {
           </Col>
 
         </Row>
+        */}
       </div>
     );
   }
