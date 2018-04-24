@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import cadetlogo from "../images/Universe.png";
+import cadetlogo from "../images/Universe Logo.png";
 import cadettitle from "../images/UTitle.png";
 import "../App.css";
 import { actions as headerActions } from "../reducers/cdheaderreducer";
@@ -59,13 +59,15 @@ class CadetHeader extends React.Component {
         <Row>
           <Col sm="11">
             <div>
-              <img src={cadetlogo} width="60" height="60" alt="logo" />
-              <img
+              <img src={cadetlogo} className="App-logo"  alt="logo" />
+              {/*}<img
                 src={cadettitle}
                 height="60"
                 alt="logoTitle"
                 className="px-0"
-              />
+              />*/}
+              <span style={{"padding-left":"20px", "font-family":"Arial","letter-spacing": "0rem", "font-size":"1.5rem","color":"#4d6788" }} >uni</span>
+              <span style={{"font-family":"Arial","letter-spacing": "0rem", "font-size":"1.5rem","color":"#698dba" }} >verse</span>
               {/*<h3 className="d-inline align-middle">Welcome to React</h3>*/}
             </div>
           </Col>
@@ -85,7 +87,7 @@ class CadetHeader extends React.Component {
               <i className="fa fa-sign-out fa-lg fa-fw" style={{cursor:"pointer"}} onClick={()=> this.props.history.push("/login")}></i>
             </div>
           </Col>
-          
+
         </Row>
       </div>
     );
