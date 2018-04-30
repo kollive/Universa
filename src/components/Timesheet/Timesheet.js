@@ -170,11 +170,14 @@ export class Timesheet extends Component {
             }
 
         }
-        let timesheet_time = {}
-        if(saveTime=='Invalid date')
+        debugger
+        if(saveTime=='Invalid date')//Valid only for start time and end time
         {
-   saveTime=null;
+
+         saveTime=null;
         }
+        let timesheet_time ={}//= { lunch_start : '11:00',lunch_end :'11:30' }
+
         switch (row) {
             case 'Clock In':
                 {
@@ -183,11 +186,11 @@ export class Timesheet extends Component {
                 }
             case 'Lunch In':
                 {
-                    timesheet_time.lunch_start = saveTime
+                    timesheet_time.lunch_start = (saveTime==null)?'11:00':saveTime
                     break;
                 } case 'Lunch Out':
                 {
-                    timesheet_time.lunch_end = saveTime
+                    timesheet_time.lunch_end =  (saveTime==null)?'11:30':saveTime
                     break;
                 } case 'Clock Out':
                 {
@@ -422,6 +425,8 @@ export class Timesheet extends Component {
                                     if(p.clock=='Lunch Out')
                                     savedTime=moment(moment({hour:11, minute:30 })   , 'YYYY-MM-DD hh:mm A')
 
+                                    //this.setState({ entry: removedArray })
+
 
                                     if (time !== undefined) {
                                         //   alert(time.start_time)
@@ -488,6 +493,7 @@ export class Timesheet extends Component {
                                         });
                                 }
                                 if (time !== undefined) {
+                                   ;
 
                                     totalVal = calculateTotalHrs(time.start_time, time.end_time, time.lunch_start, time.lunch_end)
                                 }
