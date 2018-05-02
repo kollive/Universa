@@ -177,6 +177,9 @@ export class Timesheet extends Component {
          saveTime=null;
         }
         let timesheet_time ={}//= { lunch_start : '11:00',lunch_end :'11:30' }
+//alert(findTime.lunch_start)
+        if(findTime==undefined)
+        timesheet_time = { lunch_start : '11:00',lunch_end :'11:30' }
 
         switch (row) {
             case 'Clock In':
