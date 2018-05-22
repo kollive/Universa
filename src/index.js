@@ -33,6 +33,7 @@ import GridList from "./components/grid";
 import rootSaga from "./sagas/index";
 import "bootstrap/dist/css/bootstrap.css";
 import "font-awesome/css/font-awesome.min.css";
+import 'draft-js/dist/Draft.css';
 import {
   Modal,
   ModalHeader,

@@ -203,7 +203,7 @@ let showlist=false
               value="0"
               icon={<FontIcon className="fa fa-home" style={{ color: "darkgrey" }} />}
             >
-            <TimeSheetContainer hv_staff_id={this.props.hv_staff_id} name={this.props.name}  {...this.props} /> 
+            <TimeSheetContainer hv_staff_id={this.props.hv_staff_id} name={this.props.name} userid={this.props.userid}  {...this.props} /> 
               {/*<HomeComponent callParentSearch={this.cadetSearch} parentSwitchTab={this.handleChange} /> */}
             </Tab>
             <Tab

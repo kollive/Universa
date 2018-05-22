@@ -21,7 +21,8 @@ import "../App.css";
 import { DatePicker, TimePicker } from 'antd';
 import {
     Form, Select, InputNumber, Switch, Radio, Table, Spin,
-    Slider, Button, Upload, Icon, Rate, Menu, Dropdown, message, Popconfirm
+    Slider, Button, Upload, Icon, Rate, Menu, Dropdown, message, Popconfirm, Row,
+    Col,
 } from 'antd';
 import moment from 'moment';
 
@@ -38,8 +39,6 @@ import {
     //Button,
     CardTitle,
     CardText,
-    Row,
-    Col,
     DropdownToggle
 } from "reactstrap";
 
@@ -111,7 +110,7 @@ const columns = [{
        }
         return obj;
        */
-      return secondsToHHMM(text);
+        return secondsToHHMM(text);
     },
 },
 {
@@ -190,7 +189,7 @@ const columns = [{
 const sumWeeklyHours = (WeekData) => {
     const sumHrs = WeekData.reduce((sum, week) => {
         return sum + week.totHrs
-    },0)
+    }, 0)
     return sumHrs;
 }
 
@@ -437,7 +436,7 @@ class TSPlan extends Component {
         console.log("taskID")
         console.log(taskId)
 
-        taskId.map((task,idx) => {
+        taskId.map((task, idx) => {
             const planItems = _.filter(Items, (itm) => {
                 return Number(task.task_id) == Number(itm.task_id)
             })
@@ -455,8 +454,8 @@ class TSPlan extends Component {
                 debugger;
                 let dt = new Date(itm.task_date);
                 dt.setDate(dt.getDate() + 1);
-                return (dt.getDay() != 1) ? total : total + hhmmToSeconds(itm.num_hours);               
-            },0)
+                return (dt.getDay() != 1) ? total : total + hhmmToSeconds(itm.num_hours);
+            }, 0)
 
             planObj.monHrs = monHrs;
             //alert("monHrs")
@@ -466,62 +465,66 @@ class TSPlan extends Component {
             planObj.tueHrs = planItems.reduce((total, itm) => {
                 let dt = new Date(itm.task_date);
                 dt.setDate(dt.getDate() + 1);
-                return (dt.getDay() != 2) ? total : total + hhmmToSeconds(itm.num_hours);               
-            },0)
+                return (dt.getDay() != 2) ? total : total + hhmmToSeconds(itm.num_hours);
+            }, 0)
 
             planObj.wedHrs = planItems.reduce((total, itm) => {
                 let dt = new Date(itm.task_date);
                 dt.setDate(dt.getDate() + 1);
-                return (dt.getDay() != 3) ? total : total + hhmmToSeconds(itm.num_hours);               
-            },0)
+                return (dt.getDay() != 3) ? total : total + hhmmToSeconds(itm.num_hours);
+            }, 0)
 
             planObj.thuHrs = planItems.reduce((total, itm) => {
                 let dt = new Date(itm.task_date);
                 dt.setDate(dt.getDate() + 1);
-                return (dt.getDay() != 4) ? total : total + hhmmToSeconds(itm.num_hours);               
-            },0)
+                return (dt.getDay() != 4) ? total : total + hhmmToSeconds(itm.num_hours);
+            }, 0)
 
             planObj.friHrs = planItems.reduce((total, itm) => {
                 let dt = new Date(itm.task_date);
                 dt.setDate(dt.getDate() + 1);
-                return (dt.getDay() != 5) ? total : total + hhmmToSeconds(itm.num_hours);               
-            },0)
+                return (dt.getDay() != 5) ? total : total + hhmmToSeconds(itm.num_hours);
+            }, 0)
 
             planObj.satHrs = planItems.reduce((total, itm) => {
                 let dt = new Date(itm.task_date);
                 dt.setDate(dt.getDate() + 1);
-                return (dt.getDay() != 6) ? total : total + hhmmToSeconds(itm.num_hours);               
-            },0)
+                return (dt.getDay() != 6) ? total : total + hhmmToSeconds(itm.num_hours);
+            }, 0)
 
             planObj.sunHrs = planItems.reduce((total, itm) => {
                 let dt = new Date(itm.task_date);
                 dt.setDate(dt.getDate() + 1);
-                return (dt.getDay() != 0) ? total : total + hhmmToSeconds(itm.num_hours);               
-            },0)
+                return (dt.getDay() != 0) ? total : total + hhmmToSeconds(itm.num_hours);
+            }, 0)
 
-           planObj.totHrs = Number(planObj.monHrs) +
-           Number(planObj.tueHrs) +
-           Number(planObj.wedHrs) +
-           Number(planObj.thuHrs) +
-           Number(planObj.friHrs) +
-           Number(planObj.satHrs) +
-           Number(planObj.sunHrs);
-           
-           //console.log("PlanObj")
-           //console.log(planObj)
-           planData.push(planObj)
+            planObj.totHrs = Number(planObj.monHrs) +
+                Number(planObj.tueHrs) +
+                Number(planObj.wedHrs) +
+                Number(planObj.thuHrs) +
+                Number(planObj.friHrs) +
+                Number(planObj.satHrs) +
+                Number(planObj.sunHrs);
+
+            //console.log("PlanObj")
+            //console.log(planObj)
+            planData.push(planObj)
         });
 
         debugger;
         return (
 
             <div style={{ width: "100%", display: "inline-block", border: "none" }}>
-                <Table pagination={false} rowKey={record => record.rowNum} dataSource={planData} columns={columns} size="small"
-                    rowClassName={"m-1 p-1"}
-                    //rowClassName={(record, index) => record.totalHours == null ? 'err' : 'm-1 p-1'}
-                    title={() => <span className="font-weight-bold">Week ({formatDate(WeekStart)} to {formatDate(addDays(WeekStart, 6))} )</span>}
-                    footer={() => <div className="float-right">Weekly Total: {secondsToHHMM(sumWeeklyHours(planData))}</div>}
-                ></Table>
+                <Row>
+                    <Col span={24}>
+                        <Table pagination={false} rowKey={record => record.rowNum} dataSource={planData} columns={columns} size="small"
+                            rowClassName={"m-1 p-1"}
+                            //rowClassName={(record, index) => record.totalHours == null ? 'err' : 'm-1 p-1'}
+                            title={() => <span className="font-weight-bold">Week ({formatDate(WeekStart)} to {formatDate(addDays(WeekStart, 6))} )</span>}
+                            footer={() => <div className="float-right">Weekly Total: {secondsToHHMM(sumWeeklyHours(planData))}</div>}
+                        ></Table>
+                    </Col>
+                </Row>
             </div>
         );
     }

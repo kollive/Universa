@@ -28,6 +28,7 @@ import {
 import Divider from 'material-ui/Divider';
 import TSReports from "./TSReports";
 import TSPlan from "./TSPlan";
+import DraftEditor from "./DraftEditor";
 
 import classnames from "classnames";
 const tabStyles = {
@@ -95,6 +96,21 @@ export default class Reports extends Component {
                 </NavLink>
             </NavItem>
 
+
+            <NavItem>
+              <NavLink
+                style={{ cursor: "pointer" }}
+                className={classnames({
+                  active: this.state.activeTab === "3"
+                })}
+                onClick={() => {
+                  this.toggle("3");
+                }}
+              >
+                Rich Text Editor
+                </NavLink>
+            </NavItem>
+
           </Nav>
 
           <TabContent activeTab={this.state.activeTab}>
@@ -103,6 +119,9 @@ export default class Reports extends Component {
             </TabPane>
             <TabPane tabId="2">
               <TSPlan hv_staff_id={this.props.hv_staff_id} />
+            </TabPane>
+            <TabPane tabId="3">
+              <DraftEditor />
             </TabPane>
           </TabContent>
 

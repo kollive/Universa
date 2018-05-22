@@ -80,7 +80,7 @@ const rowColor = (record) => {
     let d = new Date(record.taskDt);
     d.setDate(d.getDate() + 1);
 
-    if(d.getDay() != 6 && d.getDay() != 0) {
+    if (d.getDay() != 6 && d.getDay() != 0) {
         return record.totalHours == null ? 'err' : 'm-1 p-1'
     } else {
         //return record.totalHours == null ? 'err' : 'm-1 p-1'
@@ -173,6 +173,18 @@ const columns = [{
         return secondsToHHMM(hhmmToSeconds(hrs + ":" + mins));
     },
 },
+{
+    title: 'C# 9450016',
+    dataIndex: 'total4016',
+    key: 'total4016',
+    width: '10%'
+},
+{
+    title: 'C# 9854086',
+    dataIndex: 'total4086',
+    key: 'total4086',
+    width: '10%'
+},
 ];
 
 
@@ -218,8 +230,8 @@ class TSReports extends Component {
         //if (itm.key == 0) {
         //    this.editTask(row);
         //}
-        this.setState({month: itm.key});
-        this.setState({loading:true});
+        this.setState({ month: itm.key });
+        this.setState({ loading: true });
 
         this.props.getMonthlyTS({
             type: tsreportsTypes.FETCH_TABLES_REQUEST,
@@ -306,9 +318,9 @@ class TSReports extends Component {
                     //staffID: "10",
                     month: "march"
                 }
-            });           
+            });
         } else {
-            this.setState({loading:false});            
+            this.setState({ loading: false });
         }
 
         if (nextProps.TSRptState) {
@@ -318,7 +330,7 @@ class TSReports extends Component {
 
     componentDidMount() {
         debugger;
-        this.setState({loading:true});
+        this.setState({ loading: true });
         this.props.getMonthlyTS({
             type: tsreportsTypes.FETCH_TABLES_REQUEST,
             payload: {
@@ -362,6 +374,11 @@ class TSReports extends Component {
         let sumHours = 0;
         let sumMins = 0;
 
+        let c945Hours = 0;
+        let c945Mins = 0;
+        let c985Hours = 0;
+        let c985Mins = 0;
+
         let Items = _.filter(this.state.items, function (itm) {
             debugger;
 
@@ -400,6 +417,13 @@ class TSReports extends Component {
                     let hrs = totHrs - lunHrs;
                     let mins = totMins - lunMins;
 
+                    if(itm.contract_no == "9854086"){
+                        c985Hours += hrs;
+                        c985Mins += mins;
+                    } else {
+                        c945Hours += hrs;        
+                        c945Mins += mins;                
+                    }
                     sumHours += hrs;
                     sumMins += mins;
                 }
@@ -415,10 +439,10 @@ class TSReports extends Component {
         return (
 
             <div style={{ width: "100%", display: "inline-block", border: "none" }}>
-                <Table pagination={false} rowKey={record => record.rowNum} dataSource={Items} columns={columns} size="small" 
-                    rowClassName={(record,index) => rowColor(record)}
+                <Table pagination={false} rowKey={record => record.rowNum} dataSource={Items} columns={columns} size="small"
+                    rowClassName={(record, index) => rowColor(record)}
                     title={() => <span className="font-weight-bold">Week ({formatDate(WeekStart)} to {formatDate(addDays(WeekStart, 6))} )</span>}
-                    footer={() => <div className="float-right">Total: {secondsToHHMM(hhmmToSeconds(sumHours + ":" + sumMins))}</div>}
+                    footer={() => <div className="float-right"><span>Total: {secondsToHHMM(hhmmToSeconds(sumHours + ":" + sumMins))}</span><span>{secondsToHHMM(hhmmToSeconds(c945Hours + ":" + c945Mins))}</span><span>{secondsToHHMM(hhmmToSeconds(c985Hours + ":" + c985Mins))}</span></div>}
                 ></Table>
             </div>
         );
@@ -431,51 +455,51 @@ class TSReports extends Component {
         return (
             <div>
                 <Container fluid>
-                <div style={{ marginTop: 8, marginLeft:10 }}>
-                    <span style={{ marginRight: 16,fontWeight: "bold" }}>Please select month:</span>           
-                    <Dropdown overlay={this.getMenu()} trigger={['click']}>
-                        <span>{this.state.month}  <Icon type="down" /></span>
-                    </Dropdown>
-                    <Button onClick={this.printDocument} className="float-right">Print</Button> 
-                </div>
-                <div id="divTimeSheet" style={{ width: "100%", display: "inline-block" }}>
-                    <div
-                        id="divPerm"
-                        className="rounded"
-                        style={{
-                            //position: "absolute",
-                            backgroundColor: "white",
-                            display: "inline-block",
-                            zIndex: "100",
-                            lineHeight: "0.85",
-                            width: "97%",
-                            //maxHeight: "500px",
-                            //minHeight: "500px",
-                            height: "auto",
-                            overflowX: "hidden",
-                            overflowY: "scroll",
-                            //border: "1px solid grey"
-                            //marginTop: "-240px"
-                            //marginTop:(this.state.pageOfItems.length == 0 ? "-60px" :
-                            //(this.state.pageOfItems.length >= 7)? "-240px" : (-1 * this.state.pageOfItems.length * 40) + "px")
-                            //onClick={() => this.showDetails(row)}
-                        }}
-                    >
-                        <RTable size="md">
-                            <tbody>
-                                {_.uniqBy(this.state.items, "WeekStart").map(
-                                    (row, index) => (
-                                        <tr key={index}>
-                                            <td size="12">
-                                                {this.renderWeek(row.WeekStart)}
-                                            </td>
-                                        </tr>
-                                    )
-                                )}
-                            </tbody>
-                        </RTable>
+                    <div style={{ marginTop: 8, marginLeft: 10 }}>
+                        <span style={{ marginRight: 16, fontWeight: "bold" }}>Please select month:</span>
+                        <Dropdown overlay={this.getMenu()} trigger={['click']}>
+                            <span>{this.state.month}  <Icon type="down" /></span>
+                        </Dropdown>
+                        <Button onClick={this.printDocument} className="float-right">Print</Button>
                     </div>
-                </div>
+                    <div id="divTimeSheet" style={{ width: "100%", display: "inline-block" }}>
+                        <div
+                            id="divPerm"
+                            className="rounded"
+                            style={{
+                                //position: "absolute",
+                                backgroundColor: "white",
+                                display: "inline-block",
+                                zIndex: "100",
+                                lineHeight: "0.85",
+                                width: "97%",
+                                //maxHeight: "500px",
+                                //minHeight: "500px",
+                                height: "auto",
+                                overflowX: "hidden",
+                                overflowY: "scroll",
+                                //border: "1px solid grey"
+                                //marginTop: "-240px"
+                                //marginTop:(this.state.pageOfItems.length == 0 ? "-60px" :
+                                //(this.state.pageOfItems.length >= 7)? "-240px" : (-1 * this.state.pageOfItems.length * 40) + "px")
+                                //onClick={() => this.showDetails(row)}
+                            }}
+                        >
+                            <RTable size="md">
+                                <tbody>
+                                    {_.uniqBy(this.state.items, "WeekStart").map(
+                                        (row, index) => (
+                                            <tr key={index}>
+                                                <td size="12">
+                                                    {this.renderWeek(row.WeekStart)}
+                                                </td>
+                                            </tr>
+                                        )
+                                    )}
+                                </tbody>
+                            </RTable>
+                        </div>
+                    </div>
                 </Container>
             </div>
         );

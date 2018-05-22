@@ -190,12 +190,14 @@ html2canvas(input).
     getStaffID=()=>{
         //alert("in Getstaff")
         let userid;
+        /*
         if (JSON.parse(sessionStorage.getItem("roles")) && !!sessionStorage.getItem("roles")) {
             //debugger
             _.map(JSON.parse(sessionStorage.getItem("roles")), function (o) {
                 userid = o.hv_user_id
             })
         }
+        */
        // alert(userid)
        //alert(this.state.staff_id)
        if(this.props.hv_staff_id != "") {
@@ -215,7 +217,7 @@ html2canvas(input).
         this.props.setUserID({
             type: commonTypes.USERID,
             payload: {
-                hv_user_id: userid         
+                hv_user_id: this.props.userid         
             }
         });
 

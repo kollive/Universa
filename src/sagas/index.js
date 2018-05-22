@@ -31,6 +31,7 @@ import {types as WorkPlanTypes} from "../reducers/workplanreducer";
 import {types as CommonTypes} from "../reducers/commonreducer";
 import {types as TSRptTypes} from "../reducers/tsreportreducer";
 import {types as TSPlanTypes} from "../reducers/tsplanreducer";
+import {types as DraftEditorTypes} from "../reducers/drafteditorreducer";
 import  {types as ChangeOrderTypes} from '../reducers/ChangeOrders/changeOrderreducer';
 import  {types as COListTypes} from '../reducers/ChangeOrders/colistreducer';
 
@@ -68,6 +69,7 @@ import * as WorkPlanSaga from './workplansaga.js';
 import * as CommonSaga from './commonsaga.js';
 import * as TSRptSaga from './tsreportsaga.js';
 import * as TSPlanSaga from './tsplansaga.js';
+import * as DraftEditorSaga from './drafteditorsaga.js';
 
 
 export default function* rootSaga () {
@@ -106,6 +108,7 @@ export default function* rootSaga () {
         takeLatest([ChangeOrderTypes.INSERT_CHANGEORDER_REQUEST,ChangeOrderTypes.FETCH_CHANGEORDER_REQUEST, ChangeOrderTypes.UPDATE_CHANGEORDER_REQUEST ,ChangeOrderTypes.GET_SCREENDATA_REQUEST],ChangeOrderSaga.handleRequest),
         takeLatest([COListTypes.FETCH_LIST_REQUEST,COListTypes.DELETE_LIST_REQUEST], COListSaga.handleRequest),
         takeLatest([CommonTypes.SETNAME,CommonTypes.SETSTAFFID,CommonTypes.SETUSERID], CommonSaga.handleRequest),
+        takeLatest([DraftEditorTypes.UPDATEMONGO_REQUEST,DraftEditorTypes.GETCONTENT_REQUEST,DraftEditorTypes.UPDATECONTENT_REQUEST], DraftEditorSaga.handleRequest),
         ]);
 
     //throw e;
