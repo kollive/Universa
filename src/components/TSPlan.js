@@ -374,6 +374,7 @@ class TSPlan extends Component {
 
         let sumHours = 0;
         let sumMins = 0;
+        let contractNum = "";
 
         let Items = _.filter(this.state.items, function (itm) {
             debugger;
@@ -445,6 +446,9 @@ class TSPlan extends Component {
             console.log(planItems)
 
             let planObj = {}
+            planObj.contractNum =  planItems[0].contract_no;
+            contractNum = planObj.contractNum;
+            
             planObj.rowNum = idx;
             planObj.task_id = task.task_id;
             planObj.task_description = planItems[0].task_description;
@@ -520,7 +524,10 @@ class TSPlan extends Component {
                         <Table pagination={false} rowKey={record => record.rowNum} dataSource={planData} columns={columns} size="small"
                             rowClassName={"m-1 p-1"}
                             //rowClassName={(record, index) => record.totalHours == null ? 'err' : 'm-1 p-1'}
-                            title={() => <span className="font-weight-bold">Week ({formatDate(WeekStart)} to {formatDate(addDays(WeekStart, 6))} )</span>}
+                            title={(record) => <div><span className="font-weight-bold">Week ({formatDate(WeekStart)} to {formatDate(addDays(WeekStart, 6))} )</span>
+                                <span className="float-right">Project: C# {contractNum}</span>
+                            </div>
+                            }
                             footer={() => <div className="float-right">Weekly Total: {secondsToHHMM(sumWeeklyHours(planData))}</div>}
                         ></Table>
                     </Col>
@@ -528,7 +535,6 @@ class TSPlan extends Component {
             </div>
         );
     }
-
 
     render() {
 

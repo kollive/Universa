@@ -20,7 +20,8 @@ import * as jsPDF from 'jspdf'
 import "../App.css";
 import { DatePicker, TimePicker } from 'antd';
 import {
-    Form, Select, InputNumber, Switch, Radio, Table, Spin,
+    Form, Select, InputNumber, Switch, Radio, Table, Spin, Row,
+    Col,
     Slider, Button, Upload, Icon, Rate, Menu, Dropdown, message, Popconfirm
 } from 'antd';
 import moment from 'moment';
@@ -38,8 +39,6 @@ import {
     //Button,
     CardTitle,
     CardText,
-    Row,
-    Col,
     DropdownToggle
 } from "reactstrap";
 
@@ -177,13 +176,13 @@ const columns = [{
     title: 'C# 9450016',
     dataIndex: 'total4016',
     key: 'total4016',
-    width: '10%'
+    width: '9%'
 },
 {
     title: 'C# 9854086',
     dataIndex: 'total4086',
     key: 'total4086',
-    width: '10%'
+    width: '9%'
 },
 ];
 
@@ -417,12 +416,12 @@ class TSReports extends Component {
                     let hrs = totHrs - lunHrs;
                     let mins = totMins - lunMins;
 
-                    if(itm.contract_no == "9854086"){
+                    if (itm.contract_no == "9854086") {
                         c985Hours += hrs;
                         c985Mins += mins;
                     } else {
-                        c945Hours += hrs;        
-                        c945Mins += mins;                
+                        c945Hours += hrs;
+                        c945Mins += mins;
                     }
                     sumHours += hrs;
                     sumMins += mins;
@@ -431,19 +430,24 @@ class TSReports extends Component {
             //alert(hours)
             //return secondsToHHMM(hhmmToSeconds(hrs + ":" + mins));
             //loading={<Spin spinning={this.state.loading} />}
+            //footer={() => <div className="float-right"><span>Total: {secondsToHHMM(hhmmToSeconds(sumHours + ":" + sumMins))}</span><span>{secondsToHHMM(hhmmToSeconds(c945Hours + ":" + c945Mins))}</span><span>{secondsToHHMM(hhmmToSeconds(c985Hours + ":" + c985Mins))}</span></div>}
             return (d1 == d2)
         });
 
 
         debugger;
         return (
-
-            <div style={{ width: "100%", display: "inline-block", border: "none" }}>
-                <Table pagination={false} rowKey={record => record.rowNum} dataSource={Items} columns={columns} size="small"
-                    rowClassName={(record, index) => rowColor(record)}
-                    title={() => <span className="font-weight-bold">Week ({formatDate(WeekStart)} to {formatDate(addDays(WeekStart, 6))} )</span>}
-                    footer={() => <div className="float-right"><span>Total: {secondsToHHMM(hhmmToSeconds(sumHours + ":" + sumMins))}</span><span>{secondsToHHMM(hhmmToSeconds(c945Hours + ":" + c945Mins))}</span><span>{secondsToHHMM(hhmmToSeconds(c985Hours + ":" + c985Mins))}</span></div>}
-                ></Table>
+            <div>
+                <Row style={{ width: "100%", display: "inline-block", border: "none" }}>
+                    <Col span={24}>
+                        <Table pagination={false} rowKey={record => record.rowNum} dataSource={Items} columns={columns} size="small"
+                            rowClassName={(record, index) => rowColor(record)}
+                            title={() => <span className="font-weight-bold">Week ({formatDate(WeekStart)} to {formatDate(addDays(WeekStart, 6))} )</span>}
+                            footer={() => <div><Row><Col span={14}>{' '}</Col><Col span={2}>Weekly Total:</Col><Col span={4} push={1}>{secondsToHHMM(hhmmToSeconds(sumHours + ":" + sumMins))}</Col><Col span={2}>{secondsToHHMM(hhmmToSeconds(c945Hours + ":" + c945Mins))}</Col><Col span={2}>{secondsToHHMM(hhmmToSeconds(c985Hours + ":" + c985Mins))}</Col></Row></div>
+                            }
+                        ></Table>
+                    </Col>
+                </Row>
             </div>
         );
     }

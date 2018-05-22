@@ -52,6 +52,22 @@ export default class Reports extends Component {
         activeTab: tab
       });
     }
+
+    /*
+     <NavItem>
+              <NavLink
+                style={{ cursor: "pointer" }}
+                className={classnames({
+                  active: this.state.activeTab === "3"
+                })}
+                onClick={() => {
+                  this.toggle("3");
+                }}
+              >
+                Rich Text Editor
+                </NavLink>
+            </NavItem>
+    */
   };
   render() {
     return (
@@ -94,22 +110,7 @@ export default class Reports extends Component {
               >
                 Work Plan
                 </NavLink>
-            </NavItem>
-
-
-            <NavItem>
-              <NavLink
-                style={{ cursor: "pointer" }}
-                className={classnames({
-                  active: this.state.activeTab === "3"
-                })}
-                onClick={() => {
-                  this.toggle("3");
-                }}
-              >
-                Rich Text Editor
-                </NavLink>
-            </NavItem>
+            </NavItem>           
 
           </Nav>
 
