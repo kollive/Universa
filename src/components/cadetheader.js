@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import cadetlogo from "../images/Universe.png";
+import cadetlogo from "../images/Universe Logo.png";
 import cadettitle from "../images/UTitle.png";
 import "../App.css";
 import { actions as headerActions } from "../reducers/cdheaderreducer";
@@ -57,20 +57,34 @@ class CadetHeader extends React.Component {
     return (
       <div>
         <Row>
-          <Col sm="11">
-            <div>
-              <img src={cadetlogo} width="60" height="60" alt="logo" />
-              <img
+          <Col>
+            <div style={{"border": "0px solid blue"}}>
+              <img src={cadetlogo} height="60px" className="App-logo"  alt="logo" />
+              {/*}<img
                 src={cadettitle}
                 height="60"
                 alt="logoTitle"
                 className="px-0"
-              />
+              />*/}
+              <span style={{"padding-left":"20px", "font-family":"Arial","letter-spacing": "0rem", "font-size":"1.5rem","color":"#4d6788" }} >uni</span>
+              <span style={{"font-family":"Arial","letter-spacing": "0rem", "font-size":"1.5rem","color":"#698dba" }} >verse</span>
               {/*<h3 className="d-inline align-middle">Welcome to React</h3>*/}
             </div>
           </Col>
+
+          <Col style={{"border":"0px solid red"}} >
+            <div height="100%"
+              className="float-right  px-2"
+              style={{ "display":"flex", "height":"100%", fontWeight: "bold", color: "#4d6788","border":"0px solid blue" }}
+            >
+            <span style={{"align-self":"flex-end"}}>  Welcome, {this.props.name || "User"} {" "}
+              <i className="fa fa-sign-out fa-lg fa-fw" style={{cursor:"pointer"}} onClick={()=> this.props.history.push("/login")}></i>
+              </span>
+            </div>
+          </Col>
+
         </Row>
-        <Row>
+        {/*}<Row>
           <Col>
             <div className="float-left header-label px-4">
               {this.state.locationinfo}
@@ -85,8 +99,9 @@ class CadetHeader extends React.Component {
               <i className="fa fa-sign-out fa-lg fa-fw" style={{cursor:"pointer"}} onClick={()=> this.props.history.push("/login")}></i>
             </div>
           </Col>
-          
+
         </Row>
+        */}
       </div>
     );
   }

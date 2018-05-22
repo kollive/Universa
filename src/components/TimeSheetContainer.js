@@ -305,7 +305,7 @@ html2canvas(input).
         return (
             <div>
       <div className="mb5">
-        <button onClick={this.printDocument}>Print</button>
+        <button onClick={this.printDocument} style={{"display":"none"}}></button>
       </div>
       <div id="divToPrint" style={{width:"100%", display:"inline-block"}}>
             <Container
