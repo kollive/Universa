@@ -94,7 +94,7 @@ const formatDate = (dt) => {
     return d.getFullYear() + "-" + ('0' + (d.getMonth() + 1)).slice(-2) + "-" + ('0' + d.getDate()).slice(-2); //d.getHours() d.getMinutes()
 }
 
-//dayName                        monthDay                                                      taskDt 
+//dayName                        monthDay                                                      taskDt
 const columns = [{
     title: 'Name',
     dataIndex: 'dayName',
@@ -281,10 +281,10 @@ class TSReports extends Component {
 
                 var imgData = canvas.toDataURL("image/png", 1);
                 //const pdf = new jsPDF('p', 'pt', 'a4');
-                const pdf = new jsPDF();
+                const pdf = new jsPDF('p','pt','a4',true)
+  pdf.addImage(imgData, 'PNG', 0, 0, 0,270,'','FAST');
 
-
-                pdf.addImage(imgData, 'JPEG', 0, 0, 212, 300);
+              //  pdf.addImage(imgData, 'JPEG', 0, 0, 212, 300);
 
                 pdf.save("download.pdf");
                 input.setAttribute("style", styleOrig);
@@ -383,11 +383,11 @@ class TSReports extends Component {
 
             let d = new Date(itm.WeekStart);
             d.setDate(d.getDate() + 1);
-            let d1 = d.getFullYear() + "-" + ('0' + (d.getMonth() + 1)).slice(-2) + "-" + ('0' + d.getDate()).slice(-2); //d.getHours() 
+            let d1 = d.getFullYear() + "-" + ('0' + (d.getMonth() + 1)).slice(-2) + "-" + ('0' + d.getDate()).slice(-2); //d.getHours()
 
             d = new Date(WeekStart);
             d.setDate(d.getDate() + 1);
-            let d2 = d.getFullYear() + "-" + ('0' + (d.getMonth() + 1)).slice(-2) + "-" + ('0' + d.getDate()).slice(-2); //d.getHours() 
+            let d2 = d.getFullYear() + "-" + ('0' + (d.getMonth() + 1)).slice(-2) + "-" + ('0' + d.getDate()).slice(-2); //d.getHours()
 
 
             if (d1 == d2) {
