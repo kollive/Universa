@@ -25,7 +25,8 @@ import {
     Slider, Button, Upload, Icon, Rate, Menu, Dropdown, message, Popconfirm
 } from 'antd';
 import moment from 'moment';
-
+import { DataTable } from 'primereact/components/datatable/DataTable';
+import { Column } from 'primereact/components/column/Column';
 
 
 import {
@@ -41,6 +42,12 @@ import {
     CardText,
     DropdownToggle
 } from "reactstrap";
+import tap from "lodash/fp/tap";
+import flow from "lodash/fp/flow";
+import groupBy from "lodash/fp/groupBy";
+
+
+//import { Modal, ModalHeader, ModalBody, ModalFooter, Alert, RowR, Col, Container } from 'reactstrap';
 
 const paperStyle = {
     height: "130px",
@@ -86,7 +93,29 @@ const rowColor = (record) => {
         return "m-1 p-1"
     }
 }
+const sumWeeklyHours = (WeekData) => {
+let totalHoursData=[]
+totalHoursData=  WeekData.data
+let sumHours1=0;
+let sumMins1=0
+totalHoursData.map((hrs) => {
+if(hrs.totalHours!==null)
+{
+  let time = hrs.totalHours.split(":");
 
+  let totHrs1 = _.parseInt(time[0]);
+  let totMins1 = _.parseInt(time[1]);
+
+
+
+
+  sumHours1 += totHrs1;
+  sumMins1 += totMins1;
+}
+
+});
+return sumHours1 + ':' + sumMins1
+}
 
 const formatDate = (dt) => {
     let d = new Date(dt);
@@ -186,7 +215,9 @@ const columns = [{
 },
 ];
 
-
+let contract=[];
+let contentHeader;
+let contentData;
 class TSReports extends Component {
     constructor(props) {
         super(props);
@@ -207,7 +238,8 @@ class TSReports extends Component {
             items: [],
             month: "March",
             loading: false,
-            hv_staff_id: (this.props.hv_staff_id == "" ? this.props.CommonState.hv_staff_id : this.props.hv_staff_id)
+            hv_staff_id: (this.props.hv_staff_id == "" ? this.props.CommonState.hv_staff_id : this.props.hv_staff_id),
+            assignProjectHours:[]
         };
         // this.onClickAction = this.onClickAction.bind(this);
         this.setDate = this.setDate.bind(this);
@@ -217,6 +249,7 @@ class TSReports extends Component {
         this.onMenuClick = this.onMenuClick.bind(this);
         this.getMenu = this.getMenu.bind(this);
         //this.secondsToHHMM = this.secondsToHHMM.bind(this);
+
 
         this.getStaffID();
     }
@@ -304,9 +337,12 @@ class TSReports extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        debugger;
+        //debugger;
         //alert(nextProps.hv_staff_id)
         //alert(this.props.hv_staff_id)
+
+      //
+
         if (this.props.hv_staff_id != nextProps.hv_staff_id) {
             //this.setState({spinning:true});
 
@@ -324,7 +360,30 @@ class TSReports extends Component {
 
         if (nextProps.TSRptState) {
             this.setState({ items: nextProps.TSRptState.items[0] });
+            if(nextProps.TSRptState.items[0]!=undefined)
+            {
+            //alert(nextProps.TSRptState.items[0].length)
+            this.setState({ items: nextProps.TSRptState.items[0] });
+
+          //  contract= _(nextProps.TSRptState.items[0])
+          //  .groupBy(x => x.contract_no);
+          var data=nextProps.TSRptState.items[0];
+          contract = _(data)
+                      .groupBy(x => x.contract_no)
+                      .map((value, key,index) =>
+                      ({contract_no: key,
+                       totalhours: _.sumBy(value.totalHours),
+                       data: value})).value();
+
+                       //alert(contract.length);
+            }
+
         }
+
+
+
+
+
     }
 
     componentDidMount() {
@@ -367,8 +426,16 @@ class TSReports extends Component {
             staff_id: staffID
         });
     }
+    componentDidUpdate(prevProps,prevState){
 
+
+        //   alert('hi - '+this.props.TSRptState.items.length)
+
+
+
+}
     renderWeek = (WeekStart) => {
+
 
         let sumHours = 0;
         let sumMins = 0;
@@ -379,7 +446,7 @@ class TSReports extends Component {
         let c985Mins = 0;
 
         let Items = _.filter(this.state.items, function (itm) {
-            debugger;
+            //debugger;
 
             let d = new Date(itm.WeekStart);
             d.setDate(d.getDate() + 1);
@@ -435,7 +502,9 @@ class TSReports extends Component {
         });
 
 
+
         debugger;
+
         return (
             <div>
                 <Row style={{ width: "100%", display: "inline-block", border: "none" }}>
@@ -448,14 +517,31 @@ class TSReports extends Component {
                         ></Table>
                     </Col>
                 </Row>
+
+
             </div>
         );
     }
 
 
     render() {
+      contentHeader = contract.map((contract) => {
 
+         return   <th style={{ textAlign: 'center', height: '1px' }}>{contract.contract_no}</th>
 
+   });
+   contentData = contract.map((contract) => {
+     debugger
+     let data=[];
+     data=contract.data;
+
+      let countHours=sumWeeklyHours(contract)
+
+      return   <td style={{ textAlign: 'center', height: '1px' }}>{secondsToHHMM(hhmmToSeconds(countHours))}</td>
+    });
+
+    //  debugger
+      contract
         return (
             <div>
                 <Container fluid>
@@ -504,6 +590,26 @@ class TSReports extends Component {
                             </RTable>
                         </div>
                     </div>
+
+
+                    <RTable bordered id='#Table' striped hover size="sm" className="border-bottom-0"
+                        style={{
+                            width: '100%',
+                            borderCollapse: 'collapse',
+                            tableLayout: '',
+                        }
+                        }>
+                        <thead>
+                            <th style={{ width: "30%" }}>Total Hours</th>
+                            {contentHeader}
+
+                        </thead>
+                        <tbody>
+                        <td></td>
+{contentData}
+                        </tbody>
+                    </RTable>
+
                 </Container>
             </div>
         );
