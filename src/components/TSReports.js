@@ -315,9 +315,9 @@ class TSReports extends Component {
                 var imgData = canvas.toDataURL("image/png", 1);
                 //const pdf = new jsPDF('p', 'pt', 'a4');
                 const pdf = new jsPDF('p','pt','a4',true)
-  pdf.addImage(imgData, 'PNG', 0, 0, 0,270,'','FAST');
+//  pdf.addImage(imgData, 'PNG', 0, 0, 0,270,'','FAST');
 
-              //  pdf.addImage(imgData, 'JPEG', 0, 0, 212, 300);
+            pdf.addImage(imgData, 'JPEG', 0, 0, 212, 300);
 
                 pdf.save("download.pdf");
                 input.setAttribute("style", styleOrig);
@@ -590,7 +590,16 @@ class TSReports extends Component {
                             </RTable>
                         </div>
                     </div>
-
+                    <div   className="col-sm-6"  style={{
+                            textAlign:'right',
+                            border: 'bold'
+                        }
+                        }></div>
+                    <div   className="col-sm-6"  style={{
+                            textAlign:'conter',
+                            border: 'bold'
+                        }
+                        }>Project Hours </div>
 
                     <RTable bordered id='#Table' striped hover size="sm" className="border-bottom-0"
                         style={{
@@ -600,7 +609,8 @@ class TSReports extends Component {
                         }
                         }>
                         <thead>
-                            <th style={{ width: "30%" }}>Total Hours</th>
+
+                            <th style={{ width: "30%" }}>Weekly Total Hours</th>
                             {contentHeader}
 
                         </thead>
