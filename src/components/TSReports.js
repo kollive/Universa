@@ -46,7 +46,6 @@ import tap from "lodash/fp/tap";
 import flow from "lodash/fp/flow";
 import groupBy from "lodash/fp/groupBy";
 
-
 //import { Modal, ModalHeader, ModalBody, ModalFooter, Alert, RowR, Col, Container } from 'reactstrap';
 
 const paperStyle = {
@@ -314,10 +313,15 @@ class TSReports extends Component {
 
                 var imgData = canvas.toDataURL("image/png", 1);
                 //const pdf = new jsPDF('p', 'pt', 'a4');
-                const pdf = new jsPDF('p','pt','a4',true)
-//  pdf.addImage(imgData, 'PNG', 0, 0, 0,270,'','FAST');
+                //Kolliv's code
+             //    const pdf = new jsPDF('p','pt','a4',true)
+             //  pdf.addImage(imgData, 'PNG', 0, 0, 0,270,'','FAST');
+             //Size Compress
+          //  pdf.addImage(imgData, 'JPEG', 0, 0, 212, 300);
 
-            pdf.addImage(imgData, 'JPEG', 0, 0, 212, 300);
+
+            const pdf = new jsPDF();
+            pdf.addImage(imgData, 'JPEG', 0, 0, 218, 300);
 
                 pdf.save("download.pdf");
                 input.setAttribute("style", styleOrig);
