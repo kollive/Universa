@@ -18,7 +18,7 @@ import {
 import {
     Container,
     TabContent,
-    TabPane,
+    TabPane, 
     Nav,
     NavItem,
     NavLink,
@@ -138,7 +138,7 @@ export class WorkPlan extends Component {
 
     shouldComponentUpdate = (nextProps, nextState) => {
         return true;
-        //return ((new Date(nextProps.startDT).setHours(0, 0, 0, 0) != new Date(this.props.startDT).setHours(0, 0, 0, 0)) || (new Date(nextProps.endDT).setHours(0, 0, 0, 0) != new Date(this.props.endDT).setHours(0, 0, 0, 0))) 
+        //return ((new Date(nextProps.startDT).setHours(0, 0, 0, 0) != new Date(this.props.startDT).setHours(0, 0, 0, 0)) || (new Date(nextProps.endDT).setHours(0, 0, 0, 0) != new Date(this.props.endDT).setHours(0, 0, 0, 0)))
     }
 
 
@@ -211,14 +211,14 @@ export class WorkPlan extends Component {
                     endDT: this.formatDate(this.props.endDT)
                 }
             });
-            
+
             this.props.resetMessage({
                 type: workplanTypes.MESSAGE,
                 message: { val: 0, msg: "" }
             });
 
         } else if (_.trim(this.props.WorkPlanState.message.msg) != "") {
-            //debugger;      
+            //debugger;
             alert(this.props.WorkPlanState.message.msg);
             if (this.props.WorkPlanState.message.val == "1") {
 
@@ -255,7 +255,7 @@ export class WorkPlan extends Component {
         this.setState({ refreshData: true });
 
         alert(this.props.startDT)
-        if (this.props.startDT != null) {           
+        if (this.props.startDT != null) {
             this.props.getWorkPlans({
                 type: workplanTypes.FETCH_TABLES_REQUEST,
                 payload: {
@@ -265,7 +265,7 @@ export class WorkPlan extends Component {
                 }
             });
         }
-       
+
     */
 
     }
@@ -391,7 +391,7 @@ export class WorkPlan extends Component {
         if (_.trim(this.taskDescCtl.value) == "") {
             alert("Please enter task description.")
             this.taskDescCtl.focus();
-            return false;            
+            return false;
         }
          this.props.insertTaskTable({
             type: workplanTypes.INSERT_REQUEST,
@@ -488,12 +488,12 @@ export class WorkPlan extends Component {
         var arr = str.split(':').map(Number);
         return (arr[0] * 3600) + (arr[1] * 60) + arr[2];
     };
-    
+
     function secondsToHHMMSS(seconds) {
         var hours = parseInt(seconds / 3600, 10),
             minutes = parseInt((seconds / 60) % 60, 10),
             seconds = parseInt(seconds % 3600 % 60, 10);
-    
+
         return [hours, minutes, seconds].map(function (i) { return i.toString().length === 2 ? i : '0' + i; }).join(':');
     }
     */
@@ -564,7 +564,7 @@ export class WorkPlan extends Component {
                 //From the database
                 let d = new Date(itm.task_date);
                 d.setDate(d.getDate() + 1);
-                let d1 = d.getFullYear() + "-" + ('0' + (d.getMonth() + 1)).slice(-2) + "-" + ('0' + (d.getDate())).slice(-2); //d.getHours() 
+                let d1 = d.getFullYear() + "-" + ('0' + (d.getMonth() + 1)).slice(-2) + "-" + ('0' + (d.getDate())).slice(-2); //d.getHours()
                 //console.log(d1)
                 return (_.parseInt(itm.task_id) == _.parseInt(tmprow.task_id) && _.parseInt(itm.taskday) == _.parseInt(day) && (d1 != "1900-01-01"))
             });
@@ -584,10 +584,10 @@ export class WorkPlan extends Component {
                 //From the database
                 let d = new Date(itm.task_date);
                 d.setDate(d.getDate() + 1);
-                let d1 = d.getFullYear() + "-" + ('0' + (d.getMonth() + 1)).slice(-2) + "-" + ('0' + d.getDate()).slice(-2); //d.getHours() 
+                let d1 = d.getFullYear() + "-" + ('0' + (d.getMonth() + 1)).slice(-2) + "-" + ('0' + d.getDate()).slice(-2); //d.getHours()
 
                 d = new Date(startDT);
-                let d2 = d.getFullYear() + "-" + ('0' + (d.getMonth() + 1)).slice(-2) + "-" + ('0' + d.getDate()).slice(-2); //d.getHours() 
+                let d2 = d.getFullYear() + "-" + ('0' + (d.getMonth() + 1)).slice(-2) + "-" + ('0' + d.getDate()).slice(-2); //d.getHours()
 
                 //console.log(itm.task_date)
                 //console.log(d1)
@@ -720,7 +720,7 @@ export class WorkPlan extends Component {
         this.props.deleteTaskTable({
             type: workplanTypes.DELETE_REQUEST,
             payload: {
-                task_id: row.task_id         
+                task_id: row.task_id
             }
         });
 
@@ -1047,7 +1047,7 @@ export class WorkPlan extends Component {
                                     >
                                         {getFieldDecorator('taskStartDate', {
                                             initialValue: this.state.startDate,
-                                            //getValueFromEvent: this.handleStartEvent,                                     
+                                            //getValueFromEvent: this.handleStartEvent,
                                             rules: [{
                                                 required: true,
                                                 message: 'Please select task start date',
