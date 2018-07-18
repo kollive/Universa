@@ -12,7 +12,7 @@ import {
     fork,
     race,
     apply
-} from "redux-saga/effects";
+} from "redux-saga/effects"; 
 import { delay, buffers, eventChannel, END } from "redux-saga";
 import * as _ from "lodash";
 import * as io from "socket.io-client";
@@ -223,7 +223,7 @@ const attribApi = {
                 spName: "spd_tunivtasks",
                 token: sessionStorage.getItem("token"),
                 parms: {
-                    task_id: userData.task_id                    
+                    task_id: userData.task_id
                 }
             })
         })

@@ -13,7 +13,7 @@ export const types = {
     CHECKROLE_REQUEST: "WPLAN/CHECK_REQUEST",
     EXCEL_REQUEST: "WPLAN/EXCEL_REQUEST"
   };
-  
+
   export const initialState = {
     isLoading: false,
     hasErrored: false,
@@ -22,43 +22,43 @@ export const types = {
     token: "",
     rowID: -1
   };
-  
+
   //export function authState (state = initialState, action) {
   export default (state = initialState, action) => {
     //debugger;
-  
+
     switch (action.type) {
       case types.ITEMS:
         return { ...state, items: action.items };
-  
+
       case types.SELECTED_ROWID:
         return { ...state, rowID: action.rowID };
-  
+
       case types.MESSAGE:
         return { ...state, message: action.message };
-  
+
       case types.TOKEN:
         return { ...state, token: action.token };
-  
+
       case types.FETCH_DATA_SUCCESS:
       case types.DATA_SUCCESS:
         return { ...state, isLoading: false, hasErrored: false };
-  
+
       case types.FETCH_DATA_FAILURE:
       case types.DATA_FAILURE:
         return { ...state, isLoading: false, hasErrored: true };
-  
+
       default:
         return state;
     }
   };
-  
+
   export const actions = {
     getWorkPlans: payload => ({ type: types.FETCH_TABLE_REQUEST, payload }),
     makeRowEditable: payload => ({ type: types.MAKE_ROW_EDITABLE, payload }),
     insertTaskTable: payload => ({ type: types.INSERT_REQUEST, payload }),
     insertHourTable: payload => ({ type: types.INSERTHOUR_REQUEST, payload }),
-    updateTaskTable: payload => ({ type: types.UPDATE_REQUEST, payload }),  
+    updateTaskTable: payload => ({ type: types.UPDATE_REQUEST, payload }),
     //updateStoreWorkplanTable: payload => ({ type: types.UPDATE_STORE_REQUEST, payload }),
     deleteTaskTable: payload => ({
       type: types.DELETE_REQUEST,
@@ -71,7 +71,7 @@ export const types = {
       message: payload.message
     })
   };
-  
+
   /*
       export const getProduct = (state) => state.product.products
       export const getProductById = (state, id) => find(state.product.products, id)
