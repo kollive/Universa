@@ -217,6 +217,7 @@ const columns = [{
 let contract=[];
 let contentHeader;
 let contentData;
+let endDTotalHours;
 class TSReports extends Component {
     constructor(props) {
         super(props);
@@ -304,23 +305,20 @@ class TSReports extends Component {
         let input = document.getElementById('divTimeSheet');
         //input.parentElement.style.width = '10000px';
         var styleOrig = input.getAttribute("style");
-
         html2canvas(input).
             then((canvas) => {
                 debugger;
-
                 var ctx = canvas.getContext('2d');
 
-                var imgData = canvas.toDataURL("image/png", 1);
+                var imgData = canvas.toDataURL("image/png",1);
                 //const pdf = new jsPDF('p', 'pt', 'a4');
                 //Kolliv's code
-             //    const pdf = new jsPDF('p','pt','a4',true)
-             //  pdf.addImage(imgData, 'PNG', 0, 0, 0,270,'','FAST');
+             //  const pdf = new jsPDF('p','pt','a4',true)
+             // pdf.addImage(imgData, 'PNG', 0, 0, 0,270,'','FAST');
              //Size Compress
           //  pdf.addImage(imgData, 'JPEG', 0, 0, 212, 300);
 
-
-            const pdf = new jsPDF();
+           const pdf = new jsPDF();
             pdf.addImage(imgData, 'JPEG', 0, 0, 218, 300);
 
                 pdf.save("download.pdf");
@@ -438,7 +436,7 @@ class TSReports extends Component {
 
 
 }
-    renderWeek = (WeekStart) => {
+    renderWeek = (WeekStart,index,len) => {
 
 
         let sumHours = 0;
@@ -506,36 +504,90 @@ class TSReports extends Component {
         });
 
 
+if(index==4)
+{
 
-        debugger;
+  return (
+      <div>
 
-        return (
-            <div>
-                <Row style={{ width: "100%", display: "inline-block", border: "none" }}>
-                    <Col span={24}>
-                        <Table pagination={false} rowKey={record => record.rowNum} dataSource={Items} columns={columns} size="small"
-                            rowClassName={(record, index) => rowColor(record)}
-                            title={() => <span className="font-weight-bold">Week ({formatDate(WeekStart)} to {formatDate(addDays(WeekStart, 6))} )</span>}
-                            footer={() => <div><Row><Col span={14}>{' '}</Col><Col span={2}>Weekly Total:</Col><Col span={4} push={1}>{secondsToHHMM(hhmmToSeconds(sumHours + ":" + sumMins))}</Col><Col span={2}>{secondsToHHMM(hhmmToSeconds(c945Hours + ":" + c945Mins))}</Col><Col span={2}>{secondsToHHMM(hhmmToSeconds(c985Hours + ":" + c985Mins))}</Col></Row></div>
-                            }
-                        ></Table>
-                    </Col>
-                </Row>
+          <Row style={{ width: "100%", display: "inline-block", border: "none" }}>
+              <Col span={24}>
+                  <Table pagination={false} rowKey={record => record.rowNum} dataSource={Items} columns={columns} size="small"
+                      rowClassName={(record, index) => rowColor(record)}
+                      title={() => <span className="font-weight-bold">Week ({formatDate(WeekStart)} to {formatDate(addDays(WeekStart, 6))} )</span>}
+                      footer={() => <div><Row><Col span={14}>{' '}</Col><Col span={2}>Weekly Total:</Col><Col span={4} push={1}>{secondsToHHMM(hhmmToSeconds(sumHours + ":" + sumMins))}</Col><Col span={2}>{secondsToHHMM(hhmmToSeconds(c945Hours + ":" + c945Mins))}</Col><Col span={2}>{secondsToHHMM(hhmmToSeconds(c985Hours + ":" + c985Mins))}</Col></Row></div>
+                      }
+                  ></Table>
+              </Col>
+ 
+              <RTable size="md">
+                   <thead>
+                       <th style={{ width: "30%" }}>Weekly Total Hours</th>
+                       {contentHeader}
+                   </thead>
+                   <tbody>
+                   <td>
+                       {this.calTotalHours()}
+                   </td>
+                   {contentData}
+                   </tbody>
+               </RTable>
+              </Row>
 
+      </div>
+  );
+}
+else {
 
-            </div>
-        );
+  return (
+      <div>
+
+          <Row style={{ width: "100%", display: "inline-block", border: "none" }}>
+              <Col span={24}>
+                  <Table pagination={false} rowKey={record => record.rowNum} dataSource={Items} columns={columns} size="small"
+                      rowClassName={(record, index) => rowColor(record)}
+                      title={() => <span className="font-weight-bold">Week ({formatDate(WeekStart)} to {formatDate(addDays(WeekStart, 6))} )</span>}
+                      footer={() => <div><Row><Col span={14}>{' '}</Col><Col span={2}>Weekly Total:</Col><Col span={4} push={1}>{secondsToHHMM(hhmmToSeconds(sumHours + ":" + sumMins))}</Col><Col span={2}>{secondsToHHMM(hhmmToSeconds(c945Hours + ":" + c945Mins))}</Col><Col span={2}>{secondsToHHMM(hhmmToSeconds(c985Hours + ":" + c985Mins))}</Col></Row></div>
+                      }
+                  ></Table>
+              </Col>
+              </Row>
+      </div>
+  );
+}
+
     }
 
+    calTotalHours = () => {
+        let sumHours2=0,sumMins2=0
+         contract.map((contract) => {
+             debugger
+             let data=[];
+             data=contract.data;
+              let countHours=sumWeeklyHours(contract)
+              if(countHours!=null)
+              {
 
+                 let time = countHours.split(":");
+
+                 let totHrs1 = _.parseInt(time[0]);
+                 let totMins1 = _.parseInt(time[1]);
+
+                 sumHours2 += totHrs1;
+                 sumMins2 += totMins1;
+              }
+             });
+
+             return  secondsToHHMM(hhmmToSeconds(sumHours2+ ':'+ sumMins2))
+
+         }
     render() {
       contentHeader = contract.map((contract) => {
 
          return   <th style={{ textAlign: 'center', height: '1px' }}>{contract.contract_no}</th>
-
    });
    contentData = contract.map((contract) => {
-     debugger
+
      let data=[];
      data=contract.data;
 
@@ -544,8 +596,9 @@ class TSReports extends Component {
       return   <td style={{ textAlign: 'center', height: '1px' }}>{secondsToHHMM(hhmmToSeconds(countHours))}</td>
     });
 
+
     //  debugger
-      contract
+
         return (
             <div>
                 <Container fluid>
@@ -585,44 +638,18 @@ class TSReports extends Component {
                                         (row, index) => (
                                             <tr key={index}>
                                                 <td size="12">
-                                                    {this.renderWeek(row.WeekStart)}
+                                                    {this.renderWeek(row.WeekStart,index,this.state.items.length)}
                                                 </td>
                                             </tr>
                                         )
                                     )}
                                 </tbody>
                             </RTable>
+
+
                         </div>
                     </div>
-                    <div   className="col-sm-6"  style={{
-                            textAlign:'right',
-                            border: 'bold'
-                        }
-                        }></div>
-                    <div   className="col-sm-6"  style={{
-                            textAlign:'conter',
-                            border: 'bold'
-                        }
-                        }>Project Hours </div>
 
-                    <RTable bordered id='#Table' striped hover size="sm" className="border-bottom-0"
-                        style={{
-                            width: '100%',
-                            borderCollapse: 'collapse',
-                            tableLayout: '',
-                        }
-                        }>
-                        <thead>
-
-                            <th style={{ width: "30%" }}>Weekly Total Hours</th>
-                            {contentHeader}
-
-                        </thead>
-                        <tbody>
-                        <td></td>
-{contentData}
-                        </tbody>
-                    </RTable>
 
                 </Container>
             </div>
