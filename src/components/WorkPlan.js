@@ -18,7 +18,7 @@ import {
 import {
     Container,
     TabContent,
-    TabPane, 
+    TabPane,
     Nav,
     NavItem,
     NavLink,
@@ -527,10 +527,21 @@ export class WorkPlan extends Component {
 
 
                 rows.forEach(function (val, indx) {
+                  if(val.num_hours!==undefined)
+                  {
+                   if(val.num_hours!==0)
+                   {
                     let time = val.num_hours.split(":");
                     //hours += Number.parseFloat(val.num_hours);
                     hours += _.parseInt(time[0]);
                     mins += _.parseInt(time[1]);
+                  }
+                  else if(val.num_hours==0)
+                  {
+                    hours += _.parseInt(0);
+                    mins += _.parseInt(0);
+                  }
+                  }
                 })
                 //alert(hours)
                 return this.secondsToHHMM(this.hhmmToSeconds(hours + ":" + mins));
@@ -630,7 +641,10 @@ export class WorkPlan extends Component {
         dt = dt.setDate(dt.getDate() + num);
 
         //let hrs = e.target.value;
-        let hrs = e.format("HH:mm");
+        let hrs ;
+        if(e!==null)
+        hrs= e.format("HH:mm");
+
 
         if (_.trim(hrs) == "00:00") {
             hrs = 0;
