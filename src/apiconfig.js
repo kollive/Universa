@@ -14,9 +14,9 @@ console.log(hostname);
 
 //if(hostname === 'http://hvsuniverse.s3-website-us-east-1.amazonaws.com/')
 if (/amazonaws/.test(hostname)) {
-    backendHost.backendLoginsvc = 'http://ec2-54-89-25-220.compute-1.amazonaws.com:4001/';
-    backendHost.backendAPIGWsvc = 'http://ec2-54-89-25-220.compute-1.amazonaws.com:4003/';
-    backendHost.backendSecuritysvc = 'http://ec2-54-89-25-220.compute-1.amazonaws.com:4031/';
+    backendHost.backendLoginsvc = 'http://ec2-54-172-75-145.compute-1.amazonaws.com:4001/';
+    backendHost.backendAPIGWsvc = 'http://ec2-54-172-75-145.compute-1.amazonaws.com:4003/';
+    backendHost.backendSecuritysvc = 'http://ec2-54-172-75-145.compute-1.amazonaws.com:4031/';
 
 }
  else if (/^localhost/.test(hostname)) {
