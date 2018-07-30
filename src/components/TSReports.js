@@ -27,7 +27,7 @@ import {
 import moment from 'moment';
 import { DataTable } from 'primereact/components/datatable/DataTable';
 import { Column } from 'primereact/components/column/Column';
-
+import { Dropdown as  Dropdown1 } from 'primereact/components/dropdown/Dropdown';
 
 import {
     Container,
@@ -104,8 +104,6 @@ if(hrs.totalHours!==null)
 
   let totHrs1 = _.parseInt(time[0]);
   let totMins1 = _.parseInt(time[1]);
-
-
 
 
   sumHours1 += totHrs1;
@@ -236,10 +234,13 @@ class TSReports extends Component {
             mode: "W",
             name: "",
             items: [],
+            useritems:[],
             month: "March",
             loading: false,
             hv_staff_id: (this.props.hv_staff_id == "" ? this.props.CommonState.hv_staff_id : this.props.hv_staff_id),
-            assignProjectHours:[]
+            assignProjectHours:[],
+            staffItem:null
+        
         };
         // this.onClickAction = this.onClickAction.bind(this);
         this.setDate = this.setDate.bind(this);
@@ -250,14 +251,12 @@ class TSReports extends Component {
         this.getMenu = this.getMenu.bind(this);
         //this.secondsToHHMM = this.secondsToHHMM.bind(this);
 
-
         this.getStaffID();
     }
 
-
     onMenuClick = (itm, row) => {
-        //debugger;
-        //alert(row.task_id)
+        //////debugger;
+       //alert(row.task_id)
         //message.info(`Click on item ${itm.key}`);
         //if (itm.key == 0) {
         //    this.editTask(row);
@@ -268,9 +267,11 @@ class TSReports extends Component {
         this.props.getMonthlyTS({
             type: tsreportsTypes.FETCH_TABLES_REQUEST,
             payload: {
-                //staffID: (this.props.staffID == "" ? this.props.CommonState.hv_staff_id : this.props.staffID),
-                staffID: (this.props.hv_staff_id == "" ? this.props.CommonState.hv_staff_id : this.props.hv_staff_id),
-                month: itm.key
+                
+              //  staffID: (this.props.hv_staff_id == "" ? this.props.CommonState.hv_staff_id : this.props.hv_staff_id),
+                 staffID: (this.state.staffItem.hv_staff_id),
+                month: itm.key,
+                ParentstaffID: this.props.hv_staff_id == "" ? this.props.CommonState.hv_staff_id : this.props.hv_staff_id
             }
         });
 
@@ -298,16 +299,14 @@ class TSReports extends Component {
         return menu;
     }
 
-
-
     printDocument = () => {
-        debugger;
+        ////debugger;
         let input = document.getElementById('divTimeSheet');
         //input.parentElement.style.width = '10000px';
         var styleOrig = input.getAttribute("style");
         html2canvas(input).
             then((canvas) => {
-                debugger;
+                ////debugger;
                 var ctx = canvas.getContext('2d');
 
                 var imgData = canvas.toDataURL("image/png",1);
@@ -327,41 +326,44 @@ class TSReports extends Component {
             });
     }
 
-
     getStaffID = () => {
         //alert("in Getstaff")
         let userid;
+        
     }
 
     componentWillMount = () => {
-        //debugger;
+        //////debugger;
 
     }
 
-    componentWillReceiveProps(nextProps) {
-        //debugger;
+    componentWillReceiveProps= (nextProps) =>  {
+        //////debugger;
         //alert(nextProps.hv_staff_id)
         //alert(this.props.hv_staff_id)
 
       //
 
-        if (this.props.hv_staff_id != nextProps.hv_staff_id) {
-            //this.setState({spinning:true});
+        // if (this.props.hv_staff_id != nextProps.hv_staff_id) {
+        //     //this.setState({spinning:true});
 
-            this.props.getMonthlyTS({
-                type: tsreportsTypes.FETCH_TABLES_REQUEST,
-                payload: {
-                    staffID: (nextProps.hv_staff_id == "" ? "10" : nextProps.hv_staff_id),
-                    //staffID: "10",
-                    month: "march"
-                }
-            });
-        } else {
-            this.setState({ loading: false });
-        }
+        //     this.props.getMonthlyTS({
+        //         type: tsreportsTypes.FETCH_TABLES_REQUEST,
+        //         payload: {
+        //             staffID: (nextProps.hv_staff_id == "" ? "10" : nextProps.hv_staff_id),
+        //             //staffID: "10",
+        //             month: "march"
+        //         }
+        //     });
+        // } else {
+        //     this.setState({ loading: false });
+        //}
 
         if (nextProps.TSRptState) {
+            //debugger
             this.setState({ items: nextProps.TSRptState.items[0] });
+            this.setState({ useritems: nextProps.TSRptState.items[1] });
+            
             if(nextProps.TSRptState.items[0]!=undefined)
             {
             //alert(nextProps.TSRptState.items[0].length)
@@ -370,6 +372,8 @@ class TSReports extends Component {
           //  contract= _(nextProps.TSRptState.items[0])
           //  .groupBy(x => x.contract_no);
           var data=nextProps.TSRptState.items[0];
+         // alert(nextProps.TSRptState.items[1].length)
+
           contract = _(data)
                       .groupBy(x => x.contract_no)
                       .map((value, key,index) =>
@@ -378,32 +382,57 @@ class TSReports extends Component {
                        data: value})).value();
 
                        //alert(contract.length);
+            var self = this;
+             let findID
+            if(self.state.staffItem==null)
+            {
+            findID= _.find(nextProps.TSRptState.items[1],
+            function (o) {return (o.hv_staff_id==(  self.props.hv_staff_id == "" ? self.props.CommonState.hv_staff_id : self.props.hv_staff_id))});
+            //function (o) {return (o.hv_staff_id==(this.state).staffItem.hv_staff_id)});
+          
+            if(findID!==undefined)
+            {
+                ////debugger 
+                this.setState({ staffItem: findID  });
+            }
+        }
+        else if(self.props.hv_staff_id!==self.state.staffItem.hv_staff_id)
+        {
+             findID = _.find(nextProps.TSRptState.items[1],
+            function (o) {return (o.hv_staff_id==(self.state.staffItem.hv_staff_id))});
+            //function (o) {return (o.hv_staff_id==(this.state).staffItem.hv_staff_id)});
+          
+            if(findID!==undefined)
+            {
+                ////debugger 
+                this.setState({ staffItem: findID  });
+            }
+        }
             }
 
         }
 
 
 
-
-
     }
 
     componentDidMount() {
-        debugger;
+      //  ////debugger;
+
         this.setState({ loading: true });
         this.props.getMonthlyTS({
             type: tsreportsTypes.FETCH_TABLES_REQUEST,
             payload: {
                 staffID: (this.props.hv_staff_id == "" ? "10" : this.props.hv_staff_id),
                 //staffID: "10",
-                month: "march"
+                month: "march",
+                ParentstaffID: (this.props.hv_staff_id == "" ? "10" : this.props.hv_staff_id),
             }
         });
-
     }
 
     setDate(startDT, endDT) {
-        debugger;
+        ////debugger;
         //alert(this.state.hv_staff_id);
         this.setState({
             startDT: startDT,
@@ -413,7 +442,7 @@ class TSReports extends Component {
     }
 
     setMode(mode) {
-        debugger;
+        ////debugger;
         //alert(this.state.hv_staff_id);
         this.setState({
             mode: mode
@@ -430,16 +459,27 @@ class TSReports extends Component {
     }
     componentDidUpdate(prevProps,prevState){
 
-
         //   alert('hi - '+this.props.TSRptState.items.length)
 
-
-
 }
+    onStaffListChange = (e) => {
+        this.setState({ staffItem: e.value });
+        this.setState({ selectedStaffID: e.value.hv_staff_id });
+        this.props.getMonthlyTS({
+            type: tsreportsTypes.FETCH_TABLES_REQUEST,
+            payload: {
+                //staffID: (this.props.staffID == "" ? this.props.CommonState.hv_staff_id : this.props.staffID),
+                staffID: (e.value.hv_staff_id ),
+                month: this.state.month,
+                ParentstaffID: (this.props.hv_staff_id == "" ? "10" : this.props.hv_staff_id),
+                
+            }
+        });
+    }
+
     renderWeek = (WeekStart,index,len) => {
 
-
-        let sumHours = 0;
+       let sumHours = 0;
         let sumMins = 0;
 
         let c945Hours = 0;
@@ -448,7 +488,7 @@ class TSReports extends Component {
         let c985Mins = 0;
 
         let Items = _.filter(this.state.items, function (itm) {
-            //debugger;
+            //////debugger;
 
             let d = new Date(itm.WeekStart);
             d.setDate(d.getDate() + 1);
@@ -457,7 +497,6 @@ class TSReports extends Component {
             d = new Date(WeekStart);
             d.setDate(d.getDate() + 1);
             let d2 = d.getFullYear() + "-" + ('0' + (d.getMonth() + 1)).slice(-2) + "-" + ('0' + d.getDate()).slice(-2); //d.getHours()
-
 
             if (d1 == d2) {
                 let totalHours = itm.totalHours;
@@ -503,7 +542,6 @@ class TSReports extends Component {
             return (d1 == d2)
         });
 
-
 if(index==4)
 {
 
@@ -519,11 +557,12 @@ if(index==4)
                       }
                   ></Table>
               </Col>
- 
+
               <RTable size="md">
                    <thead>
                        <th style={{ width: "30%" }}>Weekly Total Hours</th>
                        {contentHeader}
+                   
                    </thead>
                    <tbody>
                    <td>
@@ -532,6 +571,38 @@ if(index==4)
                    {contentData}
                    </tbody>
                </RTable>
+              </Row>
+
+               <Row style={{ width: "100%", display: "inline-block", border: "none",padding:"20px" }}>
+              <Col span={24}>           
+             <b>  Signature</b> :  ____________________________________________________
+              </Col>
+
+              </Row>
+      </div>
+  );
+}
+
+else if(index==0) {
+
+  return (
+      <div>
+          <Row style={{ width: "100%", display: "inline-block", border: "none",padding:"20px" }}>
+              <Col span={24} style={{   textAlign: 'right' }}>           
+                <b>  Name</b>  : {(this.state.staffItem!=null? this.state.staffItem.hv_staff_name: '')}
+              </Col>
+
+              </Row>
+
+          <Row style={{ width: "100%", display: "inline-block", border: "none" }}>
+              <Col span={24}>
+                  <Table pagination={false} rowKey={record => record.rowNum} dataSource={Items} columns={columns} size="small"
+                      rowClassName={(record, index) => rowColor(record)}
+                      title={() => <span className="font-weight-bold">Week ({formatDate(WeekStart)} to {formatDate(addDays(WeekStart, 6))} )</span>}
+                      footer={() => <div><Row><Col span={14}>{' '}</Col><Col span={2}>Weekly Total:</Col><Col span={4} push={1}>{secondsToHHMM(hhmmToSeconds(sumHours + ":" + sumMins))}</Col><Col span={2}>{secondsToHHMM(hhmmToSeconds(c945Hours + ":" + c945Mins))}</Col><Col span={2}>{secondsToHHMM(hhmmToSeconds(c985Hours + ":" + c985Mins))}</Col></Row></div>
+                      }
+                  ></Table>
+              </Col>
               </Row>
 
       </div>
@@ -561,7 +632,7 @@ else {
     calTotalHours = () => {
         let sumHours2=0,sumMins2=0
          contract.map((contract) => {
-             debugger
+             ////debugger
              let data=[];
              data=contract.data;
               let countHours=sumWeeklyHours(contract)
@@ -571,7 +642,7 @@ else {
                  let time = countHours.split(":");
 
                  let totHrs1 = _.parseInt(time[0]);
-                 let totMins1 = _.parseInt(time[1]);
+                let totMins1 = _.parseInt(time[1]);
 
                  sumHours2 += totHrs1;
                  sumMins2 += totMins1;
@@ -596,8 +667,7 @@ else {
       return   <td style={{ textAlign: 'center', height: '1px' }}>{secondsToHHMM(hhmmToSeconds(countHours))}</td>
     });
 
-
-    //  debugger
+    //  ////debugger
 
         return (
             <div>
@@ -608,6 +678,10 @@ else {
                             <span>{this.state.month}  <Icon type="down" /></span>
                         </Dropdown>
                         <Button onClick={this.printDocument} className="float-right">Print</Button>
+
+
+                      <Dropdown1 value={this.state.staffItem} options={this.state.useritems} optionLabel="hv_staff_name"  onChange={this.onStaffListChange} style={{ width: "40%", fontSize: '12px' }}
+placeholder="Select Program" id="ddlProgram" />
                     </div>
                     <div id="divTimeSheet" style={{ width: "100%", display: "inline-block" }}>
                         <div
@@ -646,10 +720,8 @@ else {
                                 </tbody>
                             </RTable>
 
-
                         </div>
                     </div>
-
 
                 </Container>
             </div>
@@ -673,6 +745,5 @@ const mapDispatchToProps = dispatch => ({
     )
 });
 
-
-
 export default connect(mapStateToProps, mapDispatchToProps)(TSReports);
+
