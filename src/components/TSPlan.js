@@ -25,8 +25,9 @@ import {
     Col,
 } from 'antd';
 import moment from 'moment';
-
-
+import { DataTable } from 'primereact/components/datatable/DataTable';
+import { Column } from 'primereact/components/column/Column';
+import { Dropdown as Dropdown1 } from 'primereact/components/dropdown/Dropdown';
 
 import {
     Container,
@@ -41,6 +42,11 @@ import {
     CardText,
     DropdownToggle
 } from "reactstrap";
+import tap from "lodash/fp/tap";
+import flow from "lodash/fp/flow";
+import groupBy from "lodash/fp/groupBy";
+
+//import { Modal, ModalHeader, ModalBody, ModalFooter, Alert, RowR, Col, Container } from 'reactstrap';
 
 const paperStyle = {
     height: "130px",
@@ -211,9 +217,11 @@ class TSPlan extends Component {
             mode: "W",
             name: "",
             items: [],
+            useritems: [],
             month: "March",
             loading: false,
-            hv_staff_id: (this.props.hv_staff_id == "" ? this.props.CommonState.hv_staff_id : this.props.hv_staff_id)
+            hv_staff_id: (this.props.hv_staff_id == "" ? this.props.CommonState.hv_staff_id : this.props.hv_staff_id),
+            staffItem: null
         };
         // this.onClickAction = this.onClickAction.bind(this);
         this.setDate = this.setDate.bind(this);
@@ -229,7 +237,7 @@ class TSPlan extends Component {
 
 
     onMenuClick = (itm, row) => {
-        //debugger;
+        ////debugger;
         //alert(row.task_id)
         //message.info(`Click on item ${itm.key}`);
         //if (itm.key == 0) {
@@ -243,7 +251,8 @@ class TSPlan extends Component {
             payload: {
                 //staffID: (this.props.staffID == "" ? this.props.CommonState.hv_staff_id : this.props.staffID),
                 staffID: (this.props.hv_staff_id == "" ? this.props.CommonState.hv_staff_id : this.props.hv_staff_id),
-                month: itm.key
+                month: itm.key,
+                ParentstaffID: this.props.hv_staff_id == "" ? this.props.CommonState.hv_staff_id : this.props.hv_staff_id
             }
         });
 
@@ -273,24 +282,31 @@ class TSPlan extends Component {
 
 
 
+
     printDocument = () => {
-        debugger;
+        ////debugger;
         let input = document.getElementById('divWPlan');
         //input.parentElement.style.width = '10000px';
         var styleOrig = input.getAttribute("style");
-
         html2canvas(input).
             then((canvas) => {
-                debugger;
-
+                ////debugger;
                 var ctx = canvas.getContext('2d');
+
                 var imgData = canvas.toDataURL("image/png", 1);
                 //const pdf = new jsPDF('p', 'pt', 'a4');
+                //Kolliv's code
+                //  const pdf = new jsPDF('p','pt','a4',true)
+                // pdf.addImage(imgData, 'PNG', 0, 0, 0,270,'','FAST');
+                //Size Compress
+                //  pdf.addImage(imgData, 'JPEG', 0, 0, 212, 300);
+
                 const pdf = new jsPDF();
                 pdf.addImage(imgData, 'JPEG', 0, 0, 218, 300);
 
                 pdf.save("download.pdf");
                 input.setAttribute("style", styleOrig);
+
             });
     }
 
@@ -301,12 +317,12 @@ class TSPlan extends Component {
     }
 
     componentWillMount = () => {
-        //debugger;
+        ////debugger;
 
     }
 
     componentWillReceiveProps(nextProps) {
-        debugger;
+        //debugger;
         //alert(nextProps.hv_staff_id)
         //alert(this.props.hv_staff_id)
         if (this.props.hv_staff_id != nextProps.hv_staff_id) {
@@ -326,11 +342,37 @@ class TSPlan extends Component {
 
         if (nextProps.TSPlanState) {
             this.setState({ items: nextProps.TSPlanState.items[0] });
+            this.setState({ useritems: nextProps.TSPlanState.items[1] });
+
+            var self = this;
+            let findID
+            if (self.state.staffItem == null) {
+                findID = _.find(nextProps.TSPlanState.items[1],
+                    function (o) { return (o.hv_staff_id == (self.props.hv_staff_id == "" ? self.props.CommonState.hv_staff_id : self.props.hv_staff_id)) });
+                //function (o) {return (o.hv_staff_id==(this.state).staffItem.hv_staff_id)});
+
+                if (findID !== undefined) {
+                    ////debugger 
+                    this.setState({ staffItem: findID });
+                }
+            }
+            else if (self.props.hv_staff_id !== self.state.staffItem.hv_staff_id) {
+                findID = _.find(nextProps.TSPlanState.items[1],
+                    function (o) { return (o.hv_staff_id == (self.state.staffItem.hv_staff_id)) });
+                //function (o) {return (o.hv_staff_id==(this.state).staffItem.hv_staff_id)});
+
+                if (findID !== undefined) {
+                    ////debugger 
+                    this.setState({ staffItem: findID });
+                }
+            }
         }
+
     }
 
+
     componentDidMount() {
-        debugger;
+        //debugger;
         this.setState({ loading: true });
         this.props.getMonthlyTS({
             type: tsplanTypes.FETCH_TABLES_REQUEST,
@@ -338,13 +380,15 @@ class TSPlan extends Component {
                 staffID: (this.props.hv_staff_id == "" ? "10" : this.props.hv_staff_id),
                 //staffID: "10",
                 month: "march"
+                ,
+                ParentstaffID: (this.props.hv_staff_id == "" ? "10" : this.props.hv_staff_id),
             }
         });
 
     }
 
     setDate(startDT, endDT) {
-        debugger;
+        //debugger;
         //alert(this.state.hv_staff_id);
         this.setState({
             startDT: startDT,
@@ -354,7 +398,7 @@ class TSPlan extends Component {
     }
 
     setMode(mode) {
-        debugger;
+        //debugger;
         //alert(this.state.hv_staff_id);
         this.setState({
             mode: mode
@@ -369,15 +413,29 @@ class TSPlan extends Component {
             staff_id: staffID
         });
     }
+    onStaffListChange = (e) => {
+        this.setState({ staffItem: e.value });
+        this.setState({ selectedStaffID: e.value.hv_staff_id });
+        this.props.getMonthlyTS({
+            type: tsplanTypes.FETCH_TABLES_REQUEST,
+            payload: {
+                //staffID: (this.props.staffID == "" ? this.props.CommonState.hv_staff_id : this.props.staffID),
+                staffID: (e.value.hv_staff_id),
+                month: this.state.month,
+                ParentstaffID: (this.props.hv_staff_id == "" ? "10" : this.props.hv_staff_id),
 
-    renderWeek = (WeekStart) => {
+            }
+        });
+    }
+
+    renderWeek = (WeekStart, index, len) => {
 
         let sumHours = 0;
         let sumMins = 0;
         let contractNum = "";
 
         let Items = _.filter(this.state.items, function (itm) {
-            debugger;
+            //debugger;
 
             let d = new Date(itm.WeekStart);
             d.setDate(d.getDate() + 1);
@@ -397,9 +455,7 @@ class TSPlan extends Component {
             if (d1 == d2) {
                 let totalHours = itm.totalHours;
                 let lunchHours = itm.lunchHours;
-
                 if (totalHours == null || lunchHours == null) {
-
                 } else {
                     if (totalHours == null) {
                         totalHours = "00:00"
@@ -408,18 +464,13 @@ class TSPlan extends Component {
                         lunchHours = "00:00"
                     }
                     let time = totalHours.split(":");
-
                     let totHrs = _.parseInt(time[0]);
                     let totMins = _.parseInt(time[1]);
-
                     time = lunchHours.split(":");
-
                     let lunHrs = _.parseInt(time[0]);
                     let lunMins = _.parseInt(time[1]);
-
                     let hrs = totHrs - lunHrs;
                     let mins = totMins - lunMins;
-
                     sumHours += hrs;
                     sumMins += mins;
                 }
@@ -446,16 +497,16 @@ class TSPlan extends Component {
             console.log(planItems)
 
             let planObj = {}
-            planObj.contractNum =  planItems[0].contract_no;
+            planObj.contractNum = planItems[0].contract_no;
             contractNum = planObj.contractNum;
-            
+
             planObj.rowNum = idx;
             planObj.task_id = task.task_id;
             planObj.task_description = planItems[0].task_description;
 
             console.log("")
             const monHrs = planItems.reduce((total, itm) => {
-                debugger;
+                //debugger;
                 let dt = new Date(itm.task_date);
                 dt.setDate(dt.getDate() + 1);
                 return (dt.getDay() != 1) ? total : total + hhmmToSeconds(itm.num_hours);
@@ -514,26 +565,99 @@ class TSPlan extends Component {
             //console.log(planObj)
             planData.push(planObj)
         });
+        if (index == 0) {
+            return (
+                <div style={{ width: "100%", display: "inline-block", border: "none" }}>
+                    <Row style={{ width: "100%", display: "inline-block", border: "none", padding: "20px" }}>
+                        <Col span={24} style={{ textAlign: 'center' }}>
+                            <b><span style={{ fontSize: '15px' }}>  Hudson Valley Systems, Inc  </span> </b>
+                        </Col>
 
-        debugger;
-        return (
+                    </Row>
+                      <Row style={{ width: "100%", display: "inline-block", border: "none" , paddingBottom: "20px"  }}>
+                        <Col span={24} style={{ textAlign: 'left' }}>
+                            {(this.state.staffItem != null ? this.state.staffItem.hv_staff_name : '')}
+                        </Col>
 
-            <div style={{ width: "100%", display: "inline-block", border: "none" }}>
-                <Row>
-                    <Col span={24}>
-                        <Table pagination={false} rowKey={record => record.rowNum} dataSource={planData} columns={columns} size="small"
-                            rowClassName={"m-1 p-1"}
-                            //rowClassName={(record, index) => record.totalHours == null ? 'err' : 'm-1 p-1'}
-                            title={(record) => <div><span className="font-weight-bold">Week ({formatDate(WeekStart)} to {formatDate(addDays(WeekStart, 6))} )</span>
-                                <span className="float-right">Project: C# {contractNum}</span>
-                            </div>
-                            }
-                            footer={() => <div className="float-right">Weekly Total: {secondsToHHMM(sumWeeklyHours(planData))}</div>}
-                        ></Table>
-                    </Col>
-                </Row>
-            </div>
-        );
+                    </Row>
+
+                    <Row>
+                        <Col span={24}>
+                            <Table pagination={false} rowKey={record => record.rowNum} dataSource={planData} columns={columns} size="small"
+                                rowClassName={"m-1 p-1"}
+                                //rowClassName={(record, index) => record.totalHours == null ? 'err' : 'm-1 p-1'}
+                                title={(record) => <div><span className="font-weight-bold">Week ({formatDate(WeekStart)} to {formatDate(addDays(WeekStart, 6))} )</span>
+                                    <span className="float-right">Project: C# {contractNum}</span>
+                                </div>
+                                }
+                                footer={() => <div className="float-right">Weekly Total: {secondsToHHMM(sumWeeklyHours(planData))}</div>}
+                            ></Table>
+                        </Col>
+                    </Row>
+                </div>
+            )
+        }
+        else if( _.uniqBy(this.state.items, "WeekStart").length-1==index)
+{
+
+
+            //debugger;
+            return (
+
+                <div style={{ width: "100%", display: "inline-block", border: "none" }}>
+
+                    <Row>
+                        <Col span={24}>
+                            <Table pagination={false} rowKey={record => record.rowNum} dataSource={planData} columns={columns} size="small"
+                                rowClassName={"m-1 p-1"}
+                                //rowClassName={(record, index) => record.totalHours == null ? 'err' : 'm-1 p-1'}
+                                title={(record) => <div><span className="font-weight-bold">Week ({formatDate(WeekStart)} to {formatDate(addDays(WeekStart, 6))} )</span>
+                                    <span className="float-right">Project: C# {contractNum}</span>
+                                </div>
+                                }
+                                footer={() => <div className="float-right">Weekly Total: {secondsToHHMM(sumWeeklyHours(planData))}</div>}
+                            ></Table>
+                        </Col>
+                    </Row>   <Row style={{ width: "100%", display: "inline-block", border: "none", paddingTop: "50px" }}>
+                        <Col span={24}>
+                            <b>  Submitted By</b> :  ____________________________________________________
+              </Col>
+
+                    </Row>
+                    <Row style={{ width: "100%", display: "inline-block", border: "none", padding: "20px" }}>
+                        <Col span={24} style={{ textAlign: 'right' }}>
+                            <b><span style={{ fontSize: '15px' }}>  Hudson Valley Systems, Inc  </span> </b>
+                        </Col>
+
+                    </Row>
+                </div>
+            );
+        }
+
+        else {
+
+
+            //debugger;
+            return (
+
+                <div style={{ width: "100%", display: "inline-block", border: "none" }}>
+
+                    <Row>
+                        <Col span={24}>
+                            <Table pagination={false} rowKey={record => record.rowNum} dataSource={planData} columns={columns} size="small"
+                                rowClassName={"m-1 p-1"}
+                                //rowClassName={(record, index) => record.totalHours == null ? 'err' : 'm-1 p-1'}
+                                title={(record) => <div><span className="font-weight-bold">Week ({formatDate(WeekStart)} to {formatDate(addDays(WeekStart, 6))} )</span>
+                                    <span className="float-right">Project: C# {contractNum}</span>
+                                </div>
+                                }
+                                footer={() => <div className="float-right">Weekly Total: {secondsToHHMM(sumWeeklyHours(planData))}</div>}
+                            ></Table>
+                        </Col>
+                    </Row>
+                </div>
+            );
+        }
     }
 
     render() {
@@ -548,6 +672,9 @@ class TSPlan extends Component {
                             <span>{this.state.month}  <Icon type="down" /></span>
                         </Dropdown>
                         <Button onClick={this.printDocument} className="float-right">Print</Button>
+
+                        <Dropdown1 value={this.state.staffItem} options={this.state.useritems} optionLabel="hv_staff_name" onChange={this.onStaffListChange} style={{ width: "40%", fontSize: '12px' }}
+                            placeholder="Select Program" id="ddlProgram" />
                     </div>
                     <div id="divWPlan" style={{ width: "100%", display: "inline-block" }}>
                         <div
@@ -578,7 +705,7 @@ class TSPlan extends Component {
                                         (row, index) => (
                                             <tr key={index}>
                                                 <td size="12">
-                                                    {this.renderWeek(row.WeekStart)}
+                                                    {this.renderWeek(row.WeekStart, index, this.state.items.length)}
                                                 </td>
                                             </tr>
                                         )

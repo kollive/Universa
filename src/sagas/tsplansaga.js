@@ -99,7 +99,9 @@ const attribApi = {
                 token: sessionStorage.getItem("token"),
                 parms: {
                     staffID: PL.payload.staffID,
-                    month: PL.payload.month
+                    month: PL.payload.month,
+                    ParentstaffID:PL.payload.ParentstaffID
+
                 }
             })
         })

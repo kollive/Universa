@@ -106,6 +106,8 @@ if(hrs.totalHours!==null)
   let totMins1 = _.parseInt(time[1]);
 
 
+
+
   sumHours1 += totHrs1;
   sumMins1 += totMins1;
 }
@@ -251,12 +253,14 @@ class TSReports extends Component {
         this.getMenu = this.getMenu.bind(this);
         //this.secondsToHHMM = this.secondsToHHMM.bind(this);
 
+
         this.getStaffID();
     }
 
+
     onMenuClick = (itm, row) => {
         //////debugger;
-       //alert(row.task_id)
+        //alert(row.task_id)
         //message.info(`Click on item ${itm.key}`);
         //if (itm.key == 0) {
         //    this.editTask(row);
@@ -299,6 +303,8 @@ class TSReports extends Component {
         return menu;
     }
 
+
+
     printDocument = () => {
         ////debugger;
         let input = document.getElementById('divTimeSheet');
@@ -325,6 +331,7 @@ class TSReports extends Component {
 
             });
     }
+
 
     getStaffID = () => {
         //alert("in Getstaff")
@@ -374,6 +381,8 @@ class TSReports extends Component {
           var data=nextProps.TSRptState.items[0];
          // alert(nextProps.TSRptState.items[1].length)
 
+
+
           contract = _(data)
                       .groupBy(x => x.contract_no)
                       .map((value, key,index) =>
@@ -411,6 +420,8 @@ class TSReports extends Component {
             }
 
         }
+
+
 
 
 
@@ -459,7 +470,10 @@ class TSReports extends Component {
     }
     componentDidUpdate(prevProps,prevState){
 
+
         //   alert('hi - '+this.props.TSRptState.items.length)
+
+
 
 }
     onStaffListChange = (e) => {
@@ -477,9 +491,13 @@ class TSReports extends Component {
         });
     }
 
-    renderWeek = (WeekStart,index,len) => {
+    
+ 
 
-       let sumHours = 0;
+  
+    renderWeek = (WeekStart,index,len) => {
+ 
+        let sumHours = 0;
         let sumMins = 0;
 
         let c945Hours = 0;
@@ -497,6 +515,7 @@ class TSReports extends Component {
             d = new Date(WeekStart);
             d.setDate(d.getDate() + 1);
             let d2 = d.getFullYear() + "-" + ('0' + (d.getMonth() + 1)).slice(-2) + "-" + ('0' + d.getDate()).slice(-2); //d.getHours()
+
 
             if (d1 == d2) {
                 let totalHours = itm.totalHours;
@@ -541,10 +560,9 @@ class TSReports extends Component {
             //footer={() => <div className="float-right"><span>Total: {secondsToHHMM(hhmmToSeconds(sumHours + ":" + sumMins))}</span><span>{secondsToHHMM(hhmmToSeconds(c945Hours + ":" + c945Mins))}</span><span>{secondsToHHMM(hhmmToSeconds(c985Hours + ":" + c985Mins))}</span></div>}
             return (d1 == d2)
         });
-
-if(index==4)
+ 
+if( _.uniqBy(this.state.items, "WeekStart").length-1==index)
 {
-
   return (
       <div>
 
@@ -557,7 +575,7 @@ if(index==4)
                       }
                   ></Table>
               </Col>
-
+ 
               <RTable size="md">
                    <thead>
                        <th style={{ width: "30%" }}>Weekly Total Hours</th>
@@ -573,23 +591,34 @@ if(index==4)
                </RTable>
               </Row>
 
-               <Row style={{ width: "100%", display: "inline-block", border: "none",padding:"20px" }}>
+               <Row style={{ width: "100%", display: "inline-block", border: "none",paddingTop: "50px" }}>
               <Col span={24}>           
-             <b>  Signature</b> :  ____________________________________________________
+             <b>  Submitted By</b> :  ____________________________________________________
+              </Col>
+
+              </Row>
+                  <Row style={{ width: "100%", display: "inline-block", border: "none",padding:"20px" }}>
+              <Col span={24} style={{   textAlign: 'right' }}>           
+              <b><span style={{ fontSize:'15px' }}>  Hudson Valley Systems, Inc  </span> </b>
               </Col>
 
               </Row>
       </div>
   );
 }
-
 else if(index==0) {
 
   return (
       <div>
-          <Row style={{ width: "100%", display: "inline-block", border: "none",padding:"20px" }}>
-              <Col span={24} style={{   textAlign: 'right' }}>           
-                <b>  Name</b>  : {(this.state.staffItem!=null? this.state.staffItem.hv_staff_name: '')}
+             <Row style={{ width: "100%", display: "inline-block", border: "none",padding:"20px" }}>
+              <Col span={24} style={{   textAlign: 'center' }}>           
+              <b><span style={{ fontSize:'15px' }}>  Hudson Valley Systems, Inc  </span> </b>
+              </Col>
+
+              </Row>
+          <Row style={{ width: "100%", display: "inline-block", border: "none",paddingBottom:"20px" }}>
+              <Col span={24} style={{   textAlign: 'left' }}>           
+                 {(this.state.staffItem!=null? this.state.staffItem.hv_staff_name: '')}  
               </Col>
 
               </Row>
@@ -642,7 +671,7 @@ else {
                  let time = countHours.split(":");
 
                  let totHrs1 = _.parseInt(time[0]);
-                let totMins1 = _.parseInt(time[1]);
+                 let totMins1 = _.parseInt(time[1]);
 
                  sumHours2 += totHrs1;
                  sumMins2 += totMins1;
@@ -679,7 +708,7 @@ else {
                         </Dropdown>
                         <Button onClick={this.printDocument} className="float-right">Print</Button>
 
-
+ 
                       <Dropdown1 value={this.state.staffItem} options={this.state.useritems} optionLabel="hv_staff_name"  onChange={this.onStaffListChange} style={{ width: "40%", fontSize: '12px' }}
 placeholder="Select Program" id="ddlProgram" />
                     </div>
@@ -712,7 +741,10 @@ placeholder="Select Program" id="ddlProgram" />
                                         (row, index) => (
                                             <tr key={index}>
                                                 <td size="12">
-                                                    {this.renderWeek(row.WeekStart,index,this.state.items.length)}
+                                                    {
+                                                       
+                                                        this.renderWeek(row.WeekStart,index,this.state.items.length)
+                                                        }
                                                 </td>
                                             </tr>
                                         )
@@ -720,8 +752,10 @@ placeholder="Select Program" id="ddlProgram" />
                                 </tbody>
                             </RTable>
 
+
                         </div>
                     </div>
+
 
                 </Container>
             </div>
@@ -745,5 +779,6 @@ const mapDispatchToProps = dispatch => ({
     )
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(TSReports);
 
+
+export default connect(mapStateToProps, mapDispatchToProps)(TSReports);
