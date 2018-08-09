@@ -186,7 +186,30 @@ export class WorkPlan extends Component {
                 }
                 */
             }
+
+        
+        if (nextProps.WorkPlanState.itemsMsg) {
+   
+       if (nextProps.WorkPlanState.itemsMsg[0] !== undefined) {
+
+            if (nextProps.WorkPlanState.itemsMsg[0].MSG_CODE == 1) {
+
+                let TP = this.TPRefs.get(nextProps.WorkPlanState.itemsMsg[0].MSG);
+                let tspn = this.TFSSpan.get(0)                
+                tspn.innerText='Proejct hours should match with timesheet hours'
+               //TP.focus();
+
+            }
+            else {
+                if (nextProps.WorkPlanState.itemsMsg[0].MSG !== undefined) {
+                    let tspn = this.TFSSpan.get(0)                
+                tspn.innerText=''
+            
+                }
+            }
         }
+    }
+}   
         //this.setState({pageOfItems: this.props.attribTableState.items});
         //console.log("nextProps ");
         //debugger;
@@ -273,6 +296,8 @@ export class WorkPlan extends Component {
     constructor(props) {
         super(props);
         this.TPRefs = new Map();
+        this.TFSSpan = new Map();
+        
 
         this.state = {
             activeTab: "1",
@@ -1120,6 +1145,9 @@ export class WorkPlan extends Component {
                             </Button>
                         </ModalFooter>
                     </Modal>
+                    <span class="text-danger" ref={el=>this.TFSSpan.set((0),el)}>
+            
+                    </span>
                 </Container>
             </div>
         );
